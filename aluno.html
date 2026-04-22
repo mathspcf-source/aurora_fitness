@@ -15,94 +15,74 @@
         .login-box{background:#141414;border:1px solid #2a2a2a;border-radius:24px;padding:32px 24px;width:100%;max-width:360px}
         .login-logo{text-align:center;margin-bottom:28px}
         .login-logo i{font-size:2.5rem;color:#ff6b35}
-        .login-logo h1{font-size:1.8rem;font-weight:700;color:white;margin-top:8px}
+        .login-logo h1{font-size:1.8rem;font-weight:700;color:#ffffff;margin-top:8px}
         .login-logo span{background:linear-gradient(135deg,#ff6b35,#ff8c42);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .login-badge{background:linear-gradient(135deg,#ff6b35,#e85d04);padding:5px 16px;border-radius:30px;font-size:0.7rem;font-weight:700;color:white;display:inline-block;margin-top:12px}
+        .login-badge{background:linear-gradient(135deg,#ff6b35,#e85d04);padding:5px 16px;border-radius:30px;font-size:0.7rem;font-weight:700;color:#ffffff;display:inline-block;margin-top:12px}
         .input-group{margin-bottom:16px}
-        .input-group label{display:block;color:#aaa;margin-bottom:6px;font-size:0.85rem}
+        .input-group label{display:block;color:#aaaaaa;margin-bottom:6px;font-size:0.85rem}
         .input-field{position:relative}
         .input-field i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#ff6b35}
-        .input-field input{width:100%;padding:14px 14px 14px 44px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:14px;color:white;font-size:1rem}
-        .btn-login{width:100%;padding:16px;background:linear-gradient(135deg,#ff6b35,#e85d04);border:none;border-radius:14px;color:white;font-weight:600;font-size:1rem;cursor:pointer;margin-top:8px}
+        .input-field input{width:100%;padding:14px 14px 14px 44px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:14px;color:#ffffff;font-size:1rem}
+        .btn-login{width:100%;padding:16px;background:linear-gradient(135deg,#ff6b35,#e85d04);border:none;border-radius:14px;color:#ffffff;font-weight:600;font-size:1rem;cursor:pointer;margin-top:8px}
         .error-message{color:#ef4444;text-align:center;margin-top:12px;font-size:0.85rem;display:none}
         
         .main-panel{display:none;height:100vh;background:#0a0a0a;overflow:hidden;flex-direction:column}
         .main-panel.active{display:flex}
         
         .header{background:#0d0d0d;padding:16px 20px;border-bottom:1px solid #1a1a1a;display:flex;align-items:center;justify-content:space-between}
-        .header h1{font-size:1.3rem;font-weight:700;color:white}
+        .header h1{font-size:1.3rem;font-weight:700;color:#ffffff}
         .header span{background:linear-gradient(135deg,#ff6b35,#ff8c42);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .profile-badge{display:flex;align-items:center;gap:8px;background:#111;padding:6px 14px;border-radius:30px;border:1px solid #1a1a1a}
-        .profile-badge i{color:#ff6b35;font-size:1.2rem}
-        .profile-badge span{color:white;font-size:0.9rem;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .profile-badge{display:flex;align-items:center;gap:8px;background:#111111;padding:6px 14px;border-radius:30px;border:1px solid #1a1a1a}
+        .profile-badge i{color:#ff6b35}
+        .profile-badge span{color:#ffffff;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
         .logout-btn{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#ef4444;padding:8px 14px;border-radius:30px;cursor:pointer}
         
         .content{flex:1;overflow-y:auto;padding:16px}
         .content::-webkit-scrollbar{width:4px}
         .content::-webkit-scrollbar-thumb{background:#ff6b35;border-radius:10px}
         
-        .action-bar{display:flex;gap:12px;margin-bottom:20px}
-        .btn-action{flex:1;background:#111;border:1px solid #2a2a2a;border-radius:14px;padding:14px;color:white;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
-        .btn-action i{color:#ff6b35}
-        .btn-action:active{background:#1a1a1a}
+        .academy-selector{background:#111111;border:1px solid #1a1a1a;border-radius:14px;padding:12px 16px;margin-bottom:20px}
+        .academy-selector label{color:#aaaaaa;font-size:0.8rem;display:block;margin-bottom:8px}
+        .academy-selector select{width:100%;padding:12px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;color:#ffffff;font-size:1rem}
         
-        .sheet-card{background:#111;border:1px solid #1a1a1a;border-radius:16px;padding:0;margin-bottom:12px;overflow:hidden}
-        .sheet-header{display:flex;justify-content:space-between;align-items:center;padding:16px;cursor:pointer}
-        .sheet-header:active{background:#161616}
-        .sheet-title{color:white;font-weight:600;font-size:1rem}
-        .sheet-date{color:#888;font-size:0.75rem}
-        .sheet-expand{color:#ff6b35;font-size:1.2rem;transition:transform 0.2s}
-        .sheet-expand.expanded{transform:rotate(180deg)}
+        .sheet-grid{display:grid;gap:12px}
+        .sheet-card{background:#111111;border:1px solid #1a1a1a;border-radius:16px;padding:16px;cursor:pointer}
+        .sheet-card:active{background:#161616}
+        .sheet-card h3{color:#ffffff;font-size:1rem;margin-bottom:4px}
+        .sheet-card p{color:#ff6b35;font-size:0.8rem}
+        .sheet-card small{color:#888888;font-size:0.7rem}
         
-        .sheet-content{display:none;padding:0 16px 16px 16px;border-top:1px solid #1a1a1a}
-        .sheet-content.active{display:block}
-        .sheet-notes{color:#aaa;font-size:0.85rem;margin-bottom:16px;padding:12px;background:#161616;border-radius:12px}
+        .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:2000;align-items:flex-end}
+        .modal.active{display:flex}
+        .modal-content{background:#111111;border:1px solid #2a2a2a;border-radius:20px 20px 0 0;padding:24px 20px;width:100%;max-height:80vh;overflow-y:auto}
+        .modal-header{display:flex;justify-content:space-between;margin-bottom:20px}
+        .modal-header h3{color:#ffffff;font-size:1.2rem}
+        .close-modal{color:#888888;font-size:1.5rem;cursor:pointer;padding:8px}
         
         .exercise-item{background:#161616;border-radius:12px;padding:14px;margin-bottom:10px}
-        .exercise-name{color:#ff6b35;font-weight:600;margin-bottom:10px;font-size:0.95rem}
+        .exercise-name{color:#ff6b35;font-weight:600;margin-bottom:10px}
         .exercise-details{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-        .exercise-detail{background:#111;padding:8px;border-radius:8px;text-align:center}
-        .exercise-detail small{display:block;color:#888;font-size:0.65rem;margin-bottom:4px}
-        .exercise-detail strong{color:white;font-size:0.9rem}
+        .exercise-detail{background:#111111;padding:8px;border-radius:8px;text-align:center}
+        .exercise-detail small{color:#888888;font-size:0.65rem}
+        .exercise-detail strong{color:#ffffff;font-size:0.9rem}
         
-        .sheet-actions{display:flex;gap:8px;margin-top:16px;padding-top:16px;border-top:1px solid #1a1a1a}
-        .btn-small{flex:1;background:transparent;border:1px solid #2a2a2a;border-radius:10px;padding:10px;color:#aaa;font-size:0.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
-        .btn-small i{font-size:0.9rem}
-        .btn-small:active{background:#1a1a1a}
+        .modal-actions{display:flex;gap:10px;margin-top:20px}
+        .btn-action{flex:1;background:transparent;border:1px solid #2a2a2a;border-radius:12px;padding:14px;color:#ffffff;cursor:pointer}
+        .btn-primary{background:linear-gradient(135deg,#ff6b35,#e85d04);color:#ffffff;border:none;padding:14px;border-radius:12px;font-weight:600;cursor:pointer}
         
-        .empty-state{text-align:center;padding:60px 20px;color:#888}
+        .empty-state{text-align:center;padding:60px 20px;color:#888888}
         .empty-state i{font-size:4rem;color:#ff6b35;margin-bottom:16px;opacity:0.3}
-        .empty-state p{font-size:1rem;margin-bottom:8px}
-        .empty-state small{font-size:0.8rem}
         
-        .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:2000;align-items:flex-end;justify-content:center}
-        .modal.active{display:flex}
-        .modal-content{background:#111;border:1px solid #2a2a2a;border-radius:20px 20px 0 0;padding:24px 20px;width:100%;max-height:80vh;overflow-y:auto}
-        .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-        .modal-header h3{color:white;font-size:1.2rem}
-        .close-modal{color:#888;font-size:1.5rem;cursor:pointer;padding:8px}
-        
-        .import-area{border:2px dashed #2a2a2a;border-radius:16px;padding:30px 20px;text-align:center;margin:20px 0}
-        .import-area i{font-size:2.5rem;color:#ff6b35;margin-bottom:12px}
-        .import-area p{color:white;margin-bottom:8px}
-        .import-area small{color:#888}
-        .file-input{display:none}
-        
-        .toast{position:fixed;bottom:20px;left:20px;right:20px;background:#ff6b35;color:white;padding:14px 20px;border-radius:14px;font-weight:500;text-align:center;z-index:3000;animation:slideUp 0.3s ease}
+        .toast{position:fixed;bottom:20px;left:20px;right:20px;background:#ff6b35;color:#ffffff;padding:14px 20px;border-radius:14px;text-align:center;z-index:3000;animation:slideUp 0.3s}
         @keyframes slideUp{from{transform:translateY(100px);opacity:0}to{transform:translateY(0);opacity:1}}
     </style>
 </head>
 <body>
-    <!-- TELA DE LOGIN -->
     <div class="login-screen" id="loginScreen">
         <div class="login-box">
-            <div class="login-logo">
-                <i class="fas fa-dumbbell"></i>
-                <h1>Aurora<span>.</span></h1>
-                <p style="color:#aaa;margin-top:4px">Fitness</p>
-                <div class="login-badge"><i class="fas fa-user"></i> ALUNO</div>
-            </div>
+            <div class="login-logo"><i class="fas fa-dumbbell"></i><h1>Aurora<span>.</span></h1><p style="color:#aaaaaa">Fitness</p><div class="login-badge"><i class="fas fa-user"></i> ALUNO</div></div>
             <form id="loginForm">
+                <div class="input-group"><label>ID da Academia</label><div class="input-field"><i class="fas fa-building"></i><input type="text" id="academyId" placeholder="Ex: ACAD001"></div></div>
                 <div class="input-group"><label>Matrícula</label><div class="input-field"><i class="fas fa-id-card"></i><input type="text" id="studentRegistration" placeholder="Sua matrícula"></div></div>
                 <div class="input-group"><label>Senha</label><div class="input-field"><i class="fas fa-lock"></i><input type="password" id="studentPassword" placeholder="••••••••"></div></div>
                 <div class="error-message" id="loginError"></div>
@@ -111,21 +91,17 @@
         </div>
     </div>
 
-    <!-- MODAL DE IMPORTAÇÃO -->
-    <div class="modal" id="importModal">
+    <div class="modal" id="sheetModal">
         <div class="modal-content">
-            <div class="modal-header"><h3>Importar Ficha</h3><i class="fas fa-times close-modal" onclick="closeImportModal()"></i></div>
-            <div class="import-area" onclick="document.getElementById('fileInput').click()">
-                <i class="fas fa-cloud-upload-alt"></i>
-                <p>Clique para selecionar</p>
-                <small>Arquivo .txt ou .json</small>
-                <input type="file" id="fileInput" class="file-input" accept=".txt,.json" onchange="importFile(event)">
+            <div class="modal-header"><h3 id="sheetModalTitle">Ficha de Treino</h3><i class="fas fa-times close-modal" onclick="closeSheetModal()"></i></div>
+            <div id="sheetDetailContent"></div>
+            <div class="modal-actions">
+                <button class="btn-action" onclick="exportCurrentSheet()"><i class="fas fa-download"></i> Exportar</button>
+                <button class="btn-primary" onclick="closeSheetModal()">Fechar</button>
             </div>
-            <button class="btn-action" onclick="closeImportModal()">Cancelar</button>
         </div>
     </div>
 
-    <!-- PAINEL PRINCIPAL MOBILE -->
     <div class="main-panel" id="mainPanel">
         <div class="header">
             <h1>Aurora<span>.</span></h1>
@@ -136,24 +112,26 @@
         </div>
 
         <div class="content">
-            <div class="action-bar">
-                <button class="btn-action" onclick="exportAllSheets()"><i class="fas fa-download"></i> Exportar</button>
-                <button class="btn-action" onclick="openImportModal()"><i class="fas fa-upload"></i> Importar</button>
-            </div>
             <div id="studentSheetsList"></div>
         </div>
     </div>
 
     <script>
+        let academies = JSON.parse(localStorage.getItem('fit_academies')) || [];
         let students = JSON.parse(localStorage.getItem('fit_students')) || [];
         let sheets = JSON.parse(localStorage.getItem('fit_sheets')) || [];
         let currentStudent = null;
+        let currentSheet = null;
 
-        // LOGIN
         document.getElementById('loginForm').addEventListener('submit', (e) => {
             e.preventDefault();
+            const academyId = document.getElementById('academyId').value.toUpperCase().trim();
             const reg = document.getElementById('studentRegistration').value.trim();
             const pwd = document.getElementById('studentPassword').value;
+            
+            const academy = academies.find(a => a.accessId === academyId);
+            if (!academy) { document.getElementById('loginError').style.display = 'block'; return; }
+            
             const student = students.find(s => s.registration === reg && s.password === pwd);
             if (student) {
                 currentStudent = student;
@@ -166,124 +144,35 @@
 
         function logout() { currentStudent = null; document.getElementById('loginScreen').classList.remove('hidden'); document.getElementById('mainPanel').classList.remove('active'); }
 
-        // EXPANDIR/RECOLLHER FICHA
-        function toggleSheet(id) {
-            const content = document.getElementById(`sheet-${id}`);
-            const icon = document.getElementById(`icon-${id}`);
-            content.classList.toggle('active');
-            icon.classList.toggle('expanded');
-        }
-
-        // EXPORTAR UMA FICHA
-        function exportSheet(sheetId) {
-            const sheet = sheets.find(s => s.id == sheetId);
-            if (!sheet) return;
-            const data = JSON.stringify(sheet, null, 2);
-            downloadFile(data, `ficha_${sheet.name.replace(/\s/g,'_')}.json`);
-            showToast('✅ Ficha exportada!');
-        }
-
-        // EXPORTAR TODAS AS FICHAS
-        function exportAllSheets() {
-            const studentSheets = sheets.filter(s => s.studentId === currentStudent.id);
-            if (!studentSheets.length) { showToast('Nenhuma ficha para exportar'); return; }
-            const data = JSON.stringify(studentSheets, null, 2);
-            downloadFile(data, `minhas_fichas_${currentStudent.name.replace(/\s/g,'_')}.json`);
-            showToast('✅ Todas as fichas exportadas!');
-        }
-
-        // DOWNLOAD DE ARQUIVO
-        function downloadFile(content, filename) {
-            const blob = new Blob([content], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-
-        // MODAL DE IMPORTAÇÃO
-        function openImportModal() { document.getElementById('importModal').classList.add('active'); }
-        function closeImportModal() { document.getElementById('importModal').classList.remove('active'); document.getElementById('fileInput').value = ''; }
-
-        // IMPORTAR ARQUIVO
-        function importFile(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    const imported = JSON.parse(e.target.result);
-                    const sheetsToImport = Array.isArray(imported) ? imported : [imported];
-                    
-                    let count = 0;
-                    sheetsToImport.forEach(sheet => {
-                        if (sheet.studentId === currentStudent.id) {
-                            const exists = sheets.findIndex(s => s.id == sheet.id);
-                            if (exists >= 0) sheets[exists] = sheet;
-                            else sheets.push(sheet);
-                            count++;
-                        }
-                    });
-                    
-                    localStorage.setItem('fit_sheets', JSON.stringify(sheets));
-                    renderSheets();
-                    closeImportModal();
-                    showToast(`✅ ${count} ficha(s) importada(s)!`);
-                } catch (err) {
-                    showToast('❌ Arquivo inválido!');
-                }
-            };
-            reader.readAsText(file);
-        }
-
-        // TOAST DE NOTIFICAÇÃO
-        function showToast(message) {
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
-
-        // RENDERIZAR FICHAS
         function renderSheets() {
             const studentSheets = sheets.filter(s => s.studentId === currentStudent.id);
             const c = document.getElementById('studentSheetsList');
-            
-            if (!studentSheets.length) {
-                c.innerHTML = `<div class="empty-state"><i class="fas fa-clipboard-list"></i><p>Nenhuma ficha</p><small>Importe ou aguarde seu professor</small></div>`;
-                return;
-            }
-            
-            c.innerHTML = studentSheets.map(sheet => `
-                <div class="sheet-card">
-                    <div class="sheet-header" onclick="toggleSheet('${sheet.id}')">
-                        <div><div class="sheet-title">${sheet.name}</div><div class="sheet-date">${sheet.createdAt}</div></div>
-                        <i class="fas fa-chevron-down sheet-expand" id="icon-${sheet.id}"></i>
-                    </div>
-                    <div class="sheet-content" id="sheet-${sheet.id}">
-                        ${sheet.notes ? `<div class="sheet-notes"><i class="fas fa-info-circle"></i> ${sheet.notes}</div>` : ''}
-                        ${sheet.exercises.map((ex, i) => `
-                            <div class="exercise-item">
-                                <div class="exercise-name">${i+1}. ${ex.name}</div>
-                                <div class="exercise-details">
-                                    <div class="exercise-detail"><small>Séries</small><strong>${ex.series}</strong></div>
-                                    <div class="exercise-detail"><small>Repetições</small><strong>${ex.reps}</strong></div>
-                                    <div class="exercise-detail"><small>Carga</small><strong>${ex.load || '-'}</strong></div>
-                                    <div class="exercise-detail"><small>Obs</small><strong>${ex.notes || '-'}</strong></div>
-                                </div>
-                            </div>
-                        `).join('')}
-                        <div class="sheet-actions">
-                            <button class="btn-small" onclick="exportSheet('${sheet.id}')"><i class="fas fa-download"></i> Exportar</button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
+            if (!studentSheets.length) { c.innerHTML = '<div class="empty-state"><i class="fas fa-clipboard-list"></i><p>Nenhuma ficha</p></div>'; return; }
+            c.innerHTML = `<div class="sheet-grid">${studentSheets.map(sheet => `<div class="sheet-card" onclick="openSheetModal('${sheet.id}')"><h3>${sheet.name}</h3><p>${sheet.exercises.length} exercícios</p><small>${sheet.createdAt}</small></div>`).join('')}</div>`;
         }
+
+        function openSheetModal(sheetId) {
+            currentSheet = sheets.find(s => s.id == sheetId);
+            if (!currentSheet) return;
+            document.getElementById('sheetModalTitle').textContent = currentSheet.name;
+            document.getElementById('sheetDetailContent').innerHTML = `
+                ${currentSheet.notes ? `<p style="color:#aaaaaa;margin-bottom:16px">📝 ${currentSheet.notes}</p>` : ''}
+                ${currentSheet.exercises.map((ex, i) => `<div class="exercise-item"><div class="exercise-name">${i+1}. ${ex.name}</div><div class="exercise-details"><div class="exercise-detail"><small>Séries</small><strong>${ex.series}</strong></div><div class="exercise-detail"><small>Reps</small><strong>${ex.reps}</strong></div><div class="exercise-detail"><small>Carga</small><strong>${ex.load || '-'}</strong></div><div class="exercise-detail"><small>Obs</small><strong>${ex.notes || '-'}</strong></div></div></div>`).join('')}
+            `;
+            document.getElementById('sheetModal').classList.add('active');
+        }
+
+        function closeSheetModal() { document.getElementById('sheetModal').classList.remove('active'); currentSheet = null; }
+
+        function exportCurrentSheet() {
+            if (!currentSheet) return;
+            const data = JSON.stringify(currentSheet, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `ficha_${currentSheet.name}.json`; a.click();
+            showToast('✅ Ficha exportada!');
+        }
+
+        function showToast(m) { const t = document.createElement('div'); t.className = 'toast'; t.textContent = m; document.body.appendChild(t); setTimeout(() => t.remove(), 3000); }
     </script>
 </body>
 </html>
