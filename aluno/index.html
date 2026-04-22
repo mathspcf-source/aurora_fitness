@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Aurora • Aluno</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+        body{background:#0a0a0a;height:100vh;overflow:hidden}
+        
+        .login-screen{position:fixed;top:0;left:0;width:100%;height:100vh;background:linear-gradient(145deg,#0d0d0d 0%,#1a1a1a 100%);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px}
+        .login-screen.hidden{display:none}
+        .login-box{background:#141414;border:1px solid #2a2a2a;border-radius:28px;padding:36px 28px;width:100%;max-width:380px}
+        .login-logo{text-align:center;margin-bottom:36px}
+        .login-logo i{font-size:2.8rem;color:#ff6b35}
+        .login-logo h1{font-size:2rem;font-weight:700;color:#ffffff;margin-top:10px}
+        .login-logo span{background:linear-gradient(135deg,#ff6b35,#ff8c42);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .login-badge{background:linear-gradient(135deg,#ff6b35,#e85d04);padding:6px 18px;border-radius:40px;font-size:0.75rem;font-weight:700;color:#ffffff;display:inline-block;margin-top:14px}
+        .login-badge i{color:#ffffff !important;margin-right:6px}
+        .input-group{margin-bottom:20px}
+        .input-group label{display:block;color:#cccccc;margin-bottom:8px;font-weight:500;font-size:0.9rem}
+        .input-field{position:relative}
+        .input-field i{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:#ffffff !important;font-size:1.1rem}
+        .input-field input{width:100%;padding:15px 15px 15px 48px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:14px;color:#ffffff;font-size:1rem}
+        .btn-login{width:100%;padding:16px;background:linear-gradient(135deg,#ff6b35,#e85d04);border:none;border-radius:14px;color:#ffffff;font-weight:600;font-size:1rem;cursor:pointer}
+        .btn-login i{color:#ffffff !important;margin-right:8px}
+        .error-message{color:#ef4444;text-align:center;margin-top:16px;font-size:0.9rem;display:none}
+        .back-link{text-align:center;margin-top:20px}
+        .back-link a{color:#ff6b35;text-decoration:none;font-size:0.9rem}
+        
+        .main-panel{display:none;height:100vh;background:#0a0a0a;overflow:hidden;flex-direction:column}
+        .main-panel.active{display:flex}
+        
+        .header{background:#0d0d0d;padding:18px 20px;border-bottom:1px solid #1a1a1a;display:flex;align-items:center;justify-content:space-between}
+        .header h1{font-size:1.4rem;font-weight:700;color:#ffffff}
+        .header span{background:linear-gradient(135deg,#ff6b35,#ff8c42);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .profile-badge{display:flex;align-items:center;gap:8px;background:#111111;padding:8px 16px;border-radius:30px;border:1px solid #1a1a1a}
+        .profile-badge i{color:#ff6b35 !important}
+        .profile-badge span{color:#ffffff;font-size:0.9rem;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        
+        .tab-bar{display:flex;padding:12px 16px;background:#0d0d0d;border-bottom:1px solid #1a1a1a;gap:12px}
+        .tab-btn{flex:1;padding:12px;background:transparent;border:1px solid #2a2a2a;border-radius:12px;color:#aaaaaa;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+        .tab-btn i{color:#ff6b35 !important}
+        .tab-btn.active{background:linear-gradient(135deg,#ff6b35,#e85d04);color:#ffffff;border-color:#ff6b35}
+        .tab-btn.active i{color:#ffffff !important}
+        
+        .content{flex:1;overflow-y:auto;padding:16px}
+        .page{display:none}
+        .page.active{display:block}
+        
+        .sheet-grid{display:grid;gap:12px}
+        .sheet-card{background:#111111;border:1px solid #1a1a1a;border-radius:16px;padding:18px;cursor:pointer}
+        .sheet-card h3{color:#ffffff;font-size:1rem;margin-bottom:6px}
+        .sheet-card p{color:#ff6b35;font-size:0.85rem}
+        .sheet-card small{color:#888888;font-size:0.75rem}
+        
+        .backup-actions{display:grid;gap:16px}
+        .backup-card{background:#111111;border:1px solid #1a1a1a;border-radius:16px;padding:24px;text-align:center}
+        .backup-card i{font-size:3rem;color:#ff6b35 !important;margin-bottom:16px}
+        .backup-card h3{color:#ffffff;margin-bottom:8px}
+        .backup-card p{color:#aaaaaa;font-size:0.85rem;margin-bottom:20px}
+        
+        .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:2000;align-items:flex-end}
+        .modal.active{display:flex}
+        .modal-content{background:#111111;border:1px solid #2a2a2a;border-radius:24px 24px 0 0;padding:28px 24px;width:100%;max-height:80vh;overflow-y:auto}
+        .modal-header{display:flex;justify-content:space-between;margin-bottom:24px}
+        .modal-header h3{color:#ffffff;font-size:1.2rem}
+        .close-modal{color:#888888;font-size:1.5rem;cursor:pointer}
+        
+        .exercise-item{background:#161616;border-radius:14px;padding:16px;margin-bottom:12px}
+        .exercise-name{color:#ff6b35;font-weight:600;margin-bottom:12px}
+        .exercise-details{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+        .exercise-detail{background:#111111;padding:10px;border-radius:10px;text-align:center}
+        .exercise-detail small{display:block;color:#888888;font-size:0.65rem;margin-bottom:4px}
+        .exercise-detail strong{color:#ffffff;font-size:0.9rem}
+        
+        .btn-primary{background:linear-gradient(135deg,#ff6b35,#e85d04);color:#ffffff;border:none;padding:16px;border-radius:14px;font-weight:600;cursor:pointer;width:100%}
+        .btn-secondary{background:transparent;color:#ffffff;border:1px solid #2a2a2a;padding:16px;border-radius:14px;font-weight:500;cursor:pointer;width:100%}
+        
+        .empty-state{text-align:center;padding:60px 20px;color:#888888}
+        .empty-state i{font-size:4rem;color:#ff6b35 !important;margin-bottom:16px;opacity:0.3}
+        
+        .logout-section{padding:16px}
+    </style>
+</head>
+<body>
+    <div class="login-screen" id="loginScreen">
+        <div class="login-box">
+            <div class="login-logo"><i class="fas fa-dumbbell"></i><h1>Aurora<span>.</span></h1><p style="color:#aaaaaa;margin-top:4px">Fitness</p><div class="login-badge"><i class="fas fa-user"></i> ALUNO</div></div>
+            <form id="loginForm">
+                <div class="input-group"><label>Email</label><div class="input-field"><i class="fas fa-envelope"></i><input type="email" id="clientEmail" placeholder="seu@email.com"></div></div>
+                <div class="input-group"><label>Senha</label><div class="input-field"><i class="fas fa-lock"></i><input type="password" id="clientPassword" placeholder="••••••••"></div></div>
+                <div class="error-message" id="loginError">Email ou senha incorretos</div>
+                <button type="submit" class="btn-login"><i class="fas fa-sign-in-alt"></i> Acessar</button>
+            </form>
+            <div class="back-link"><a href="../index.html"><i class="fas fa-arrow-left"></i> Voltar ao Instrutor</a></div>
+        </div>
+    </div>
+
+    <div class="modal" id="sheetModal">
+        <div class="modal-content">
+            <div class="modal-header"><h3 id="sheetModalTitle">Ficha</h3><i class="fas fa-times close-modal" onclick="closeSheetModal()"></i></div>
+            <div id="sheetDetailContent"></div>
+            <button class="btn-primary" onclick="closeSheetModal()" style="margin-top:20px">Fechar</button>
+        </div>
+    </div>
+
+    <div class="main-panel" id="mainPanel">
+        <div class="header">
+            <h1>Aurora<span>.</span></h1>
+            <div class="profile-badge"><i class="fas fa-user-circle"></i><span id="clientNameDisplay">Aluno</span></div>
+        </div>
+
+        <div class="tab-bar">
+            <button class="tab-btn active" onclick="switchTab('treinos')"><i class="fas fa-clipboard-list"></i> Treinos</button>
+            <button class="tab-btn" onclick="switchTab('backup')"><i class="fas fa-database"></i> Backup</button>
+            <button class="tab-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</button>
+        </div>
+
+        <div class="content">
+            <div class="page active" id="tab-treinos"><div id="clientSheetsList"></div></div>
+            <div class="page" id="tab-backup">
+                <div class="backup-actions">
+                    <div class="backup-card"><i class="fas fa-download"></i><h3>Exportar Backup</h3><p>Salve todas as suas fichas</p><button class="btn-primary" onclick="exportClientBackup()">Exportar</button></div>
+                    <div class="backup-card"><i class="fas fa-upload"></i><h3>Importar Backup</h3><p>Restaure suas fichas</p><button class="btn-secondary" onclick="importClientBackup()">Importar</button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let clients = JSON.parse(localStorage.getItem('pt_clients')) || [];
+        let sheets = JSON.parse(localStorage.getItem('pt_sheets')) || [];
+        let currentClient = null;
+
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('clientEmail').value.trim();
+            const pwd = document.getElementById('clientPassword').value;
+            const client = clients.find(c => c.email === email && c.password === pwd);
+            if (client) {
+                currentClient = client;
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('mainPanel').classList.add('active');
+                document.getElementById('clientNameDisplay').textContent = client.name.split(' ')[0];
+                renderSheets();
+            } else { document.getElementById('loginError').style.display = 'block'; }
+        });
+
+        function logout() { currentClient = null; document.getElementById('loginScreen').classList.remove('hidden'); document.getElementById('mainPanel').classList.remove('active'); }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach((b, i) => { if (i < 2) b.classList.remove('active'); });
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            if (tab === 'treinos') { document.querySelector('.tab-btn:first-child').classList.add('active'); document.getElementById('tab-treinos').classList.add('active'); }
+            else { document.querySelectorAll('.tab-btn')[1].classList.add('active'); document.getElementById('tab-backup').classList.add('active'); }
+        }
+
+        function renderSheets() {
+            const clientSheets = sheets.filter(s => s.clientId === currentClient.id);
+            const c = document.getElementById('clientSheetsList');
+            if (!clientSheets.length) { c.innerHTML = '<div class="empty-state"><i class="fas fa-clipboard-list"></i><p>Nenhuma ficha</p><small>Seu personal ainda não criou fichas</small></div>'; return; }
+            c.innerHTML = `<div class="sheet-grid">${clientSheets.map(sheet => `<div class="sheet-card" onclick="openSheetModal('${sheet.id}')"><h3>${sheet.name}</h3><p>${sheet.exercises.length} exercícios</p><small>${sheet.createdAt}</small></div>`).join('')}</div>`;
+        }
+
+        function openSheetModal(sheetId) {
+            const sheet = sheets.find(s => s.id == sheetId); if (!sheet) return;
+            document.getElementById('sheetModalTitle').textContent = sheet.name;
+            document.getElementById('sheetDetailContent').innerHTML = `${sheet.notes ? `<p style="color:#aaaaaa;margin-bottom:16px;padding:12px;background:#161616;border-radius:12px">📝 ${sheet.notes}</p>` : ''}${sheet.exercises.map((ex, i) => `<div class="exercise-item"><div class="exercise-name">${i+1}. ${ex.name}</div><div class="exercise-details"><div class="exercise-detail"><small>Séries</small><strong>${ex.series}</strong></div><div class="exercise-detail"><small>Repetições</small><strong>${ex.reps}</strong></div><div class="exercise-detail"><small>Carga</small><strong>${ex.load || '-'}</strong></div><div class="exercise-detail"><small>Observações</small><strong>${ex.notes || '-'}</strong></div></div></div>`).join('')}`;
+            document.getElementById('sheetModal').classList.add('active');
+        }
+
+        function closeSheetModal() { document.getElementById('sheetModal').classList.remove('active'); }
+
+        function exportClientBackup() {
+            const clientSheets = sheets.filter(s => s.clientId === currentClient.id);
+            if (!clientSheets.length) { alert('Nenhuma ficha para exportar'); return; }
+            const backup = { client: currentClient, sheets: clientSheets, date: new Date().toISOString() };
+            const data = JSON.stringify(backup);
+            const blob = new Blob([data], { type: 'application/json' });
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `minhas_fichas_${currentClient.name.split(' ')[0]}.json`; a.click();
+        }
+
+        function importClientBackup() {
+            const input = document.createElement('input'); input.type = 'file'; input.accept = '.json';
+            input.onchange = (e) => { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = (ev) => { try { const data = JSON.parse(ev.target.result); if (data.sheets && data.client && data.client.id === currentClient.id) { const otherSheets = sheets.filter(s => s.clientId !== currentClient.id); sheets = [...otherSheets, ...data.sheets]; localStorage.setItem('pt_sheets', JSON.stringify(sheets)); renderSheets(); alert('✅ Fichas importadas!'); } else { alert('❌ Arquivo inválido!'); } } catch(err) { alert('❌ Erro ao ler arquivo'); } }; reader.readAsText(file); }; input.click();
+        }
+    </script>
+</body>
+</html>
