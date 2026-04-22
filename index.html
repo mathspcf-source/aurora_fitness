@@ -70,6 +70,17 @@
         .table-row{display:grid;padding:12px 18px;border-bottom:1px solid #1a1a1a;color:#ffffff;font-size:0.85rem;align-items:center}
         .table-row:last-child{border-bottom:none}
         
+        .client-group{background:#111111;border:1px solid #1a1a1a;border-radius:14px;margin-bottom:16px;overflow:hidden}
+        .client-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:#161616;cursor:pointer}
+        .client-header h3{color:#ffffff;font-size:0.95rem;display:flex;align-items:center;gap:8px}
+        .client-header i{color:#ff6b35;transition:transform 0.2s}
+        .client-header.expanded i{transform:rotate(180deg)}
+        .client-sheets{display:none;padding:8px 0}
+        .client-sheets.active{display:block}
+        .sheet-item{display:grid;grid-template-columns:2fr 1fr 1fr 70px;padding:10px 18px;border-bottom:1px solid #1a1a1a;color:#ffffff;font-size:0.85rem;align-items:center}
+        .sheet-item:last-child{border-bottom:none}
+        .sheet-item:hover{background:#1a1a1a}
+        
         .btn-primary{background:linear-gradient(135deg,#ff6b35,#e85d04);color:#ffffff;border:none;padding:10px 20px;border-radius:12px;font-weight:600;font-size:0.85rem;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
         .btn-secondary{background:transparent;color:#ffffff;border:1px solid #2a2a2a;padding:9px 18px;border-radius:12px;font-size:0.85rem;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
         .action-buttons{display:flex;gap:12px;margin-bottom:16px}
@@ -174,8 +185,8 @@
             </div>
 
             <div class="page" id="sheets">
-                <div class="action-buttons"><button class="btn-primary" onclick="openSheetModal()"><i class="fas fa-plus"></i> Nova</button></div>
-                <div class="table-wrapper"><div class="table-container"><div class="table-header" style="grid-template-columns:2fr 1.5fr 1fr 70px"><div>Ficha</div><div>Cliente</div><div>Data</div><div>Ações</div></div><div id="sheetsList"></div></div></div>
+                <div class="action-buttons"><button class="btn-primary" onclick="openSheetModal()"><i class="fas fa-plus"></i> Nova Ficha</button></div>
+                <div class="table-wrapper" id="sheetsByClient"></div>
             </div>
 
             <div class="page" id="backup">
@@ -210,6 +221,7 @@
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(this.dataset.page).classList.add('active');
             document.getElementById('pageTitle').textContent = { dashboard:'Dashboard', clients:'Clientes', sheets:'Fichas', backup:'Backup' }[this.dataset.page];
+            if (this.dataset.page === 'sheets') renderSheetsByClient();
         });});
 
         function openClientModal(id = null) {
@@ -219,7 +231,7 @@
         }
         function closeClientModal() { document.getElementById('clientModal').classList.remove('active'); }
         document.getElementById('clientForm').addEventListener('submit', (e) => { e.preventDefault(); const id = document.getElementById('clientId').value || String(Date.now()); const client = { id, name: document.getElementById('clientName').value, email: document.getElementById('clientEmail').value, password: document.getElementById('clientPassword').value, phone: document.getElementById('clientPhone').value, status: 'Ativo' }; const idx = clients.findIndex(c => c.id == id); if (idx >= 0) clients[idx] = client; else clients.push(client); localStorage.setItem('pt_clients', JSON.stringify(clients)); closeClientModal(); renderClients(); updateStats(); });
-        function deleteClient(id) { if (confirm('Excluir?')) { clients = clients.filter(c => c.id != id); sheets = sheets.filter(s => s.clientId != id); localStorage.setItem('pt_clients', JSON.stringify(clients)); localStorage.setItem('pt_sheets', JSON.stringify(sheets)); renderClients(); renderSheets(); updateStats(); } }
+        function deleteClient(id) { if (confirm('Excluir?')) { clients = clients.filter(c => c.id != id); sheets = sheets.filter(s => s.clientId != id); localStorage.setItem('pt_clients', JSON.stringify(clients)); localStorage.setItem('pt_sheets', JSON.stringify(sheets)); renderClients(); updateStats(); } }
         function renderClients() {
             const c = document.getElementById('clientsList'); if (!clients.length) { c.innerHTML = '<div class="empty-state">Nenhum cliente</div>'; return; }
             c.innerHTML = clients.map(c => `<div class="table-row" style="grid-template-columns:2fr 1.5fr 1.5fr 70px"><div>${c.name}</div><div>${c.email}</div><div>${c.phone || '-'}</div><div><i class="fas fa-edit action-icon" onclick="openClientModal('${c.id}')"></i><i class="fas fa-trash-alt action-icon" onclick="deleteClient('${c.id}')" style="color:#ef4444"></i></div></div>`).join('');
@@ -240,16 +252,56 @@
             const c = document.getElementById('exercisesList'); if (!tempExercises.length) { c.innerHTML = '<p style="color:#888;text-align:center">Nenhum</p>'; return; }
             c.innerHTML = tempExercises.map((ex, i) => `<div class="exercise-item"><div class="exercise-header"><h4>Exercício ${i+1}</h4><i class="fas fa-trash-alt" onclick="removeExercise(${i})" style="color:#ef4444;cursor:pointer"></i></div><div class="exercise-grid"><input type="text" placeholder="Nome" value="${ex.name}" onchange="tempExercises[${i}].name = this.value" style="grid-column:span 4"><input type="text" placeholder="Séries" value="${ex.series}" onchange="tempExercises[${i}].series = this.value"><input type="text" placeholder="Reps" value="${ex.reps}" onchange="tempExercises[${i}].reps = this.value"><input type="text" placeholder="Carga" value="${ex.load}" onchange="tempExercises[${i}].load = this.value"><input type="text" placeholder="Obs" value="${ex.notes}" onchange="tempExercises[${i}].notes = this.value"></div></div>`).join('');
         }
-        document.getElementById('sheetForm').addEventListener('submit', (e) => { e.preventDefault(); if (!tempExercises.length) { alert('Adicione exercícios!'); return; } const id = document.getElementById('sheetId').value || String(Date.now()); const clientId = document.getElementById('sheetClient').value; const client = clients.find(c => c.id == clientId); const sheet = { id, clientId, clientName: client.name, name: document.getElementById('sheetName').value, notes: document.getElementById('sheetNotes').value, exercises: tempExercises, createdAt: new Date().toLocaleDateString('pt-BR') }; const idx = sheets.findIndex(s => s.id == id); if (idx >= 0) sheets[idx] = sheet; else sheets.push(sheet); localStorage.setItem('pt_sheets', JSON.stringify(sheets)); closeSheetModal(); renderSheets(); updateStats(); });
-        function deleteSheet(id) { if (confirm('Excluir?')) { sheets = sheets.filter(s => s.id != id); localStorage.setItem('pt_sheets', JSON.stringify(sheets)); renderSheets(); updateStats(); } }
-        function renderSheets() { const c = document.getElementById('sheetsList'); if (!sheets.length) { c.innerHTML = '<div class="empty-state">Nenhuma ficha</div>'; return; } c.innerHTML = sheets.map(s => `<div class="table-row" style="grid-template-columns:2fr 1.5fr 1fr 70px"><div>${s.name}</div><div>${s.clientName}</div><div>${s.createdAt}</div><div><i class="fas fa-edit action-icon" onclick="openSheetModal('${s.id}')"></i><i class="fas fa-trash-alt action-icon" onclick="deleteSheet('${s.id}')" style="color:#ef4444"></i></div></div>`).join(''); }
+        document.getElementById('sheetForm').addEventListener('submit', (e) => { e.preventDefault(); if (!tempExercises.length) { alert('Adicione exercícios!'); return; } const id = document.getElementById('sheetId').value || String(Date.now()); const clientId = document.getElementById('sheetClient').value; const client = clients.find(c => c.id == clientId); const sheet = { id, clientId, clientName: client.name, name: document.getElementById('sheetName').value, notes: document.getElementById('sheetNotes').value, exercises: tempExercises, createdAt: new Date().toLocaleDateString('pt-BR') }; const idx = sheets.findIndex(s => s.id == id); if (idx >= 0) sheets[idx] = sheet; else sheets.push(sheet); localStorage.setItem('pt_sheets', JSON.stringify(sheets)); closeSheetModal(); updateStats(); if (document.querySelector('[data-page=sheets]').classList.contains('active')) renderSheetsByClient(); });
+        function deleteSheet(id) { if (confirm('Excluir?')) { sheets = sheets.filter(s => s.id != id); localStorage.setItem('pt_sheets', JSON.stringify(sheets)); updateStats(); renderSheetsByClient(); } }
+
+        function toggleClientSheets(clientId) {
+            const content = document.getElementById(`sheets-${clientId}`);
+            const header = document.getElementById(`header-${clientId}`);
+            content.classList.toggle('active');
+            header.classList.toggle('expanded');
+        }
+
+        function renderSheetsByClient() {
+            const container = document.getElementById('sheetsByClient');
+            if (!clients.length) { container.innerHTML = '<div class="empty-state">Nenhum cliente cadastrado</div>'; return; }
+            
+            const clientsWithSheets = clients.map(client => {
+                const clientSheets = sheets.filter(s => s.clientId === client.id);
+                return { client, sheets: clientSheets };
+            }).filter(c => c.sheets.length > 0);
+            
+            if (!clientsWithSheets.length) { container.innerHTML = '<div class="empty-state">Nenhuma ficha criada</div>'; return; }
+            
+            container.innerHTML = clientsWithSheets.map(({ client, sheets: clientSheets }) => `
+                <div class="client-group">
+                    <div class="client-header" id="header-${client.id}" onclick="toggleClientSheets('${client.id}')">
+                        <h3><i class="fas fa-user"></i> ${client.name}</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="client-sheets" id="sheets-${client.id}">
+                        ${clientSheets.map(sheet => `
+                            <div class="sheet-item">
+                                <div><strong>${sheet.name}</strong></div>
+                                <div>${sheet.createdAt}</div>
+                                <div>${sheet.exercises.length} ex.</div>
+                                <div>
+                                    <i class="fas fa-edit action-icon" onclick="openSheetModal('${sheet.id}')"></i>
+                                    <i class="fas fa-trash-alt action-icon" onclick="deleteSheet('${sheet.id}')" style="color:#ef4444"></i>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
 
         function exportBackup() { const backup = { clients, sheets, date: new Date().toISOString() }; backups.unshift({ date: new Date().toLocaleString('pt-BR'), type: 'Manual' }); localStorage.setItem('pt_backups', JSON.stringify(backups)); const data = JSON.stringify(backup); const blob = new Blob([data], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `backup_${new Date().toISOString().slice(0,10)}.json`; a.click(); renderBackupHistory(); updateStats(); }
-        function importBackup() { const input = document.createElement('input'); input.type = 'file'; input.accept = '.json'; input.onchange = (e) => { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = (ev) => { try { const data = JSON.parse(ev.target.result); if (data.clients) { clients = data.clients; sheets = data.sheets || []; localStorage.setItem('pt_clients', JSON.stringify(clients)); localStorage.setItem('pt_sheets', JSON.stringify(sheets)); renderClients(); renderSheets(); updateStats(); alert('✅ Backup restaurado!'); } } catch(err) { alert('❌ Arquivo inválido'); } }; reader.readAsText(file); }; input.click(); }
+        function importBackup() { const input = document.createElement('input'); input.type = 'file'; input.accept = '.json'; input.onchange = (e) => { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = (ev) => { try { const data = JSON.parse(ev.target.result); if (data.clients) { clients = data.clients; sheets = data.sheets || []; localStorage.setItem('pt_clients', JSON.stringify(clients)); localStorage.setItem('pt_sheets', JSON.stringify(sheets)); renderClients(); updateStats(); alert('✅ Backup restaurado!'); } } catch(err) { alert('❌ Arquivo inválido'); } }; reader.readAsText(file); }; input.click(); }
         function renderBackupHistory() { document.getElementById('backupHistoryList').innerHTML = backups.slice(0,5).map(b => `<div class="table-row" style="grid-template-columns:2fr 1fr"><div>${b.date}</div><div>${b.type}</div></div>`).join(''); }
 
         function updateStats() { document.getElementById('totalClients').textContent = clients.length; document.getElementById('totalSheets').textContent = sheets.length; document.getElementById('totalBackups').textContent = backups.length; }
-        function renderAll() { renderClients(); renderSheets(); renderBackupHistory(); updateStats(); }
+        function renderAll() { renderClients(); renderBackupHistory(); updateStats(); }
     </script>
 </body>
 </html>
