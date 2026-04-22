@@ -73,6 +73,7 @@
         .status-active{background:rgba(16,185,129,0.15);color:#34d399}
         .action-icon{color:white;cursor:pointer;margin:0 6px}
         .action-icon:hover{color:#34d399}
+        .action-icon.delete{color:#f87171}
         
         .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);z-index:2000;align-items:center;justify-content:center}
         .modal.active{display:flex}
@@ -110,6 +111,10 @@
                 <button type="submit" class="btn-login"><i class="fas fa-sign-in-alt"></i> Acessar</button>
             </form>
             <div class="creator-info">© 2026 Aurora Fitness • Matheus Pacifico<br>(79) 99645-8399</div>
+            <div style="margin-top:20px;padding:12px;background:rgba(16,185,129,0.1);border-radius:12px;text-align:center">
+                <p style="color:#cbd5e0;font-size:0.8rem">Acesso de teste:</p>
+                <code style="background:rgba(0,0,0,0.3);padding:4px 8px;border-radius:6px;color:white">ACAD001 / 123456</code>
+            </div>
         </div>
     </div>
 
@@ -130,6 +135,20 @@
         </div>
     </div>
 
+    <!-- MODAL DE EXERCÍCIO (BIBLIOTECA) -->
+    <div class="modal" id="exerciseModal">
+        <div class="modal-content" style="max-width:500px">
+            <div class="modal-header"><h2 id="exerciseModalTitle">Novo Exercício</h2><i class="fas fa-times close-modal" onclick="closeExerciseModal()"></i></div>
+            <form id="exerciseForm">
+                <input type="hidden" id="exerciseId">
+                <div class="form-group"><label>Nome do Exercício</label><input type="text" id="exerciseName" placeholder="Ex: Supino Reto" required></div>
+                <div class="form-group"><label>Grupo Muscular</label><input type="text" id="exerciseGroup" placeholder="Ex: Peito" required></div>
+                <div class="form-group"><label>Categoria</label><select id="exerciseCategory"><option value="Musculação">Musculação</option><option value="Cardio">Cardio</option><option value="Funcional">Funcional</option><option value="Alongamento">Alongamento</option></select></div>
+                <button type="submit" class="btn-primary" style="width:100%"><i class="fas fa-save"></i> Salvar Exercício</button>
+            </form>
+        </div>
+    </div>
+
     <!-- MODAL DE FICHA DE TREINO -->
     <div class="modal" id="sheetModal">
         <div class="modal-content" style="max-width:700px">
@@ -141,7 +160,7 @@
                 <div class="form-group"><label>Observações</label><input type="text" id="sheetNotes" placeholder="Orientações gerais"></div>
                 
                 <div style="margin:20px 0"><h3 style="color:white;margin-bottom:12px">Exercícios</h3><div id="exercisesList"></div>
-                <button type="button" class="btn-secondary" onclick="addExercise()" style="width:100%"><i class="fas fa-plus"></i> Adicionar Exercício</button></div>
+                <button type="button" class="btn-secondary" onclick="addExerciseToSheet()" style="width:100%"><i class="fas fa-plus"></i> Adicionar Exercício</button></div>
                 
                 <button type="submit" class="btn-primary" style="width:100%"><i class="fas fa-save"></i> Salvar Ficha</button>
             </form>
@@ -192,10 +211,10 @@
                 <div class="table-container"><div class="table-header" style="grid-template-columns:2fr 1.5fr 1fr 1fr 100px"><div>Ficha</div><div>Aluno</div><div>Data</div><div>Status</div><div>Ações</div></div><div id="sheetsList"></div></div>
             </div>
 
-            <!-- EXERCÍCIOS -->
+            <!-- EXERCÍCIOS (BIBLIOTECA) -->
             <div class="page" id="exercises">
                 <div class="action-buttons"><button class="btn-primary" onclick="openExerciseModal()"><i class="fas fa-plus-circle"></i> Novo Exercício</button></div>
-                <div class="table-container"><div class="table-header" style="grid-template-columns:2fr 1fr 1fr 100px"><div>Exercício</div><div>Grupo Muscular</div><div>Categoria</div><div>Ações</div></div><div id="exercisesLibraryList"></div></div>
+                <div class="table-container"><div class="table-header" style="grid-template-columns:2fr 1.5fr 1fr 100px"><div>Exercício</div><div>Grupo Muscular</div><div>Categoria</div><div>Ações</div></div><div id="exercisesLibraryList"></div></div>
             </div>
 
             <div class="copyright">© 2026 Aurora Fitness • Desenvolvido por Matheus Pacifico | (79) 99645-8399</div>
@@ -203,20 +222,13 @@
     </div>
 
     <script>
-        // DADOS DA ACADEMIA (simulando login)
+        // DADOS DA ACADEMIA
         const ACADEMIES = [{ id: 'ACAD001', password: '123456', name: 'Academia Exemplo' }];
         
         let currentAcademy = null;
         let students = JSON.parse(localStorage.getItem('aurora_fitness_students')) || [];
         let sheets = JSON.parse(localStorage.getItem('aurora_fitness_sheets')) || [];
-        let exercises = JSON.parse(localStorage.getItem('aurora_fitness_exercises')) || [
-            { id: '1', name: 'Supino Reto', group: 'Peito', category: 'Musculação' },
-            { id: '2', name: 'Agachamento Livre', group: 'Pernas', category: 'Musculação' },
-            { id: '3', name: 'Rosca Direta', group: 'Bíceps', category: 'Musculação' },
-            { id: '4', name: 'Tríceps Corda', group: 'Tríceps', category: 'Musculação' },
-            { id: '5', name: 'Puxada Alta', group: 'Costas', category: 'Musculação' },
-            { id: '6', name: 'Desenvolvimento', group: 'Ombros', category: 'Musculação' }
-        ];
+        let exercises = JSON.parse(localStorage.getItem('aurora_fitness_exercises')) || [];
         
         let tempExercises = [];
 
@@ -287,11 +299,44 @@
         function renderStudents() {
             const c = document.getElementById('studentsList');
             if (!students.length) { c.innerHTML = '<div class="empty-state">Nenhum aluno</div>'; return; }
-            c.innerHTML = students.map(s => `<div class="table-row" style="grid-template-columns:2fr 1.5fr 1.5fr 1fr 100px"><div><strong>${s.name}</strong></div><div>${s.registration}</div><div>${s.phone || '-'}</div><div><span class="status-badge status-active">${s.status}</span></div><div><i class="fas fa-edit action-icon" onclick="openStudentModal('${s.id}')"></i><i class="fas fa-trash action-icon" onclick="deleteStudent('${s.id}')"></i></div></div>`).join('');
+            c.innerHTML = students.map(s => `<div class="table-row" style="grid-template-columns:2fr 1.5fr 1.5fr 1fr 100px"><div><strong>${s.name}</strong></div><div>${s.registration}</div><div>${s.phone || '-'}</div><div><span class="status-badge status-active">${s.status}</span></div><div><i class="fas fa-edit action-icon" onclick="openStudentModal('${s.id}')"></i><i class="fas fa-trash action-icon delete" onclick="deleteStudent('${s.id}')"></i></div></div>`).join('');
             document.getElementById('recentStudentsList').innerHTML = students.slice(-3).reverse().map(s => `<div class="table-row" style="grid-template-columns:2fr 1fr 1fr"><div>${s.name}</div><div>${s.registration}</div><div><span class="status-badge status-active">${s.status}</span></div></div>`).join('');
         }
 
-        // FICHAS
+        // EXERCÍCIOS (BIBLIOTECA)
+        function openExerciseModal(id = null) {
+            if (id) {
+                const ex = exercises.find(x => x.id == id);
+                document.getElementById('exerciseModalTitle').textContent = 'Editar Exercício';
+                document.getElementById('exerciseId').value = ex.id;
+                document.getElementById('exerciseName').value = ex.name;
+                document.getElementById('exerciseGroup').value = ex.group;
+                document.getElementById('exerciseCategory').value = ex.category;
+            } else {
+                document.getElementById('exerciseModalTitle').textContent = 'Novo Exercício';
+                document.getElementById('exerciseForm').reset();
+                document.getElementById('exerciseId').value = '';
+            }
+            document.getElementById('exerciseModal').classList.add('active');
+        }
+        function closeExerciseModal() { document.getElementById('exerciseModal').classList.remove('active'); }
+        document.getElementById('exerciseForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('exerciseId').value || String(Date.now());
+            const exercise = { id, name: document.getElementById('exerciseName').value, group: document.getElementById('exerciseGroup').value, category: document.getElementById('exerciseCategory').value };
+            const idx = exercises.findIndex(ex => ex.id == id);
+            if (idx >= 0) exercises[idx] = exercise; else exercises.push(exercise);
+            localStorage.setItem('aurora_fitness_exercises', JSON.stringify(exercises));
+            closeExerciseModal(); renderExercisesLibrary(); updateStats();
+        });
+        function deleteExercise(id) { if (confirm('Excluir?')) { exercises = exercises.filter(ex => ex.id != id); localStorage.setItem('aurora_fitness_exercises', JSON.stringify(exercises)); renderExercisesLibrary(); updateStats(); } }
+        function renderExercisesLibrary() {
+            const c = document.getElementById('exercisesLibraryList');
+            if (!exercises.length) { c.innerHTML = '<div class="empty-state">Nenhum exercício cadastrado</div>'; return; }
+            c.innerHTML = exercises.map(ex => `<div class="table-row" style="grid-template-columns:2fr 1.5fr 1fr 100px"><div>${ex.name}</div><div>${ex.group}</div><div>${ex.category}</div><div><i class="fas fa-edit action-icon" onclick="openExerciseModal('${ex.id}')"></i><i class="fas fa-trash action-icon delete" onclick="deleteExercise('${ex.id}')"></i></div></div>`).join('');
+        }
+
+        // FICHAS DE TREINO
         function openSheetModal(id = null) {
             const select = document.getElementById('sheetStudent');
             select.innerHTML = students.map(s => `<option value="${s.id}">${s.name} (${s.registration})</option>`).join('');
@@ -313,18 +358,22 @@
             document.getElementById('sheetModal').classList.add('active');
         }
         function closeSheetModal() { document.getElementById('sheetModal').classList.remove('active'); }
-        function addExercise() {
-            tempExercises.push({ name: '', series: '3', reps: '12', load: '', notes: '' });
+        function addExerciseToSheet() {
+            tempExercises.push({ exerciseId: '', name: '', series: '3', reps: '12', load: '', notes: '' });
             renderExerciseList();
         }
-        function removeExercise(idx) { tempExercises.splice(idx, 1); renderExerciseList(); }
+        function removeExerciseFromSheet(idx) { tempExercises.splice(idx, 1); renderExerciseList(); }
         function renderExerciseList() {
             const c = document.getElementById('exercisesList');
+            if (!tempExercises.length) { c.innerHTML = '<p style="color:#8892b0;text-align:center">Nenhum exercício adicionado</p>'; return; }
             c.innerHTML = tempExercises.map((ex, i) => `
                 <div class="exercise-item">
-                    <div class="exercise-header"><strong>Exercício ${i+1}</strong><i class="fas fa-trash action-icon" onclick="removeExercise(${i})" style="color:#f87171;cursor:pointer"></i></div>
+                    <div class="exercise-header"><strong>Exercício ${i+1}</strong><i class="fas fa-trash action-icon" onclick="removeExerciseFromSheet(${i})" style="color:#f87171;cursor:pointer"></i></div>
                     <div class="exercise-grid">
-                        <select onchange="tempExercises[${i}].name = this.value" class="form-group" style="margin:0;padding:8px">${exercises.map(e => `<option value="${e.name}" ${ex.name === e.name ? 'selected' : ''}>${e.name}</option>`).join('')}</select>
+                        <select onchange="updateExerciseName(${i}, this.value)" class="form-group" style="margin:0;padding:8px">
+                            <option value="">Selecione...</option>
+                            ${exercises.map(e => `<option value="${e.id}" ${ex.exerciseId === e.id ? 'selected' : ''}>${e.name}</option>`).join('')}
+                        </select>
                         <input type="text" placeholder="Séries" value="${ex.series}" onchange="tempExercises[${i}].series = this.value" style="padding:8px">
                         <input type="text" placeholder="Reps" value="${ex.reps}" onchange="tempExercises[${i}].reps = this.value" style="padding:8px">
                         <input type="text" placeholder="Carga" value="${ex.load}" onchange="tempExercises[${i}].load = this.value" style="padding:8px">
@@ -332,8 +381,14 @@
                 </div>
             `).join('');
         }
+        function updateExerciseName(idx, exerciseId) {
+            const ex = exercises.find(e => e.id === exerciseId);
+            tempExercises[idx].exerciseId = exerciseId;
+            tempExercises[idx].name = ex ? ex.name : '';
+        }
         document.getElementById('sheetForm').addEventListener('submit', (e) => {
             e.preventDefault();
+            if (!tempExercises.length) { alert('Adicione pelo menos um exercício!'); return; }
             const id = document.getElementById('sheetId').value || String(Date.now());
             const studentId = document.getElementById('sheetStudent').value;
             const student = students.find(s => s.id == studentId);
@@ -347,14 +402,7 @@
         function renderSheets() {
             const c = document.getElementById('sheetsList');
             if (!sheets.length) { c.innerHTML = '<div class="empty-state">Nenhuma ficha</div>'; return; }
-            c.innerHTML = sheets.map(s => `<div class="table-row" style="grid-template-columns:2fr 1.5fr 1fr 1fr 100px"><div><strong>${s.name}</strong></div><div>${s.studentName}</div><div>${s.createdAt}</div><div><span class="status-badge status-active">${s.status}</span></div><div><i class="fas fa-edit action-icon" onclick="openSheetModal('${s.id}')"></i><i class="fas fa-trash action-icon" onclick="deleteSheet('${s.id}')"></i></div></div>`).join('');
-        }
-
-        // EXERCÍCIOS (biblioteca)
-        function openExerciseModal() { alert('Em breve: cadastro de novos exercícios!'); }
-        function renderExercisesLibrary() {
-            const c = document.getElementById('exercisesLibraryList');
-            c.innerHTML = exercises.map(e => `<div class="table-row" style="grid-template-columns:2fr 1fr 1fr 100px"><div>${e.name}</div><div>${e.group}</div><div>${e.category}</div><div><i class="fas fa-edit action-icon"></i></div></div>`).join('');
+            c.innerHTML = sheets.map(s => `<div class="table-row" style="grid-template-columns:2fr 1.5fr 1fr 1fr 100px"><div><strong>${s.name}</strong></div><div>${s.studentName}</div><div>${s.createdAt}</div><div><span class="status-badge status-active">${s.status}</span></div><div><i class="fas fa-edit action-icon" onclick="openSheetModal('${s.id}')"></i><i class="fas fa-trash action-icon delete" onclick="deleteSheet('${s.id}')"></i></div></div>`).join('');
         }
 
         // UTILITÁRIAS
@@ -365,9 +413,6 @@
             document.getElementById('activeStudents').textContent = students.filter(s => s.status === 'Ativo').length;
         }
         function renderAll() { renderStudents(); renderSheets(); renderExercisesLibrary(); }
-
-        // INICIALIZAR
-        renderExercisesLibrary();
     </script>
 </body>
 </html>
