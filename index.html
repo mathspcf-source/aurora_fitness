@@ -150,8 +150,8 @@
         <div class="choice-box">
             <div class="choice-logo"><i class="fas fa-dumbbell"></i><h1>Aurora<span>.</span></h1><p style="color:#aaaaaa;margin-top:6px;font-size:0.85rem">Fitness</p></div>
             <div class="choice-buttons">
-                <div class="choice-btn" onclick="showInstructorLogin()"><i class="fas fa-user-tie"></i><h3>Sou Instrutor</h3><p>Acesse o painel do personal</p></div>
-                <div class="choice-btn" onclick="showClientLogin()"><i class="fas fa-user"></i><h3>Sou Aluno</h3><p>Acesse suas fichas de treino</p></div>
+                <div class="choice-btn" id="btnInstructor"><i class="fas fa-user-tie"></i><h3>Sou Instrutor</h3><p>Acesse o painel do personal</p></div>
+                <div class="choice-btn" id="btnClient"><i class="fas fa-user"></i><h3>Sou Aluno</h3><p>Acesse suas fichas de treino</p></div>
             </div>
             <div class="choice-footer">© 2026 Aurora Fitness • Matheus Pacifico<br>(79) 99645-8399</div>
         </div>
@@ -166,7 +166,7 @@
                 <div class="input-group"><label>Senha</label><div class="input-field"><i class="fas fa-lock"></i><input type="password" id="instructorPassword" value="123456"></div></div>
                 <div class="error-message" id="instructorLoginError">ID ou senha incorretos</div>
                 <button type="submit" class="btn-login"><i class="fas fa-sign-in-alt"></i> Acessar</button>
-                <button type="button" class="btn-back" onclick="backToChoice()"><i class="fas fa-arrow-left"></i> Voltar</button>
+                <button type="button" class="btn-back" id="btnBackInstructor"><i class="fas fa-arrow-left"></i> Voltar</button>
             </form>
         </div>
     </div>
@@ -180,7 +180,7 @@
                 <div class="input-group"><label>Senha</label><div class="input-field"><i class="fas fa-lock"></i><input type="password" id="clientPassword" placeholder="••••••••"></div></div>
                 <div class="error-message" id="clientLoginError">ID ou senha incorretos</div>
                 <button type="submit" class="btn-login"><i class="fas fa-sign-in-alt"></i> Acessar</button>
-                <button type="button" class="btn-back" onclick="backToChoice()"><i class="fas fa-arrow-left"></i> Voltar</button>
+                <button type="button" class="btn-back" id="btnBackClient"><i class="fas fa-arrow-left"></i> Voltar</button>
             </form>
         </div>
     </div>
@@ -191,14 +191,14 @@
             <h1>Aurora<span>.</span></h1>
             <div style="display:flex;align-items:center;gap:8px">
                 <div class="instructor-profile"><i class="fas fa-user-tie"></i><span>Trainer</span></div>
-                <button class="logout-instructor-btn" onclick="logoutInstructor()"><i class="fas fa-sign-out-alt"></i> Sair</button>
+                <button class="logout-instructor-btn" id="btnLogoutInstructor"><i class="fas fa-sign-out-alt"></i> Sair</button>
             </div>
         </div>
         <div class="instructor-tabs">
-            <button class="instructor-tab active" onclick="switchInstructorTab('dashboard')"><i class="fas fa-chart-pie"></i> Dashboard</button>
-            <button class="instructor-tab" onclick="switchInstructorTab('clients')"><i class="fas fa-users"></i> Clientes</button>
-            <button class="instructor-tab" onclick="switchInstructorTab('sheets')"><i class="fas fa-clipboard-list"></i> Fichas</button>
-            <button class="instructor-tab" onclick="switchInstructorTab('backup')"><i class="fas fa-database"></i> Backup</button>
+            <button class="instructor-tab active" data-tab="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</button>
+            <button class="instructor-tab" data-tab="clients"><i class="fas fa-users"></i> Clientes</button>
+            <button class="instructor-tab" data-tab="sheets"><i class="fas fa-clipboard-list"></i> Fichas</button>
+            <button class="instructor-tab" data-tab="backup"><i class="fas fa-database"></i> Backup</button>
         </div>
         <div class="instructor-content">
             <div class="instructor-page active" id="dashboard">
@@ -215,7 +215,7 @@
                 </div>
             </div>
             <div class="instructor-page" id="clients">
-                <div class="action-buttons"><button class="btn-primary" onclick="openClientModal()"><i class="fas fa-plus"></i> Novo Cliente</button></div>
+                <div class="action-buttons"><button class="btn-primary" id="btnNewClient"><i class="fas fa-plus"></i> Novo Cliente</button></div>
                 <div class="table-wrapper">
                     <div class="mobile-table">
                         <div class="mobile-table-header" style="grid-template-columns:1.5fr 1.5fr 60px"><div>Nome</div><div>ID</div><div>Ações</div></div>
@@ -224,11 +224,11 @@
                 </div>
             </div>
             <div class="instructor-page" id="sheets">
-                <div class="action-buttons"><button class="btn-primary" onclick="openSheetModal()"><i class="fas fa-plus"></i> Nova Ficha</button></div>
+                <div class="action-buttons"><button class="btn-primary" id="btnNewSheet"><i class="fas fa-plus"></i> Nova Ficha</button></div>
                 <div class="table-wrapper" id="sheetsByClient" style="overflow-y:auto"></div>
             </div>
             <div class="instructor-page" id="backup">
-                <div class="action-buttons"><button class="btn-primary" onclick="exportBackup()"><i class="fas fa-download"></i> Exportar</button><button class="btn-primary" onclick="importBackup()" style="background:#333"><i class="fas fa-upload"></i> Importar</button></div>
+                <div class="action-buttons"><button class="btn-primary" id="btnExportBackup"><i class="fas fa-download"></i> Exportar</button><button class="btn-primary" id="btnImportBackup" style="background:#333"><i class="fas fa-upload"></i> Importar</button></div>
                 <div class="table-wrapper">
                     <div class="mobile-table">
                         <div class="mobile-table-header" style="grid-template-columns:1.5fr 1fr"><div>Data</div><div>Tipo</div></div>
@@ -241,8 +241,8 @@
     </div>
 
     <!-- MODAIS INSTRUTOR -->
-    <div class="modal" id="clientModal"><div class="modal-content"><div class="modal-header"><h2>Novo Cliente</h2><i class="fas fa-times close-modal" onclick="closeClientModal()"></i></div><form id="clientForm"><input type="hidden" id="clientId"><div class="form-group"><label>Nome</label><input type="text" id="clientName" required></div><div class="form-group"><label>ID do Cliente</label><input type="text" id="clientIdField" required></div><div class="form-group"><label>Senha</label><input type="text" id="clientPasswordField" required></div><div class="form-group"><label>Telefone</label><input type="tel" id="clientPhone"></div><button type="submit" class="btn-primary" style="width:100%">Salvar</button></form></div></div>
-    <div class="modal" id="sheetModal"><div class="modal-content"><div class="modal-header"><h2>Nova Ficha</h2><i class="fas fa-times close-modal" onclick="closeSheetModal()"></i></div><form id="sheetForm"><input type="hidden" id="sheetId"><div class="form-group"><label>Cliente</label><select id="sheetClient" required></select></div><div class="form-group"><label>Nome da Ficha</label><input type="text" id="sheetName" required></div><div class="form-group"><label>Observações</label><input type="text" id="sheetNotes"></div><div id="exercisesList"></div><button type="button" class="btn-primary" onclick="addExercise()" style="margin:10px 0">+ Exercício</button><button type="submit" class="btn-primary" style="width:100%">Salvar</button></form></div></div>
+    <div class="modal" id="clientModal"><div class="modal-content"><div class="modal-header"><h2>Novo Cliente</h2><i class="fas fa-times close-modal" id="closeClientModal"></i></div><form id="clientForm"><input type="hidden" id="clientId"><div class="form-group"><label>Nome</label><input type="text" id="clientName" required></div><div class="form-group"><label>ID do Cliente</label><input type="text" id="clientIdField" required></div><div class="form-group"><label>Senha</label><input type="text" id="clientPasswordField" required></div><div class="form-group"><label>Telefone</label><input type="tel" id="clientPhone"></div><button type="submit" class="btn-primary" style="width:100%">Salvar</button></form></div></div>
+    <div class="modal" id="sheetModal"><div class="modal-content"><div class="modal-header"><h2>Nova Ficha</h2><i class="fas fa-times close-modal" id="closeSheetModal"></i></div><form id="sheetForm"><input type="hidden" id="sheetId"><div class="form-group"><label>Cliente</label><select id="sheetClient" required></select></div><div class="form-group"><label>Nome da Ficha</label><input type="text" id="sheetName" required></div><div class="form-group"><label>Observações</label><input type="text" id="sheetNotes"></div><div id="exercisesList"></div><button type="button" class="btn-primary" id="btnAddExercise" style="margin:10px 0">+ Exercício</button><button type="submit" class="btn-primary" style="width:100%">Salvar</button></form></div></div>
 
     <!-- PAINEL DO ALUNO MOBILE -->
     <div class="client-panel" id="clientPanel">
@@ -250,26 +250,26 @@
             <h1>Aurora<span style="background:linear-gradient(135deg,#ff6b35,#ff8c42);-webkit-background-clip:text;-webkit-text-fill-color:transparent">.</span></h1>
             <div style="display:flex;align-items:center;gap:6px">
                 <div class="client-profile"><i class="fas fa-user-circle"></i><span id="clientNameDisplay">Aluno</span></div>
-                <button class="logout-instructor-btn" onclick="logoutClient()"><i class="fas fa-sign-out-alt"></i> Sair</button>
+                <button class="logout-instructor-btn" id="btnLogoutClient"><i class="fas fa-sign-out-alt"></i> Sair</button>
             </div>
         </div>
         <div class="client-content">
-            <button class="main-treino-btn" onclick="toggleSubTreinos()"><i class="fas fa-dumbbell"></i> MEUS TREINOS</button>
+            <button class="main-treino-btn" id="btnMeusTreinos"><i class="fas fa-dumbbell"></i> MEUS TREINOS</button>
             <div class="sub-treinos-grid" id="subTreinosGrid" style="display:none">
-                <button class="sub-treino-btn" onclick="mostrarTreino('A')"><i class="fas fa-fire"></i> Treino A</button>
-                <button class="sub-treino-btn" onclick="mostrarTreino('B')"><i class="fas fa-bolt"></i> Treino B</button>
-                <button class="sub-treino-btn" onclick="mostrarTreino('C')"><i class="fas fa-dumbbell"></i> Treino C</button>
-                <button class="sub-treino-btn" onclick="mostrarTreino('D')"><i class="fas fa-heart"></i> Treino D</button>
-                <button class="sub-treino-btn" onclick="mostrarTreino('E')" style="grid-column:span 2"><i class="fas fa-star"></i> Treino E</button>
+                <button class="sub-treino-btn" data-treino="A"><i class="fas fa-fire"></i> Treino A</button>
+                <button class="sub-treino-btn" data-treino="B"><i class="fas fa-bolt"></i> Treino B</button>
+                <button class="sub-treino-btn" data-treino="C"><i class="fas fa-dumbbell"></i> Treino C</button>
+                <button class="sub-treino-btn" data-treino="D"><i class="fas fa-heart"></i> Treino D</button>
+                <button class="sub-treino-btn" data-treino="E" style="grid-column:span 2"><i class="fas fa-star"></i> Treino E</button>
             </div>
-            <button class="relatorio-btn" onclick="mostrarRelatorio()"><i class="fas fa-chart-bar"></i> RELATÓRIO DE TREINOS</button>
+            <button class="relatorio-btn" id="btnRelatorio"><i class="fas fa-chart-bar"></i> RELATÓRIO DE TREINOS</button>
             <div class="cronometro-container">
                 <div class="cronometro-display"><div class="timer" id="cronometroDisplay">00:00</div><div class="label">CRONÔMETRO</div></div>
                 <div class="cronometro-botoes">
-                    <button class="crono-btn crono-start" onclick="startCronometro()"><i class="fas fa-play"></i> Iniciar</button>
-                    <button class="crono-btn crono-pause" onclick="pauseCronometro()"><i class="fas fa-pause"></i> Pausar</button>
-                    <button class="crono-btn crono-reset" onclick="resetCronometro()"><i class="fas fa-redo-alt"></i> Reset</button>
-                    <button class="crono-btn crono-save" onclick="salvarTempoTreino()"><i class="fas fa-save"></i> Salvar</button>
+                    <button class="crono-btn crono-start" id="btnCronoStart"><i class="fas fa-play"></i> Iniciar</button>
+                    <button class="crono-btn crono-pause" id="btnCronoPause"><i class="fas fa-pause"></i> Pausar</button>
+                    <button class="crono-btn crono-reset" id="btnCronoReset"><i class="fas fa-redo-alt"></i> Reset</button>
+                    <button class="crono-btn crono-save" id="btnCronoSave"><i class="fas fa-save"></i> Salvar</button>
                 </div>
             </div>
             <div class="copyright">© 2026 Aurora Fitness • Matheus Pacifico | (79) 99645-8399</div>
@@ -277,14 +277,16 @@
     </div>
 
     <!-- MODAIS ALUNO -->
-    <div class="modal" id="treinoModal"><div class="modal-content"><div class="modal-header"><h3 id="treinoModalTitle">Treino</h3><i class="fas fa-times close-modal" onclick="closeTreinoModal()"></i></div><div id="treinoModalContent"></div><button class="btn-primary" onclick="closeTreinoModal()" style="width:100%;margin-top:16px">Fechar</button></div></div>
-    <div class="modal" id="relatorioModal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-chart-bar"></i> Relatório</h3><i class="fas fa-times close-modal" onclick="closeRelatorioModal()"></i></div><div id="relatorioContent"></div><button class="btn-primary" onclick="closeRelatorioModal()" style="width:100%;margin-top:16px">Fechar</button></div></div>
+    <div class="modal" id="treinoModal"><div class="modal-content"><div class="modal-header"><h3 id="treinoModalTitle">Treino</h3><i class="fas fa-times close-modal" id="closeTreinoModal"></i></div><div id="treinoModalContent"></div><button class="btn-primary" id="btnCloseTreinoModal" style="width:100%;margin-top:16px">Fechar</button></div></div>
+    <div class="modal" id="relatorioModal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-chart-bar"></i> Relatório</h3><i class="fas fa-times close-modal" id="closeRelatorioModal"></i></div><div id="relatorioContent"></div><button class="btn-primary" id="btnCloseRelatorioModal" style="width:100%;margin-top:16px">Fechar</button></div></div>
 
     <script>
         // CONFIGURAÇÃO SUPABASE
         const SUPABASE_URL = 'https://hupkzyvbvfpzeihhmgxg.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1cGt6eXZidmZwemVpaGhtZ3hnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4MjU2NzksImV4cCI6MjA5MjQwMTY3OX0.YevRjHVLFOUFIGcoj0k0dGcFcpUquhW9LTFdsbuRWmE';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        // INICIALIZAR SUPABASE (APENAS UMA VEZ)
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         
         const TRAINER = { id: 'trainer', password: '123456' };
         let clients = [];
@@ -295,66 +297,398 @@
         let currentClient = null;
         let cronometroInterval, cronometroSeconds = 0, cronometroRunning = false;
 
-        // CARREGAR DADOS DO SUPABASE
-        async function loadClients() { const { data } = await supabase.from('clients').select('*').order('created_at', { ascending: false }); clients = data || []; return clients; }
-        async function loadSheets() { const { data } = await supabase.from('sheets').select('*').order('created_at', { ascending: false }); sheets = data || []; return sheets; }
-        async function loadBackups() { const { data } = await supabase.from('backups').select('*').order('created_at', { ascending: false }); backups = data || []; return backups; }
-        async function loadTreinosTempo() { const { data } = await supabase.from('treinos_tempo').select('*'); treinosTempo = {}; if (data) { data.forEach(t => { if (!treinosTempo[t.client_id]) treinosTempo[t.client_id] = []; treinosTempo[t.client_id].push(t); }); } }
+        // CARREGAR DADOS
+        async function loadClients() { const { data } = await supabaseClient.from('clients').select('*').order('created_at', { ascending: false }); clients = data || []; return clients; }
+        async function loadSheets() { const { data } = await supabaseClient.from('sheets').select('*').order('created_at', { ascending: false }); sheets = data || []; return sheets; }
+        async function loadBackups() { const { data } = await supabaseClient.from('backups').select('*').order('created_at', { ascending: false }); backups = data || []; return backups; }
+        async function loadTreinosTempo() { const { data } = await supabaseClient.from('treinos_tempo').select('*'); treinosTempo = {}; if (data) { data.forEach(t => { if (!treinosTempo[t.client_id]) treinosTempo[t.client_id] = []; treinosTempo[t.client_id].push(t); }); } }
 
         async function loadAllData() {
-            document.getElementById('instructorContent')?.insertAdjacentHTML('beforeend', '<div class="loading"><i class="fas fa-spinner"></i> Carregando...</div>');
             await loadClients();
             await loadSheets();
             await loadBackups();
             await loadTreinosTempo();
-            document.querySelector('.loading')?.remove();
         }
 
-        function showInstructorLogin() { document.getElementById('choiceScreen').classList.add('hidden'); document.getElementById('instructorLoginScreen').classList.remove('hidden'); }
-        function showClientLogin() { document.getElementById('choiceScreen').classList.add('hidden'); document.getElementById('clientLoginScreen').classList.remove('hidden'); }
-        function backToChoice() { document.getElementById('choiceScreen').classList.remove('hidden'); document.getElementById('instructorLoginScreen').classList.add('hidden'); document.getElementById('clientLoginScreen').classList.add('hidden'); }
+        // EVENT LISTENERS (SUBSTITUINDO ONCLICK)
+        document.addEventListener('DOMContentLoaded', function() {
+            // TELA DE ESCOLHA
+            document.getElementById('btnInstructor').addEventListener('click', function() {
+                document.getElementById('choiceScreen').classList.add('hidden');
+                document.getElementById('instructorLoginScreen').classList.remove('hidden');
+            });
+            document.getElementById('btnClient').addEventListener('click', function() {
+                document.getElementById('choiceScreen').classList.add('hidden');
+                document.getElementById('clientLoginScreen').classList.remove('hidden');
+            });
+            
+            // BOTÕES VOLTAR
+            document.getElementById('btnBackInstructor').addEventListener('click', function() {
+                document.getElementById('choiceScreen').classList.remove('hidden');
+                document.getElementById('instructorLoginScreen').classList.add('hidden');
+            });
+            document.getElementById('btnBackClient').addEventListener('click', function() {
+                document.getElementById('choiceScreen').classList.remove('hidden');
+                document.getElementById('clientLoginScreen').classList.add('hidden');
+            });
+            
+            // LOGIN INSTRUTOR
+            document.getElementById('instructorLoginForm').addEventListener('submit', async (e) => { 
+                e.preventDefault(); 
+                if (document.getElementById('instructorId').value === TRAINER.id && document.getElementById('instructorPassword').value === TRAINER.password) { 
+                    document.getElementById('instructorLoginScreen').classList.add('hidden'); 
+                    document.getElementById('instructorPanel').classList.add('active'); 
+                    await loadAllData(); 
+                    renderAll(); 
+                } else { 
+                    document.getElementById('instructorLoginError').style.display = 'block'; 
+                } 
+            });
+            
+            // LOGOUT INSTRUTOR
+            document.getElementById('btnLogoutInstructor').addEventListener('click', function() {
+                document.getElementById('instructorPanel').classList.remove('active');
+                document.getElementById('choiceScreen').classList.remove('hidden');
+            });
+            
+            // TABS INSTRUTOR
+            document.querySelectorAll('.instructor-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.instructor-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    document.querySelectorAll('.instructor-page').forEach(p => p.classList.remove('active'));
+                    document.getElementById(this.dataset.tab).classList.add('active');
+                    if (this.dataset.tab === 'sheets') renderSheetsByClient();
+                    if (this.dataset.tab === 'backup') renderBackupHistory();
+                });
+            });
+            
+            // NOVO CLIENTE
+            document.getElementById('btnNewClient').addEventListener('click', function() { openClientModal(); });
+            document.getElementById('closeClientModal').addEventListener('click', function() { document.getElementById('clientModal').classList.remove('active'); });
+            
+            // NOVA FICHA
+            document.getElementById('btnNewSheet').addEventListener('click', function() { openSheetModal(); });
+            document.getElementById('closeSheetModal').addEventListener('click', function() { document.getElementById('sheetModal').classList.remove('active'); });
+            document.getElementById('btnAddExercise').addEventListener('click', function() { addExercise(); });
+            
+            // BACKUP
+            document.getElementById('btnExportBackup').addEventListener('click', function() { exportBackup(); });
+            document.getElementById('btnImportBackup').addEventListener('click', function() { importBackup(); });
+            
+            // LOGIN CLIENTE
+            document.getElementById('clientLoginForm').addEventListener('submit', async (e) => { 
+                e.preventDefault(); 
+                const clientId = document.getElementById('clientId').value.trim(); 
+                const pwd = document.getElementById('clientPassword').value; 
+                await loadAllData(); 
+                const client = clients.find(c => c.client_id === clientId && c.password === pwd); 
+                if (client) { 
+                    currentClient = client; 
+                    document.getElementById('clientLoginScreen').classList.add('hidden'); 
+                    document.getElementById('clientPanel').classList.add('active'); 
+                    document.getElementById('clientNameDisplay').textContent = client.name.split(' ')[0]; 
+                    verificarTreinos(); 
+                } else { 
+                    document.getElementById('clientLoginError').style.display = 'block'; 
+                } 
+            });
+            
+            // LOGOUT CLIENTE
+            document.getElementById('btnLogoutClient').addEventListener('click', function() {
+                currentClient = null;
+                document.getElementById('clientPanel').classList.remove('active');
+                document.getElementById('choiceScreen').classList.remove('hidden');
+            });
+            
+            // MEUS TREINOS
+            document.getElementById('btnMeusTreinos').addEventListener('click', function() {
+                const grid = document.getElementById('subTreinosGrid');
+                grid.style.display = grid.style.display === 'none' ? 'grid' : 'none';
+            });
+            
+            // SUB-TREINOS
+            document.querySelectorAll('.sub-treino-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    mostrarTreino(this.dataset.treino);
+                });
+            });
+            
+            // RELATÓRIO
+            document.getElementById('btnRelatorio').addEventListener('click', function() { mostrarRelatorio(); });
+            document.getElementById('closeRelatorioModal').addEventListener('click', function() { document.getElementById('relatorioModal').classList.remove('active'); });
+            document.getElementById('btnCloseRelatorioModal').addEventListener('click', function() { document.getElementById('relatorioModal').classList.remove('active'); });
+            
+            // MODAL TREINO
+            document.getElementById('closeTreinoModal').addEventListener('click', function() { document.getElementById('treinoModal').classList.remove('active'); });
+            document.getElementById('btnCloseTreinoModal').addEventListener('click', function() { document.getElementById('treinoModal').classList.remove('active'); });
+            
+            // CRONOMETRO
+            document.getElementById('btnCronoStart').addEventListener('click', function() { startCronometro(); });
+            document.getElementById('btnCronoPause').addEventListener('click', function() { pauseCronometro(); });
+            document.getElementById('btnCronoReset').addEventListener('click', function() { resetCronometro(); });
+            document.getElementById('btnCronoSave').addEventListener('click', function() { salvarTempoTreino(); });
+            
+            // FORM CLIENTE
+            document.getElementById('clientForm').addEventListener('submit', async (e) => { 
+                e.preventDefault(); 
+                const id = document.getElementById('clientId').value || crypto.randomUUID(); 
+                const client = { 
+                    id, 
+                    name: document.getElementById('clientName').value, 
+                    client_id: document.getElementById('clientIdField').value, 
+                    password: document.getElementById('clientPasswordField').value, 
+                    phone: document.getElementById('clientPhone').value, 
+                    status: 'Ativo' 
+                }; 
+                await supabaseClient.from('clients').upsert(client); 
+                await loadClients(); 
+                document.getElementById('clientModal').classList.remove('active'); 
+                renderClients(); 
+                updateStats(); 
+            });
+            
+            // FORM FICHA
+            document.getElementById('sheetForm').addEventListener('submit', async (e) => { 
+                e.preventDefault(); 
+                const id = document.getElementById('sheetId').value || crypto.randomUUID(); 
+                const clientId = document.getElementById('sheetClient').value; 
+                const client = clients.find(c => c.id == clientId); 
+                const sheet = { 
+                    id, 
+                    client_id: client.client_id, 
+                    client_name: client.name, 
+                    name: document.getElementById('sheetName').value, 
+                    notes: document.getElementById('sheetNotes').value, 
+                    exercises: tempExercises 
+                }; 
+                await supabaseClient.from('sheets').upsert(sheet); 
+                await loadSheets(); 
+                document.getElementById('sheetModal').classList.remove('active'); 
+                updateStats(); 
+                if (document.getElementById('sheets').classList.contains('active')) renderSheetsByClient(); 
+            });
+        });
 
-        // INSTRUTOR
-        document.getElementById('instructorLoginForm').addEventListener('submit', async (e) => { e.preventDefault(); if (document.getElementById('instructorId').value === TRAINER.id && document.getElementById('instructorPassword').value === TRAINER.password) { document.getElementById('instructorLoginScreen').classList.add('hidden'); document.getElementById('instructorPanel').classList.add('active'); await loadAllData(); renderAll(); } else { document.getElementById('instructorLoginError').style.display = 'block'; } });
-        function logoutInstructor() { document.getElementById('instructorPanel').classList.remove('active'); document.getElementById('choiceScreen').classList.remove('hidden'); }
+        // FUNÇÕES
+        function openClientModal(id = null) { 
+            if (id) { 
+                const c = clients.find(x => x.id == id); 
+                document.getElementById('clientId').value = c.id; 
+                document.getElementById('clientName').value = c.name; 
+                document.getElementById('clientIdField').value = c.client_id; 
+                document.getElementById('clientPasswordField').value = c.password; 
+                document.getElementById('clientPhone').value = c.phone || ''; 
+            } else { 
+                document.getElementById('clientForm').reset(); 
+                document.getElementById('clientId').value = ''; 
+                document.getElementById('clientPasswordField').value = Math.random().toString(36).slice(-6); 
+            } 
+            document.getElementById('clientModal').classList.add('active'); 
+        }
         
-        function switchInstructorTab(tab) { document.querySelectorAll('.instructor-tab').forEach(t => t.classList.remove('active')); event.target.classList.add('active'); document.querySelectorAll('.instructor-page').forEach(p => p.classList.remove('active')); document.getElementById(tab).classList.add('active'); if (tab === 'sheets') renderSheetsByClient(); if (tab === 'backup') renderBackupHistory(); }
+        async function deleteClient(id) { 
+            if (confirm('Excluir?')) { 
+                await supabaseClient.from('clients').delete().eq('id', id); 
+                await loadClients(); 
+                await loadSheets(); 
+                renderClients(); 
+                updateStats(); 
+            } 
+        }
+        
+        function renderClients() { 
+            const c = document.getElementById('clientsList'); 
+            if (!clients.length) { c.innerHTML = '<div class="empty-state">Nenhum cliente</div>'; return; } 
+            c.innerHTML = clients.map(c => `<div class="mobile-table-row" style="grid-template-columns:1.5fr 1.5fr 60px"><div>${c.name}</div><div>${c.client_id}</div><div><i class="fas fa-edit action-icon" onclick="openClientModal('${c.id}')"></i><i class="fas fa-trash-alt action-icon" onclick="deleteClient('${c.id}')" style="color:#ef4444"></i></div></div>`).join(''); 
+            document.getElementById('recentClientsList').innerHTML = clients.slice(0, 3).map(c => `<div class="mobile-table-row" style="grid-template-columns:1.5fr 1fr"><div>${c.name}</div><div>${c.client_id}</div></div>`).join(''); 
+        }
 
-        function openClientModal(id = null) { if (id) { const c = clients.find(x => x.id == id); document.getElementById('clientId').value = c.id; document.getElementById('clientName').value = c.name; document.getElementById('clientIdField').value = c.client_id; document.getElementById('clientPasswordField').value = c.password; document.getElementById('clientPhone').value = c.phone || ''; } else { document.getElementById('clientForm').reset(); document.getElementById('clientId').value = ''; document.getElementById('clientPasswordField').value = Math.random().toString(36).slice(-6); } document.getElementById('clientModal').classList.add('active'); }
-        function closeClientModal() { document.getElementById('clientModal').classList.remove('active'); }
-        document.getElementById('clientForm').addEventListener('submit', async (e) => { e.preventDefault(); const id = document.getElementById('clientId').value || crypto.randomUUID(); const client = { id, name: document.getElementById('clientName').value, client_id: document.getElementById('clientIdField').value, password: document.getElementById('clientPasswordField').value, phone: document.getElementById('clientPhone').value, status: 'Ativo' }; await supabase.from('clients').upsert(client); await loadClients(); closeClientModal(); renderClients(); updateStats(); });
-        async function deleteClient(id) { if (confirm('Excluir?')) { await supabase.from('clients').delete().eq('id', id); await loadClients(); await loadSheets(); renderClients(); updateStats(); } }
-        function renderClients() { const c = document.getElementById('clientsList'); if (!clients.length) { c.innerHTML = '<div class="empty-state">Nenhum cliente</div>'; return; } c.innerHTML = clients.map(c => `<div class="mobile-table-row" style="grid-template-columns:1.5fr 1.5fr 60px"><div>${c.name}</div><div>${c.client_id}</div><div><i class="fas fa-edit action-icon" onclick="openClientModal('${c.id}')"></i><i class="fas fa-trash-alt action-icon" onclick="deleteClient('${c.id}')" style="color:#ef4444"></i></div></div>`).join(''); document.getElementById('recentClientsList').innerHTML = clients.slice(0, 3).map(c => `<div class="mobile-table-row" style="grid-template-columns:1.5fr 1fr"><div>${c.name}</div><div>${c.client_id}</div></div>`).join(''); }
-
-        function openSheetModal(id = null) { const select = document.getElementById('sheetClient'); select.innerHTML = clients.map(c => `<option value="${c.id}">${c.name}</option>`).join(''); tempExercises = []; if (id) { const s = sheets.find(x => x.id == id); document.getElementById('sheetId').value = s.id; document.getElementById('sheetClient').value = s.client_id; document.getElementById('sheetName').value = s.name; document.getElementById('sheetNotes').value = s.notes || ''; tempExercises = [...s.exercises]; } else { document.getElementById('sheetForm').reset(); document.getElementById('sheetId').value = ''; } document.getElementById('sheetModal').classList.add('active'); }
-        function closeSheetModal() { document.getElementById('sheetModal').classList.remove('active'); }
+        function openSheetModal(id = null) { 
+            const select = document.getElementById('sheetClient'); 
+            select.innerHTML = clients.map(c => `<option value="${c.id}">${c.name}</option>`).join(''); 
+            tempExercises = []; 
+            if (id) { 
+                const s = sheets.find(x => x.id == id); 
+                document.getElementById('sheetId').value = s.id; 
+                document.getElementById('sheetClient').value = clients.find(c => c.client_id === s.client_id)?.id || ''; 
+                document.getElementById('sheetName').value = s.name; 
+                document.getElementById('sheetNotes').value = s.notes || ''; 
+                tempExercises = [...s.exercises]; 
+            } else { 
+                document.getElementById('sheetForm').reset(); 
+                document.getElementById('sheetId').value = ''; 
+            } 
+            document.getElementById('sheetModal').classList.add('active'); 
+        }
+        
         function addExercise() { tempExercises.push({ name: '', series: '3', reps: '12', load: '', notes: '' }); }
-        document.getElementById('sheetForm').addEventListener('submit', async (e) => { e.preventDefault(); const id = document.getElementById('sheetId').value || crypto.randomUUID(); const clientId = document.getElementById('sheetClient').value; const client = clients.find(c => c.id == clientId); const sheet = { id, client_id: client.client_id, client_name: client.name, name: document.getElementById('sheetName').value, notes: document.getElementById('sheetNotes').value, exercises: tempExercises }; await supabase.from('sheets').upsert(sheet); await loadSheets(); closeSheetModal(); updateStats(); if (document.getElementById('sheets').classList.contains('active')) renderSheetsByClient(); });
-        async function deleteSheet(id) { if (confirm('Excluir?')) { await supabase.from('sheets').delete().eq('id', id); await loadSheets(); updateStats(); renderSheetsByClient(); } }
-        function toggleClientSheets(clientId) { document.getElementById(`sheets-${clientId}`).classList.toggle('active'); }
-        function renderSheetsByClient() { const container = document.getElementById('sheetsByClient'); const grouped = {}; sheets.forEach(s => { if (!grouped[s.client_id]) grouped[s.client_id] = { client: clients.find(c => c.client_id === s.client_id), sheets: [] }; if (grouped[s.client_id].client) grouped[s.client_id].sheets.push(s); }); const html = Object.values(grouped).filter(g => g.client).map(g => `<div class="client-group"><div class="client-header" onclick="toggleClientSheets('${g.client.client_id}')"><h3><i class="fas fa-user"></i> ${g.client.name}</h3><i class="fas fa-chevron-down"></i></div><div class="client-sheets" id="sheets-${g.client.client_id}">${g.sheets.map(s => `<div class="sheet-item"><span><strong>${s.name}</strong></span><span>${new Date(s.created_at).toLocaleDateString('pt-BR')}</span><span><i class="fas fa-edit action-icon" onclick="openSheetModal('${s.id}')"></i><i class="fas fa-trash-alt action-icon" onclick="deleteSheet('${s.id}')" style="color:#ef4444"></i></span></div>`).join('')}</div></div>`).join(''); container.innerHTML = html || '<div class="empty-state">Nenhuma ficha</div>'; }
-
-        async function exportBackup() { const backup = { clients, sheets, date: new Date().toISOString() }; const data = JSON.stringify(backup); const size = Math.round(data.length / 1024); await supabase.from('backups').insert({ date: new Date().toLocaleString('pt-BR'), type: 'Manual', size: size + ' KB', data: backup }); await loadBackups(); const blob = new Blob([data], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `backup_${new Date().toISOString().slice(0,10)}.json`; a.click(); renderBackupHistory(); updateStats(); }
-        function importBackup() { const input = document.createElement('input'); input.type = 'file'; input.accept = '.json'; input.onchange = async (e) => { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = async (ev) => { try { const data = JSON.parse(ev.target.result); if (data.clients) { for (const c of data.clients) await supabase.from('clients').upsert(c); for (const s of data.sheets) await supabase.from('sheets').upsert(s); await loadAllData(); renderClients(); updateStats(); renderBackupHistory(); alert('✅ Backup restaurado!'); } } catch(err) { alert('❌ Arquivo inválido'); } }; reader.readAsText(file); }; input.click(); }
-        function renderBackupHistory() { const c = document.getElementById('backupHistoryList'); if (!backups.length) { c.innerHTML = '<div class="empty-state">Nenhum backup</div>'; return; } c.innerHTML = backups.map(b => `<div class="mobile-table-row" style="grid-template-columns:1.5fr 1fr"><div>${b.date}</div><div>${b.type}</div></div>`).join(''); }
-        function updateStats() { document.getElementById('totalClients').textContent = clients.length; document.getElementById('totalSheets').textContent = sheets.length; }
-        function renderAll() { renderClients(); renderBackupHistory(); updateStats(); }
-
-        // CLIENTE
-        document.getElementById('clientLoginForm').addEventListener('submit', async (e) => { e.preventDefault(); const clientId = document.getElementById('clientId').value.trim(); const pwd = document.getElementById('clientPassword').value; await loadClients(); await loadSheets(); await loadTreinosTempo(); const client = clients.find(c => c.client_id === clientId && c.password === pwd); if (client) { currentClient = client; document.getElementById('clientLoginScreen').classList.add('hidden'); document.getElementById('clientPanel').classList.add('active'); document.getElementById('clientNameDisplay').textContent = client.name.split(' ')[0]; verificarTreinos(); } else { document.getElementById('clientLoginError').style.display = 'block'; } });
-        function logoutClient() { currentClient = null; document.getElementById('clientPanel').classList.remove('active'); document.getElementById('choiceScreen').classList.remove('hidden'); }
-        function toggleSubTreinos() { const grid = document.getElementById('subTreinosGrid'); grid.style.display = grid.style.display === 'none' ? 'grid' : 'none'; }
-        function verificarTreinos() { const clientSheets = sheets.filter(s => s.client_id === currentClient.client_id); const btns = document.querySelectorAll('.sub-treino-btn'); btns.forEach((btn, i) => { const treino = ['A','B','C','D','E'][i]; const temTreino = clientSheets.some(s => s.name.toLowerCase().includes(`treino ${treino.toLowerCase()}`)); if (temTreino) { btn.classList.add('has-treino'); btn.style.background = '#1a1a1a'; btn.style.borderColor = '#ff6b35'; } }); }
-        function mostrarTreino(treino) { const clientSheets = sheets.filter(s => s.client_id === currentClient.client_id); const treinoSheet = clientSheets.find(s => s.name.toLowerCase().includes(`treino ${treino.toLowerCase()}`)); if (!treinoSheet) { alert(`Nenhum Treino ${treino} encontrado!`); return; } document.getElementById('treinoModalTitle').textContent = `Treino ${treino}`; let html = treinoSheet.notes ? `<p style="color:#ddd;margin-bottom:12px;padding:8px;background:#2a2a2a;border-radius:6px">📝 ${treinoSheet.notes}</p>` : ''; treinoSheet.exercises.forEach((ex, i) => { html += `<div style="background:#222;border-radius:8px;padding:10px;margin-bottom:8px"><div style="color:#ff8c42;font-weight:600;margin-bottom:8px">${i+1}. ${ex.name}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div style="background:#2a2a2a;padding:6px;border-radius:5px;text-align:20px"><small style="color:#aaa;font-size:0.6rem">Séries</small><br><strong style="color:#fff;font-size:0.8rem">${ex.series}</strong></div><div style="background:#2a2a2a;padding:6px;border-radius:5px;text-align:center"><small style="color:#aaa;font-size:0.6rem">Reps</small><br><strong style="color:#fff;font-size:0.8rem">${ex.reps}</strong></div><div style="background:#2a2a2a;padding:6px;border-radius:5px;text-align:center"><small style="color:#aaa;font-size:0.6rem">Carga</small><br><strong style="color:#fff;font-size:0.8rem">${ex.load || '-'}</strong></div><div style="background:#2a2a2a;padding:6px;border-radius:5px;text-align:center"><small style="color:#aaa;font-size:0.6rem">Obs</small><br><strong style="color:#fff;font-size:0.8rem">${ex.notes || '-'}</strong></div></div></div>`; }); document.getElementById('treinoModalContent').innerHTML = html; document.getElementById('treinoModal').classList.add('active'); }
-        function closeTreinoModal() { document.getElementById('treinoModal').classList.remove('active'); }
         
-        function updateCronometroDisplay() { const mins = Math.floor(cronometroSeconds / 60); const secs = cronometroSeconds % 60; document.getElementById('cronometroDisplay').textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`; }
-        function startCronometro() { if (!cronometroRunning) { cronometroRunning = true; cronometroInterval = setInterval(() => { cronometroSeconds++; updateCronometroDisplay(); }, 1000); } }
-        function pauseCronometro() { if (cronometroRunning) { cronometroRunning = false; clearInterval(cronometroInterval); } }
-        function resetCronometro() { pauseCronometro(); cronometroSeconds = 0; updateCronometroDisplay(); }
-        async function salvarTempoTreino() { if (cronometroSeconds === 0) { alert('Inicie o cronômetro!'); return; } const tempoFormatado = `${Math.floor(cronometroSeconds/60)}:${String(cronometroSeconds%60).padStart(2,'0')}`; await supabase.from('treinos_tempo').insert({ client_id: currentClient.client_id, data: new Date().toLocaleDateString('pt-BR'), hora: new Date().toLocaleTimeString('pt-BR'), tempo_segundos: cronometroSeconds, tempo_formatado: tempoFormatado }); await loadTreinosTempo(); resetCronometro(); alert(`✅ Treino de ${tempoFormatado} salvo!`); }
-        function mostrarRelatorio() { const tempos = treinosTempo[currentClient.client_id] || []; let html = ''; if (tempos.length === 0) { html = '<p style="color:#aaa;text-align:center;padding:20px">Nenhum treino registrado</p>'; } else { html = `<div style="margin-bottom:12px;color:#ff6b35">Total: ${tempos.length} treinos</div>`; tempos.slice(-10).reverse().forEach(t => { html += `<div style="background:#222;padding:8px;border-radius:6px;margin-bottom:5px;display:flex;justify-content:space-between"><span><i class="fas fa-calendar"></i> ${t.data}</span><span style="color:#ff6b35"><i class="fas fa-stopwatch"></i> ${t.tempo_formatado}</span></div>`; }); } document.getElementById('relatorioContent').innerHTML = html; document.getElementById('relatorioModal').classList.add('active'); }
-        function closeRelatorioModal() { document.getElementById('relatorioModal').classList.remove('active'); }
+        async function deleteSheet(id) { 
+            if (confirm('Excluir?')) { 
+                await supabaseClient.from('sheets').delete().eq('id', id); 
+                await loadSheets(); 
+                updateStats(); 
+                renderSheetsByClient(); 
+            } 
+        }
+        
+        function toggleClientSheets(clientId) { document.getElementById(`sheets-${clientId}`).classList.toggle('active'); }
+        
+        function renderSheetsByClient() { 
+            const container = document.getElementById('sheetsByClient'); 
+            const grouped = {}; 
+            sheets.forEach(s => { 
+                if (!grouped[s.client_id]) grouped[s.client_id] = { client: clients.find(c => c.client_id === s.client_id), sheets: [] }; 
+                if (grouped[s.client_id].client) grouped[s.client_id].sheets.push(s); 
+            }); 
+            const html = Object.values(grouped).filter(g => g.client).map(g => `<div class="client-group"><div class="client-header" onclick="toggleClientSheets('${g.client.client_id}')"><h3><i class="fas fa-user"></i> ${g.client.name}</h3><i class="fas fa-chevron-down"></i></div><div class="client-sheets" id="sheets-${g.client.client_id}">${g.sheets.map(s => `<div class="sheet-item"><span><strong>${s.name}</strong></span><span>${new Date(s.created_at).toLocaleDateString('pt-BR')}</span><span><i class="fas fa-edit action-icon" onclick="openSheetModal('${s.id}')"></i><i class="fas fa-trash-alt action-icon" onclick="deleteSheet('${s.id}')" style="color:#ef4444"></i></span></div>`).join('')}</div></div>`).join(''); 
+            container.innerHTML = html || '<div class="empty-state">Nenhuma ficha</div>'; 
+        }
+
+        async function exportBackup() { 
+            const backup = { clients, sheets, date: new Date().toISOString() }; 
+            const data = JSON.stringify(backup); 
+            const size = Math.round(data.length / 1024); 
+            await supabaseClient.from('backups').insert({ date: new Date().toLocaleString('pt-BR'), type: 'Manual', size: size + ' KB', data: backup }); 
+            await loadBackups(); 
+            const blob = new Blob([data], { type: 'application/json' }); 
+            const a = document.createElement('a'); 
+            a.href = URL.createObjectURL(blob); 
+            a.download = `backup_${new Date().toISOString().slice(0,10)}.json`; 
+            a.click(); 
+            renderBackupHistory(); 
+            updateStats(); 
+        }
+        
+        function importBackup() { 
+            const input = document.createElement('input'); 
+            input.type = 'file'; 
+            input.accept = '.json'; 
+            input.onchange = async (e) => { 
+                const file = e.target.files[0]; 
+                if (!file) return; 
+                const reader = new FileReader(); 
+                reader.onload = async (ev) => { 
+                    try { 
+                        const data = JSON.parse(ev.target.result); 
+                        if (data.clients) { 
+                            for (const c of data.clients) await supabaseClient.from('clients').upsert(c); 
+                            for (const s of data.sheets) await supabaseClient.from('sheets').upsert(s); 
+                            await loadAllData(); 
+                            renderClients(); 
+                            updateStats(); 
+                            renderBackupHistory(); 
+                            alert('✅ Backup restaurado!'); 
+                        } 
+                    } catch(err) { 
+                        alert('❌ Arquivo inválido'); 
+                    } 
+                }; 
+                reader.readAsText(file); 
+            }; 
+            input.click(); 
+        }
+        
+        function renderBackupHistory() { 
+            const c = document.getElementById('backupHistoryList'); 
+            if (!backups.length) { c.innerHTML = '<div class="empty-state">Nenhum backup</div>'; return; } 
+            c.innerHTML = backups.map(b => `<div class="mobile-table-row" style="grid-template-columns:1.5fr 1fr"><div>${b.date}</div><div>${b.type}</div></div>`).join(''); 
+        }
+        
+        function updateStats() { 
+            document.getElementById('totalClients').textContent = clients.length; 
+            document.getElementById('totalSheets').textContent = sheets.length; 
+        }
+        
+        function renderAll() { 
+            renderClients(); 
+            renderBackupHistory(); 
+            updateStats(); 
+        }
+
+        function verificarTreinos() { 
+            const clientSheets = sheets.filter(s => s.client_id === currentClient.client_id); 
+            const btns = document.querySelectorAll('.sub-treino-btn'); 
+            btns.forEach((btn, i) => { 
+                const treino = ['A','B','C','D','E'][i]; 
+                const temTreino = clientSheets.some(s => s.name.toLowerCase().includes(`treino ${treino.toLowerCase()}`)); 
+                if (temTreino) { 
+                    btn.classList.add('has-treino'); 
+                    btn.style.background = '#1a1a1a'; 
+                    btn.style.borderColor = '#ff6b35'; 
+                } 
+            }); 
+        }
+        
+        function mostrarTreino(treino) { 
+            const clientSheets = sheets.filter(s => s.client_id === currentClient.client_id); 
+            const treinoSheet = clientSheets.find(s => s.name.toLowerCase().includes(`treino ${treino.toLowerCase()}`)); 
+            if (!treinoSheet) { alert(`Nenhum Treino ${treino} encontrado!`); return; } 
+            document.getElementById('treinoModalTitle').textContent = `Treino ${treino}`; 
+            let html = treinoSheet.notes ? `<p style="color:#ddd;margin-bottom:12px;padding:8px;background:#2a2a2a;border-radius:6px">📝 ${treinoSheet.notes}</p>` : ''; 
+            treinoSheet.exercises.forEach((ex, i) => { 
+                html += `<div style="background:#222;border-radius:8px;padding:10px;margin-bottom:8px"><div style="color:#ff8c42;font-weight:600;margin-bottom:8px">${i+1}. ${ex.name}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div style="background:#2a2a2a;padding:6px;border-radius:5px;text-align:center"><small style="color:#aaa;font-size:0.6rem">Séries</small><br><strong style="color:#fff;font-size:0.8rem">${ex.series}</strong></div><div style="background:#2a2a2a;padding:6px;border-radius:5px;text-align:center"><small style="color:#aaa;font-size:0.6rem">Reps</small><br><strong style="color:#fff;font-size:0.8rem">${ex.reps}</strong></div><div style="background:#2a2a2a;padding:6px;border-radius:5px;text-align:center"><small style="color:#aaa;font-size:0.6rem">Carga</small><br><strong style="color:#fff;font-size:0.8rem">${ex.load || '-'}</strong></div><div style="background:#2a2a2a;padding:6px;border-radius:5px;text-align:center"><small style="color:#aaa;font-size:0.6rem">Obs</small><br><strong style="color:#fff;font-size:0.8rem">${ex.notes || '-'}</strong></div></div></div>`; 
+            }); 
+            document.getElementById('treinoModalContent').innerHTML = html; 
+            document.getElementById('treinoModal').classList.add('active'); 
+        }
+        
+        function updateCronometroDisplay() { 
+            const mins = Math.floor(cronometroSeconds / 60); 
+            const secs = cronometroSeconds % 60; 
+            document.getElementById('cronometroDisplay').textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`; 
+        }
+        
+        function startCronometro() { 
+            if (!cronometroRunning) { 
+                cronometroRunning = true; 
+                cronometroInterval = setInterval(() => { cronometroSeconds++; updateCronometroDisplay(); }, 1000); 
+            } 
+        }
+        
+        function pauseCronometro() { 
+            if (cronometroRunning) { 
+                cronometroRunning = false; 
+                clearInterval(cronometroInterval); 
+            } 
+        }
+        
+        function resetCronometro() { 
+            pauseCronometro(); 
+            cronometroSeconds = 0; 
+            updateCronometroDisplay(); 
+        }
+        
+        async function salvarTempoTreino() { 
+            if (cronometroSeconds === 0) { alert('Inicie o cronômetro!'); return; } 
+            const tempoFormatado = `${Math.floor(cronometroSeconds/60)}:${String(cronometroSeconds%60).padStart(2,'0')}`; 
+            await supabaseClient.from('treinos_tempo').insert({ 
+                client_id: currentClient.client_id, 
+                data: new Date().toLocaleDateString('pt-BR'), 
+                hora: new Date().toLocaleTimeString('pt-BR'), 
+                tempo_segundos: cronometroSeconds, 
+                tempo_formatado: tempoFormatado 
+            }); 
+            await loadTreinosTempo(); 
+            resetCronometro(); 
+            alert(`✅ Treino de ${tempoFormatado} salvo!`); 
+        }
+        
+        function mostrarRelatorio() { 
+            const tempos = treinosTempo[currentClient.client_id] || []; 
+            let html = ''; 
+            if (tempos.length === 0) { 
+                html = '<p style="color:#aaa;text-align:center;padding:20px">Nenhum treino registrado</p>'; 
+            } else { 
+                html = `<div style="margin-bottom:12px;color:#ff6b35">Total: ${tempos.length} treinos</div>`; 
+                tempos.slice(-10).reverse().forEach(t => { 
+                    html += `<div style="background:#222;padding:8px;border-radius:6px;margin-bottom:5px;display:flex;justify-content:space-between"><span><i class="fas fa-calendar"></i> ${t.data}</span><span style="color:#ff6b35"><i class="fas fa-stopwatch"></i> ${t.tempo_formatado}</span></div>`; 
+                }); 
+            } 
+            document.getElementById('relatorioContent').innerHTML = html; 
+            document.getElementById('relatorioModal').classList.add('active'); 
+        }
     </script>
 </body>
 </html>
