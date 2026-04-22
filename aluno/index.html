@@ -50,14 +50,13 @@
         .page{display:none;flex:1;flex-direction:column;overflow:hidden}
         .page.active{display:flex}
         
-        .sheet-grid{display:grid;gap:10px;overflow-y:auto;padding-right:2px}
-        .sheet-grid::-webkit-scrollbar{width:3px}
-        .sheet-grid::-webkit-scrollbar-thumb{background:#ff6b35;border-radius:10px}
-        .sheet-card{background:#111111;border:1px solid #1a1a1a;border-radius:14px;padding:16px;cursor:pointer}
-        .sheet-card:active{background:#161616}
-        .sheet-card h3{color:#ffffff;font-size:0.95rem;margin-bottom:4px}
-        .sheet-card p{color:#ff6b35;font-size:0.8rem}
-        .sheet-card small{color:#888888;font-size:0.7rem}
+        .workout-buttons{display:flex;flex-direction:column;gap:10px;overflow-y:auto;padding-right:2px}
+        .workout-buttons::-webkit-scrollbar{width:3px}
+        .workout-buttons::-webkit-scrollbar-thumb{background:#ff6b35;border-radius:10px}
+        .workout-btn{background:#111111;border:1px solid #ff6b35;border-radius:14px;padding:18px;color:#ffffff;font-size:1rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:all 0.2s}
+        .workout-btn i{color:#ff6b35;font-size:1.2rem}
+        .workout-btn:hover{background:#1a1a1a}
+        .workout-btn small{display:block;color:#888888;font-size:0.75rem;font-weight:400;margin-top:4px}
         
         .backup-actions{display:grid;gap:14px}
         .backup-card{background:#111111;border:1px solid #1a1a1a;border-radius:14px;padding:22px;text-align:center}
@@ -84,8 +83,6 @@
         
         .empty-state{text-align:center;padding:40px 20px;color:#888888}
         .empty-state i{font-size:3.5rem;color:#ff6b35 !important;margin-bottom:12px;opacity:0.3}
-        .empty-state p{font-size:0.95rem;margin-bottom:4px}
-        .empty-state small{font-size:0.75rem}
     </style>
 </head>
 <body>
@@ -123,7 +120,7 @@
         </div>
 
         <div class="content">
-            <div class="page active" id="tab-treinos"><div class="sheet-grid" id="clientSheetsList"></div></div>
+            <div class="page active" id="tab-treinos"><div class="workout-buttons" id="clientSheetsList"></div></div>
             <div class="page" id="tab-backup">
                 <div class="backup-actions">
                     <div class="backup-card"><i class="fas fa-download"></i><h3>Exportar Backup</h3><p>Salve todas as suas fichas</p><button class="btn-primary" onclick="exportClientBackup()">Exportar</button></div>
@@ -164,8 +161,16 @@
         function renderSheets() {
             const clientSheets = sheets.filter(s => s.clientId === currentClient.id);
             const c = document.getElementById('clientSheetsList');
-            if (!clientSheets.length) { c.innerHTML = '<div class="empty-state"><i class="fas fa-clipboard-list"></i><p>Nenhuma ficha</p><small>Seu personal ainda não criou fichas</small></div>'; return; }
-            c.innerHTML = clientSheets.map(sheet => `<div class="sheet-card" onclick="openSheetModal('${sheet.id}')"><h3>${sheet.name}</h3><p>${sheet.exercises.length} exercícios</p><small>${sheet.createdAt}</small></div>`).join('');
+            if (!clientSheets.length) { c.innerHTML = '<div class="empty-state"><i class="fas fa-clipboard-list"></i><p>Nenhuma ficha</p></div>'; return; }
+            c.innerHTML = clientSheets.map(sheet => `
+                <div class="workout-btn" onclick="openSheetModal('${sheet.id}')">
+                    <div>
+                        <strong>${sheet.name}</strong>
+                        <small>${sheet.exercises.length} exercícios • ${sheet.createdAt}</small>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            `).join('');
         }
 
         function openSheetModal(sheetId) {
