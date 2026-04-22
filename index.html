@@ -10,7 +10,6 @@
         *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
         body{background:#0a0a0a;height:100vh;overflow:hidden}
         
-        /* TELA DE ESCOLHA */
         .choice-screen{position:fixed;top:0;left:0;width:100%;height:100vh;background:linear-gradient(145deg,#0d0d0d 0%,#1a1a1a 100%);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px}
         .choice-screen.hidden{display:none}
         .choice-box{background:#141414;border:1px solid #2a2a2a;border-radius:28px;padding:32px 24px;width:100%;max-width:360px;text-align:center}
@@ -25,7 +24,6 @@
         .choice-btn p{color:#aaaaaa;font-size:0.75rem}
         .choice-footer{text-align:center;margin-top:28px;color:#666666;font-size:0.7rem}
         
-        /* TELA DE LOGIN */
         .login-screen{position:fixed;top:0;left:0;width:100%;height:100vh;background:linear-gradient(145deg,#0d0d0d 0%,#1a1a1a 100%);display:flex;align-items:center;justify-content:center;z-index:1000;padding:16px}
         .login-screen.hidden{display:none}
         .login-box{background:#141414;border:1px solid #2a2a2a;border-radius:24px;padding:28px 20px;width:100%;max-width:340px}
@@ -44,7 +42,6 @@
         .btn-back{width:100%;padding:10px;background:transparent;border:1px solid #2a2a2a;border-radius:12px;color:#aaaaaa;cursor:pointer;margin-top:10px;font-size:0.85rem}
         .error-message{color:#ef4444;text-align:center;margin-top:10px;font-size:0.8rem;display:none}
         
-        /* PAINEL DO INSTRUTOR - MOBILE */
         .instructor-panel{display:none;height:100vh;background:#0a0a0a;overflow:hidden;flex-direction:column}
         .instructor-panel.active{display:flex}
         .instructor-header{background:#0d0d0d;padding:14px 18px;border-bottom:1px solid #1a1a1a;display:flex;align-items:center;justify-content:space-between}
@@ -88,7 +85,6 @@
         .action-icon{color:#888888;cursor:pointer;margin:0 6px;font-size:0.9rem}
         .status-badge{padding:3px 8px;border-radius:20px;font-size:0.65rem;background:rgba(16,185,129,0.15);color:#34d399}
         
-        /* PAINEL DO ALUNO - MOBILE */
         .client-panel{display:none;height:100vh;background:#0a0a0a;overflow:hidden;flex-direction:column}
         .client-panel.active{display:flex}
         .client-header{background:#0d0d0d;padding:14px 18px;border-bottom:1px solid #1a1a1a;display:flex;align-items:center;justify-content:space-between}
@@ -119,6 +115,8 @@
         .relatorio-btn i{color:#ff6b35}
         
         .logout-client-btn{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#ef4444;padding:10px;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;font-size:0.85rem}
+        
+        .logout-instructor-btn{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#ef4444;padding:8px 12px;border-radius:20px;cursor:pointer;display:flex;align-items:center;gap:4px;font-size:0.75rem;margin-left:10px}
         
         .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:2000;align-items:flex-end}
         .modal.active{display:flex}
@@ -179,7 +177,13 @@
 
     <!-- PAINEL DO INSTRUTOR MOBILE -->
     <div class="instructor-panel" id="instructorPanel">
-        <div class="instructor-header"><h1>Aurora<span>.</span></h1><div class="instructor-profile"><i class="fas fa-user-tie"></i><span>Trainer</span></div></div>
+        <div class="instructor-header">
+            <h1>Aurora<span>.</span></h1>
+            <div style="display:flex;align-items:center">
+                <div class="instructor-profile"><i class="fas fa-user-tie"></i><span>Trainer</span></div>
+                <button class="logout-instructor-btn" onclick="logoutInstructor()"><i class="fas fa-sign-out-alt"></i> Sair</button>
+            </div>
+        </div>
         <div class="instructor-tabs">
             <button class="instructor-tab active" onclick="switchInstructorTab('dashboard')"><i class="fas fa-chart-pie"></i> Dashboard</button>
             <button class="instructor-tab" onclick="switchInstructorTab('clients')"><i class="fas fa-users"></i> Clientes</button>
@@ -212,12 +216,18 @@
     </div>
 
     <!-- MODAIS INSTRUTOR -->
-    <div class="modal" id="clientModal"><div class="modal-content"><div class="modal-header"><h2 id="clientModalTitle">Novo Cliente</h2><i class="fas fa-times close-modal" onclick="closeClientModal()"></i></div><form id="clientForm"><input type="hidden" id="clientId"><div class="form-group"><label>Nome</label><input type="text" id="clientName" required></div><div class="form-group"><label>ID do Cliente</label><input type="text" id="clientIdField" required></div><div class="form-group"><label>Senha</label><input type="text" id="clientPassword" required></div><div class="form-group"><label>Telefone</label><input type="tel" id="clientPhone"></div><button type="submit" class="btn-primary" style="width:100%">Salvar</button></form></div></div>
+    <div class="modal" id="clientModal"><div class="modal-content"><div class="modal-header"><h2 id="clientModalTitle">Novo Cliente</h2><i class="fas fa-times close-modal" onclick="closeClientModal()"></i></div><form id="10_clientForm"><input type="hidden" id="clientId"><div class="form-group"><label>Nome</label><input type="text" id="clientName" required></div><div class="form-group"><label>ID do Cliente</label><input type="text" id="clientIdField" required></div><div class="form-group"><label>Senha</label><input type="text" id="clientPasswordField" required></div><div class="form-group"><label>Telefone</label><input type="tel" id="clientPhone"></div><button type="submit" class="btn-primary" style="width:100%">Salvar</button></form></div></div>
     <div class="modal" id="sheetModal"><div class="modal-content"><div class="modal-header"><h2>Nova Ficha</h2><i class="fas fa-times close-modal" onclick="closeSheetModal()"></i></div><form id="sheetForm"><input type="hidden" id="sheetId"><div class="form-group"><label>Cliente</label><select id="sheetClient" required></select></div><div class="form-group"><label>Nome da Ficha</label><input type="text" id="sheetName" required></div><div class="form-group"><label>Observações</label><input type="text" id="sheetNotes"></div><div id="exercisesList"></div><button type="button" class="btn-primary" onclick="addExercise()" style="margin:10px 0">+ Exercício</button><button type="submit" class="btn-primary" style="width:100%">Salvar</button></form></div></div>
 
     <!-- PAINEL DO ALUNO MOBILE -->
     <div class="client-panel" id="clientPanel">
-        <div class="client-header"><h1>Aurora<span style="background:linear-gradient(135deg,#ff6b35,#ff8c42);-webkit-background-clip:text;-webkit-text-fill-color:transparent">.</span></h1><div class="client-profile"><i class="fas fa-user-circle"></i><span id="clientNameDisplay">Aluno</span></div></div>
+        <div class="client-header">
+            <h1>Aurora<span style="background:linear-gradient(135deg,#ff6b35,#ff8c42);-webkit-background-clip:text;-webkit-text-fill-color:transparent">.</span></h1>
+            <div style="display:flex;align-items:center;gap:8px">
+                <div class="client-profile"><i class="fas fa-user-circle"></i><span id="clientNameDisplay">Aluno</span></div>
+                <button class="logout-instructor-btn" onclick="logoutClient()"><i class="fas fa-sign-out-alt"></i> Sair</button>
+            </div>
+        </div>
         <div class="client-content">
             <button class="main-treino-btn" onclick="toggleSubTreinos()"><i class="fas fa-dumbbell"></i> MEUS TREINOS</button>
             <div class="sub-treinos-grid" id="subTreinosGrid" style="display:none">
@@ -237,7 +247,6 @@
                     <button class="crono-btn crono-save" onclick="salvarTempoTreino()"><i class="fas fa-save"></i> Salvar</button>
                 </div>
             </div>
-            <button class="logout-client-btn" onclick="logoutClient()"><i class="fas fa-sign-out-alt"></i> Sair</button>
             <div class="copyright">© 2026 Aurora Fitness • Matheus Pacifico | (79) 99645-8399</div>
         </div>
     </div>
@@ -266,9 +275,9 @@
         
         function switchInstructorTab(tab) { document.querySelectorAll('.instructor-tab').forEach(t => t.classList.remove('active')); event.target.classList.add('active'); document.querySelectorAll('.instructor-page').forEach(p => p.classList.remove('active')); document.getElementById(tab).classList.add('active'); if (tab === 'sheets') renderSheetsByClient(); if (tab === 'backup') renderBackupHistory(); }
 
-        function openClientModal(id = null) { if (id) { const c = clients.find(x => x.id == id); document.getElementById('clientId').value = c.id; document.getElementById('clientName').value = c.name; document.getElementById('clientIdField').value = c.clientId; document.getElementById('clientPassword').value = c.password; document.getElementById('clientPhone').value = c.phone || ''; } else { document.getElementById('clientForm').reset(); document.getElementById('clientId').value = ''; document.getElementById('clientPassword').value = Math.random().toString(36).slice(-6); } document.getElementById('clientModal').classList.add('active'); }
+        function openClientModal(id = null) { if (id) { const c = clients.find(x => x.id == id); document.getElementById('clientId').value = c.id; document.getElementById('clientName').value = c.name; document.getElementById('clientIdField').value = c.clientId; document.getElementById('clientPasswordField').value = c.password; document.getElementById('clientPhone').value = c.phone || ''; } else { document.getElementById('10_clientForm').reset(); document.getElementById('clientId').value = ''; document.getElementById('clientPasswordField').value = Math.random().toString(36).slice(-6); } document.getElementById('clientModal').classList.add('active'); }
         function closeClientModal() { document.getElementById('clientModal').classList.remove('active'); }
-        document.getElementById('clientForm').addEventListener('submit', (e) => { e.preventDefault(); const id = document.getElementById('clientId').value || String(Date.now()); const client = { id, name: document.getElementById('clientName').value, clientId: document.getElementById('clientIdField').value, password: document.getElementById('clientPassword').value, phone: document.getElementById('clientPhone').value, status: 'Ativo' }; const idx = clients.findIndex(c => c.id == id); if (idx >= 0) clients[idx] = client; else clients.push(client); localStorage.setItem('pt_clients', JSON.stringify(clients)); closeClientModal(); renderClients(); updateStats(); });
+        document.getElementById('10_clientForm').addEventListener('submit', (e) => { e.preventDefault(); const id = document.getElementById('clientId').value || String(Date.now()); const client = { id, name: document.getElementById('clientName').value, clientId: document.getElementById('clientIdField').value, password: document.getElementById('clientPasswordField').value, phone: document.getElementById('clientPhone').value, status: 'Ativo' }; const idx = clients.findIndex(c => c.id == id); if (idx >= 0) clients[idx] = client; else clients.push(client); localStorage.setItem('pt_clients', JSON.stringify(clients)); closeClientModal(); renderClients(); updateStats(); });
         function deleteClient(id) { if (confirm('Excluir?')) { clients = clients.filter(c => c.id != id); sheets = sheets.filter(s => s.clientId != id); localStorage.setItem('pt_clients', JSON.stringify(clients)); localStorage.setItem('pt_sheets', JSON.stringify(sheets)); renderClients(); updateStats(); } }
         function renderClients() { const c = document.getElementById('clientsList'); if (!clients.length) { c.innerHTML = '<div class="empty-state">Nenhum cliente</div>'; return; } c.innerHTML = clients.map(c => `<div class="mobile-table-row" style="grid-template-columns:1.5fr 1.5fr 80px"><div>${c.name}</div><div>${c.clientId}</div><div><i class="fas fa-edit action-icon" onclick="openClientModal('${c.id}')"></i><i class="fas fa-trash-alt action-icon" onclick="deleteClient('${c.id}')" style="color:#ef4444"></i></div></div>`).join(''); document.getElementById('recentClientsList').innerHTML = clients.slice(-3).reverse().map(c => `<div class="mobile-table-row" style="grid-template-columns:1.5fr 1fr"><div>${c.name}</div><div>${c.clientId}</div></div>`).join(''); }
 
@@ -286,8 +295,24 @@
         function updateStats() { document.getElementById('totalClients').textContent = clients.length; document.getElementById('totalSheets').textContent = sheets.length; }
         function renderAll() { renderClients(); renderBackupHistory(); updateStats(); }
 
-        // CLIENTE
-        document.getElementById('clientLoginForm').addEventListener('submit', (e) => { e.preventDefault(); const clientId = document.getElementById('clientId').value.trim(); const pwd = document.getElementById('clientPassword').value; const client = clients.find(c => c.clientId === clientId && c.password === pwd); if (client) { currentClient = client; document.getElementById('clientLoginScreen').classList.add('hidden'); document.getElementById('clientPanel').classList.add('active'); document.getElementById('clientNameDisplay').textContent = client.name.split(' ')[0]; verificarTreinos(); } else { document.getElementById('clientLoginError').style.display = 'block'; } });
+        // CLIENTE - CORRIGIDO!
+        document.getElementById('clientLoginForm').addEventListener('submit', (e) => { 
+            e.preventDefault(); 
+            const clientId = document.getElementById('clientId').value.trim(); 
+            const pwd = document.getElementById('clientPassword').value; 
+            console.log('Tentando login com:', clientId, pwd);
+            console.log('Clientes cadastrados:', clients);
+            const client = clients.find(c => c.clientId === clientId && c.password === pwd); 
+            if (client) { 
+                currentClient = client; 
+                document.getElementById('clientLoginScreen').classList.add('hidden'); 
+                document.getElementById('clientPanel').classList.add('active'); 
+                document.getElementById('clientNameDisplay').textContent = client.name.split(' ')[0]; 
+                verificarTreinos(); 
+            } else { 
+                document.getElementById('clientLoginError').style.display = 'block'; 
+            } 
+        });
         function logoutClient() { currentClient = null; document.getElementById('clientPanel').classList.remove('active'); document.getElementById('choiceScreen').classList.remove('hidden'); }
         function toggleSubTreinos() { const grid = document.getElementById('subTreinosGrid'); grid.style.display = grid.style.display === 'none' ? 'grid' : 'none'; }
         function verificarTreinos() { const clientSheets = sheets.filter(s => s.clientId === currentClient.id); const btns = document.querySelectorAll('.sub-treino-btn'); btns.forEach((btn, i) => { const treino = ['A','B','C','D','E'][i]; const temTreino = clientSheets.some(s => s.name.toLowerCase().includes(`treino ${treino.toLowerCase()}`)); if (temTreino) { btn.classList.add('has-treino'); btn.style.background = '#1a1a1a'; btn.style.borderColor = '#ff6b35'; } }); }
