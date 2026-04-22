@@ -136,6 +136,13 @@
         .form-group label{display:block;color:#cccccc;margin-bottom:4px;font-size:0.75rem}
         .form-group input,.form-group select{width:100%;padding:10px;background:#111111;border:1px solid #2a2a2a;border-radius:8px;color:#ffffff;font-size:0.85rem}
         
+        .exercise-item{background:#161616;border:1px solid #2a2a2a;border-radius:12px;padding:14px;margin-bottom:12px}
+        .exercise-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+        .exercise-header h4{color:#ff6b35;font-size:0.9rem}
+        .exercise-grid{display:grid;grid-template-columns:1fr;gap:8px}
+        .exercise-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+        .exercise-grid input{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;padding:8px 10px;color:#ffffff;font-size:0.85rem}
+        
         .empty-state{text-align:center;padding:20px;color:#888888}
         .empty-state i{font-size:2.5rem;color:#ff6b35;margin-bottom:10px;opacity:0.3}
         
@@ -284,8 +291,6 @@
         // CONFIGURAÇÃO SUPABASE
         const SUPABASE_URL = 'https://hupkzyvbvfpzeihhmgxg.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1cGt6eXZidmZwemVpaGhtZ3hnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4MjU2NzksImV4cCI6MjA5MjQwMTY3OX0.YevRjHVLFOUFIGcoj0k0dGcFcpUquhW9LTFdsbuRWmE';
-        
-        // INICIALIZAR SUPABASE (APENAS UMA VEZ)
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         
         const TRAINER = { id: 'trainer', password: '123456' };
@@ -310,7 +315,47 @@
             await loadTreinosTempo();
         }
 
-        // EVENT LISTENERS (SUBSTITUINDO ONCLICK)
+        // RENDERIZAR LISTA DE EXERCÍCIOS
+        function renderExerciseList() {
+            const container = document.getElementById('exercisesList');
+            if (!tempExercises.length) {
+                container.innerHTML = '<p style="color:#888;text-align:center;padding:16px">Nenhum exercício. Clique em "+ Exercício"</p>';
+                return;
+            }
+            container.innerHTML = tempExercises.map((ex, i) => `
+                <div class="exercise-item">
+                    <div class="exercise-header">
+                        <h4>Exercício ${i+1}</h4>
+                        <i class="fas fa-trash-alt" onclick="removeExercise(${i})" style="color:#ef4444;cursor:pointer"></i>
+                    </div>
+                    <div class="exercise-grid">
+                        <input type="text" placeholder="Nome do exercício" value="${ex.name}" onchange="tempExercises[${i}].name = this.value">
+                        <div class="exercise-row">
+                            <input type="text" placeholder="Séries" value="${ex.series}" onchange="tempExercises[${i}].series = this.value">
+                            <input type="text" placeholder="Repetições" value="${ex.reps}" onchange="tempExercises[${i}].reps = this.value">
+                        </div>
+                        <div class="exercise-row">
+                            <input type="text" placeholder="Carga" value="${ex.load}" onchange="tempExercises[${i}].load = this.value">
+                            <input type="text" placeholder="Observações" value="${ex.notes}" onchange="tempExercises[${i}].notes = this.value">
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ADICIONAR EXERCÍCIO
+        function addExercise() {
+            tempExercises.push({ name: '', series: '3', reps: '12', load: '', notes: '' });
+            renderExerciseList();
+        }
+
+        // REMOVER EXERCÍCIO
+        window.removeExercise = function(idx) {
+            tempExercises.splice(idx, 1);
+            renderExerciseList();
+        };
+
+        // EVENT LISTENERS
         document.addEventListener('DOMContentLoaded', function() {
             // TELA DE ESCOLHA
             document.getElementById('btnInstructor').addEventListener('click', function() {
@@ -450,7 +495,8 @@
             
             // FORM FICHA
             document.getElementById('sheetForm').addEventListener('submit', async (e) => { 
-                e.preventDefault(); 
+                e.preventDefault();
+                if (!tempExercises.length) { alert('Adicione pelo menos um exercício!'); return; }
                 const id = document.getElementById('sheetId').value || crypto.randomUUID(); 
                 const clientId = document.getElementById('sheetClient').value; 
                 const client = clients.find(c => c.id == clientId); 
@@ -519,10 +565,9 @@
                 document.getElementById('sheetForm').reset(); 
                 document.getElementById('sheetId').value = ''; 
             } 
+            renderExerciseList();
             document.getElementById('sheetModal').classList.add('active'); 
         }
-        
-        function addExercise() { tempExercises.push({ name: '', series: '3', reps: '12', load: '', notes: '' }); }
         
         async function deleteSheet(id) { 
             if (confirm('Excluir?')) { 
@@ -533,7 +578,10 @@
             } 
         }
         
-        function toggleClientSheets(clientId) { document.getElementById(`sheets-${clientId}`).classList.toggle('active'); }
+        function toggleClientSheets(clientId) { 
+            const el = document.getElementById(`sheets-${clientId}`);
+            if (el) el.classList.toggle('active'); 
+        }
         
         function renderSheetsByClient() { 
             const container = document.getElementById('sheetsByClient'); 
@@ -617,7 +665,11 @@
                     btn.classList.add('has-treino'); 
                     btn.style.background = '#1a1a1a'; 
                     btn.style.borderColor = '#ff6b35'; 
-                } 
+                } else {
+                    btn.classList.remove('has-treino');
+                    btn.style.background = '#111111';
+                    btn.style.borderColor = '#2a2a2a';
+                }
             }); 
         }
         
@@ -676,7 +728,7 @@
         }
         
         function mostrarRelatorio() { 
-            const tempos = treinosTempo[currentClient.client_id] || []; 
+            const tempos = treinosTempo[currentClient?.client_id] || []; 
             let html = ''; 
             if (tempos.length === 0) { 
                 html = '<p style="color:#aaa;text-align:center;padding:20px">Nenhum treino registrado</p>'; 
