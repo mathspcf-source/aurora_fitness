@@ -12,82 +12,88 @@
         
         .login-screen{position:fixed;top:0;left:0;width:100%;height:100vh;background:linear-gradient(145deg,#0d0d0d 0%,#1a1a1a 100%);display:flex;align-items:center;justify-content:center;z-index:1000}
         .login-screen.hidden{display:none}
-        .login-box{background:#141414;border:1px solid #2a2a2a;border-radius:28px;padding:48px 40px;width:100%;max-width:420px}
-        .login-logo{text-align:center;margin-bottom:40px}
-        .login-logo i{font-size:3.2rem;color:#ff6b35}
-        .login-logo h1{font-size:2.2rem;font-weight:700;color:#ffffff;margin-top:12px}
+        .login-box{background:#141414;border:1px solid #2a2a2a;border-radius:28px;padding:40px 36px;width:100%;max-width:400px}
+        .login-logo{text-align:center;margin-bottom:32px}
+        .login-logo i{font-size:3rem;color:#ff6b35}
+        .login-logo h1{font-size:2rem;font-weight:700;color:#ffffff;margin-top:10px}
         .login-logo span{background:linear-gradient(135deg,#ff6b35,#ff8c42);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .login-badge{background:linear-gradient(135deg,#ff6b35,#e85d04);padding:6px 18px;border-radius:40px;font-size:0.75rem;font-weight:700;color:#ffffff;display:inline-block;margin-top:16px}
+        .login-badge{background:linear-gradient(135deg,#ff6b35,#e85d04);padding:5px 16px;border-radius:30px;font-size:0.7rem;font-weight:700;color:#ffffff;display:inline-block;margin-top:14px}
         .login-badge i{color:#ffffff !important;margin-right:6px}
-        .input-group{margin-bottom:24px}
-        .input-group label{display:block;color:#cccccc;margin-bottom:8px;font-weight:500;font-size:0.9rem}
+        .input-group{margin-bottom:18px}
+        .input-group label{display:block;color:#cccccc;margin-bottom:6px;font-weight:500;font-size:0.85rem}
         .input-field{position:relative}
-        .input-field i{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:#ffffff !important;font-size:1.1rem}
-        .input-field input{width:100%;padding:15px 15px 15px 48px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:14px;color:#ffffff;font-size:1rem}
-        .btn-login{width:100%;padding:16px;background:linear-gradient(135deg,#ff6b35,#e85d04);border:none;border-radius:14px;color:#ffffff;font-weight:600;font-size:1rem;cursor:pointer}
+        .input-field i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#ffffff !important;font-size:1rem}
+        .input-field input{width:100%;padding:13px 13px 13px 44px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;color:#ffffff;font-size:0.95rem}
+        .btn-login{width:100%;padding:14px;background:linear-gradient(135deg,#ff6b35,#e85d04);border:none;border-radius:12px;color:#ffffff;font-weight:600;font-size:0.95rem;cursor:pointer}
         .btn-login i{color:#ffffff !important;margin-right:8px}
-        .error-message{color:#ef4444;text-align:center;margin-top:16px;font-size:0.9rem;display:none}
-        .login-footer{text-align:center;margin-top:32px;color:#666666;font-size:0.8rem}
-        .register-link{text-align:center;margin-top:20px}
-        .register-link a{color:#ff6b35;text-decoration:none;font-size:0.9rem}
+        .error-message{color:#ef4444;text-align:center;margin-top:14px;font-size:0.85rem;display:none}
+        .login-footer{text-align:center;margin-top:28px;color:#666666;font-size:0.75rem}
         
         .main-panel{display:none;height:100vh;background:#0a0a0a;overflow:hidden}
         .main-panel.active{display:flex}
-        .sidebar{width:280px;background:#0d0d0d;border-right:1px solid #1a1a1a;padding:28px 0;height:100vh;display:flex;flex-direction:column;overflow:hidden}
-        .sidebar-logo{padding:0 20px 28px 28px;border-bottom:1px solid #1a1a1a;margin-bottom:28px}
-        .sidebar-logo h2{font-size:1.7rem;font-weight:700;color:#ffffff}
+        .sidebar{width:260px;background:#0d0d0d;border-right:1px solid #1a1a1a;padding:24px 0;height:100vh;display:flex;flex-direction:column}
+        .sidebar-logo{padding:0 18px 24px 24px;border-bottom:1px solid #1a1a1a;margin-bottom:24px}
+        .sidebar-logo h2{font-size:1.5rem;font-weight:700;color:#ffffff}
         .sidebar-logo span{background:linear-gradient(135deg,#ff6b35,#ff8c42);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .nav-menu{flex:1;padding:0 16px;overflow-y:auto}
-        .nav-item{display:flex;align-items:center;gap:14px;padding:14px 18px;margin:4px 0;border-radius:14px;color:#aaaaaa;cursor:pointer}
-        .nav-item i{width:24px;color:#ffffff !important}
+        .sidebar-logo p{color:#888888;font-size:0.7rem;margin-top:4px}
+        .nav-menu{flex:1;padding:0 14px}
+        .nav-item{display:flex;align-items:center;gap:12px;padding:12px 16px;margin:3px 0;border-radius:12px;color:#aaaaaa;cursor:pointer;font-size:0.9rem}
+        .nav-item i{width:22px;color:#ffffff !important;font-size:1.1rem}
         .nav-item:hover{background:rgba(255,107,53,0.1);color:#ffffff}
         .nav-item.active{background:linear-gradient(135deg,#ff6b35,#e85d04);color:#ffffff}
-        .logout-btn{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#ef4444;padding:14px 18px;border-radius:14px;cursor:pointer;display:flex;align-items:center;gap:10px;margin:20px 18px}
+        .logout-btn{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#ef4444;padding:12px 16px;border-radius:12px;cursor:pointer;display:flex;align-items:center;gap:8px;margin:16px 14px}
         
-        .content-area{flex:1;padding:28px 36px;overflow-y:auto;height:100vh}
-        .top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px}
-        .page-title h1{font-size:2rem;font-weight:700;color:#ffffff}
-        .profile-info{display:flex;align-items:center;gap:12px;background:#111111;padding:10px 24px;border-radius:40px;border:1px solid #1a1a1a}
-        .profile-info i{color:#ff6b35 !important}
-        .profile-info span{color:#ffffff}
+        .content-area{flex:1;padding:24px 28px;display:flex;flex-direction:column;height:100vh;overflow:hidden}
+        .top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+        .page-title h1{font-size:1.8rem;font-weight:700;color:#ffffff}
+        .profile-info{display:flex;align-items:center;gap:10px;background:#111111;padding:8px 20px;border-radius:40px;border:1px solid #1a1a1a}
+        .profile-info i{color:#ff6b35 !important;font-size:1.2rem}
+        .profile-info span{color:#ffffff;font-size:0.9rem}
         
-        .page{display:none}
-        .page.active{display:block}
+        .page{display:none;flex:1;flex-direction:column;overflow:hidden}
+        .page.active{display:flex}
         
-        .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:36px}
-        .stat-card{background:#111111;border:1px solid #1a1a1a;border-radius:18px;padding:24px}
-        .stat-header{display:flex;justify-content:space-between;margin-bottom:16px}
-        .stat-header h3{color:#aaaaaa;font-size:0.9rem}
-        .stat-icon{width:48px;height:48px;background:rgba(255,107,53,0.1);border-radius:14px;display:flex;align-items:center;justify-content:center;color:#ff6b35 !important}
-        .stat-number{font-size:2.5rem;font-weight:700;color:#ffffff}
+        .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:20px}
+        .stat-card{background:#111111;border:1px solid #1a1a1a;border-radius:16px;padding:18px}
+        .stat-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+        .stat-header h3{color:#aaaaaa;font-size:0.8rem;font-weight:500}
+        .stat-icon{width:40px;height:40px;background:rgba(255,107,53,0.1);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#ff6b35 !important;font-size:1.3rem}
+        .stat-number{font-size:2rem;font-weight:700;color:#ffffff}
         
-        .table-container{background:#111111;border:1px solid #1a1a1a;border-radius:16px;overflow:hidden}
-        .table-header{display:grid;padding:14px 20px;background:#161616;color:#cccccc;font-weight:600;font-size:0.75rem;text-transform:uppercase}
-        .table-row{display:grid;padding:14px 20px;border-bottom:1px solid #1a1a1a;color:#ffffff;font-size:0.9rem}
+        .section-title{color:#ffffff;font-size:1rem;font-weight:600;margin-bottom:12px}
         
-        .btn-primary{background:linear-gradient(135deg,#ff6b35,#e85d04);color:#ffffff;border:none;padding:12px 24px;border-radius:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
-        .btn-secondary{background:transparent;color:#ffffff;border:1px solid #2a2a2a;padding:10px 20px;border-radius:12px;cursor:pointer}
-        .action-buttons{display:flex;gap:16px;margin-bottom:24px}
+        .table-wrapper{flex:1;overflow-y:auto;min-height:0}
+        .table-wrapper::-webkit-scrollbar{width:4px}
+        .table-wrapper::-webkit-scrollbar-thumb{background:#ff6b35;border-radius:10px}
+        .table-container{background:#111111;border:1px solid #1a1a1a;border-radius:14px;overflow:hidden}
+        .table-header{display:grid;padding:12px 18px;background:#161616;color:#cccccc;font-weight:600;font-size:0.7rem;text-transform:uppercase}
+        .table-row{display:grid;padding:12px 18px;border-bottom:1px solid #1a1a1a;color:#ffffff;font-size:0.85rem;align-items:center}
+        .table-row:last-child{border-bottom:none}
         
-        .status-badge{padding:4px 10px;border-radius:30px;font-size:0.75rem;background:rgba(16,185,129,0.15);color:#34d399}
-        .action-icon{color:#888888;cursor:pointer;margin:0 8px}
+        .btn-primary{background:linear-gradient(135deg,#ff6b35,#e85d04);color:#ffffff;border:none;padding:10px 20px;border-radius:12px;font-weight:600;font-size:0.85rem;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+        .btn-secondary{background:transparent;color:#ffffff;border:1px solid #2a2a2a;padding:9px 18px;border-radius:12px;font-size:0.85rem;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+        .action-buttons{display:flex;gap:12px;margin-bottom:16px}
+        
+        .status-badge{padding:3px 8px;border-radius:20px;font-size:0.65rem;background:rgba(16,185,129,0.15);color:#34d399}
+        .action-icon{color:#888888;cursor:pointer;margin:0 6px;font-size:0.9rem}
+        .action-icon:hover{color:#ff6b35}
         
         .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:2000;align-items:center;justify-content:center}
         .modal.active{display:flex}
-        .modal-content{background:#111111;border:1px solid #2a2a2a;border-radius:20px;padding:32px;max-width:600px;width:90%;max-height:80vh;overflow-y:auto}
-        .modal-header{display:flex;justify-content:space-between;margin-bottom:24px;color:#ffffff}
-        .close-modal{color:#888888;font-size:1.5rem;cursor:pointer}
-        .form-group{margin-bottom:20px}
-        .form-group label{display:block;color:#cccccc;margin-bottom:8px}
-        .form-group input,.form-group select{width:100%;padding:12px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;color:#ffffff}
+        .modal-content{background:#111111;border:1px solid #2a2a2a;border-radius:18px;padding:28px;max-width:550px;width:90%;max-height:75vh;overflow-y:auto}
+        .modal-header{display:flex;justify-content:space-between;margin-bottom:20px;color:#ffffff}
+        .close-modal{color:#888888;font-size:1.3rem;cursor:pointer}
+        .form-group{margin-bottom:16px}
+        .form-group label{display:block;color:#cccccc;margin-bottom:6px;font-size:0.85rem}
+        .form-group input,.form-group select{width:100%;padding:11px 14px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;color:#ffffff;font-size:0.9rem}
         
-        .exercise-item{background:#161616;border:1px solid #2a2a2a;border-radius:14px;padding:16px;margin-bottom:14px}
-        .exercise-header{display:flex;justify-content:space-between;margin-bottom:14px;color:#ff6b35}
-        .exercise-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1.2fr;gap:10px}
-        .exercise-grid input{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:10px;color:#ffffff}
+        .exercise-item{background:#161616;border:1px solid #2a2a2a;border-radius:12px;padding:14px;margin-bottom:12px}
+        .exercise-header{display:flex;justify-content:space-between;margin-bottom:12px;color:#ff6b35;font-size:0.9rem}
+        .exercise-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1.2fr;gap:8px}
+        .exercise-grid input{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;padding:8px;color:#ffffff;font-size:0.85rem}
         
-        .empty-state{text-align:center;padding:40px;color:#888888}
-        .copyright{text-align:center;padding:20px;color:#666666;font-size:0.8rem;border-top:1px solid #1a1a1a;margin-top:20px}
+        .empty-state{text-align:center;padding:30px;color:#888888}
+        .copyright{text-align:center;padding:12px 0 4px;color:#666666;font-size:0.7rem;border-top:1px solid #1a1a1a;margin-top:auto}
     </style>
 </head>
 <body>
@@ -96,14 +102,14 @@
             <div class="login-logo">
                 <i class="fas fa-dumbbell"></i>
                 <h1>Aurora<span>.</span></h1>
-                <p style="color:#aaaaaa;margin-top:6px">Personal Trainer</p>
+                <p style="color:#aaaaaa;margin-top:4px;font-size:0.9rem">Personal Trainer</p>
                 <div class="login-badge"><i class="fas fa-user-tie"></i> INSTRUTOR</div>
             </div>
             <form id="loginForm">
-                <div class="input-group"><label>Email</label><div class="input-field"><i class="fas fa-envelope"></i><input type="email" id="trainerEmail" placeholder="seu@email.com" value="trainer@aurora.com"></div></div>
-                <div class="input-group"><label>Senha</label><div class="input-field"><i class="fas fa-lock"></i><input type="password" id="trainerPassword" placeholder="••••••••" value="123456"></div></div>
-                <div class="error-message" id="loginError">Email ou senha incorretos</div>
-                <button type="submit" class="btn-login"><i class="fas fa-sign-in-alt"></i> Acessar Sistema</button>
+                <div class="input-group"><label>Email</label><div class="input-field"><i class="fas fa-envelope"></i><input type="email" id="trainerEmail" value="trainer@aurora.com"></div></div>
+                <div class="input-group"><label>Senha</label><div class="input-field"><i class="fas fa-lock"></i><input type="password" id="trainerPassword" value="123456"></div></div>
+                <div class="error-message" id="loginError"></div>
+                <button type="submit" class="btn-login"><i class="fas fa-sign-in-alt"></i> Acessar</button>
             </form>
             <div class="login-footer">© 2026 Aurora Fitness • Matheus Pacifico</div>
         </div>
@@ -114,11 +120,11 @@
             <div class="modal-header"><h2>Novo Cliente</h2><i class="fas fa-times close-modal" onclick="closeClientModal()"></i></div>
             <form id="clientForm">
                 <input type="hidden" id="clientId">
-                <div class="form-group"><label>Nome Completo</label><input type="text" id="clientName" required></div>
+                <div class="form-group"><label>Nome</label><input type="text" id="clientName" required></div>
                 <div class="form-group"><label>Email</label><input type="email" id="clientEmail" required></div>
-                <div class="form-group"><label>Senha de Acesso</label><input type="text" id="clientPassword" required></div>
+                <div class="form-group"><label>Senha</label><input type="text" id="clientPassword" required></div>
                 <div class="form-group"><label>Telefone</label><input type="tel" id="clientPhone"></div>
-                <button type="submit" class="btn-primary" style="width:100%"><i class="fas fa-save"></i> Salvar Cliente</button>
+                <button type="submit" class="btn-primary" style="width:100%">Salvar</button>
             </form>
         </div>
     </div>
@@ -131,24 +137,18 @@
                 <div class="form-group"><label>Cliente</label><select id="sheetClient" required></select></div>
                 <div class="form-group"><label>Nome da Ficha</label><input type="text" id="sheetName" required></div>
                 <div class="form-group"><label>Observações</label><input type="text" id="sheetNotes"></div>
-                <div style="margin:24px 0">
-                    <div style="display:flex;justify-content:space-between;margin-bottom:14px">
-                        <h3 style="color:#fff">Exercícios</h3>
-                        <button type="button" class="btn-secondary" onclick="addExercise()"><i class="fas fa-plus"></i> Adicionar</button>
-                    </div>
-                    <div id="exercisesList"></div>
-                </div>
-                <button type="submit" class="btn-primary" style="width:100%"><i class="fas fa-save"></i> Salvar Ficha</button>
+                <div style="margin:20px 0"><div style="display:flex;justify-content:space-between;margin-bottom:12px"><h3 style="color:#fff;font-size:1rem">Exercícios</h3><button type="button" class="btn-secondary" onclick="addExercise()"><i class="fas fa-plus"></i></button></div><div id="exercisesList"></div></div>
+                <button type="submit" class="btn-primary" style="width:100%">Salvar</button>
             </form>
         </div>
     </div>
 
     <div class="main-panel" id="mainPanel">
         <div class="sidebar">
-            <div class="sidebar-logo"><h2>Aurora<span>.</span></h2><p style="color:#888;font-size:0.75rem;margin-top:6px">Personal Trainer</p></div>
+            <div class="sidebar-logo"><h2>Aurora<span>.</span></h2><p>Personal Trainer</p></div>
             <div class="nav-menu">
                 <div class="nav-item active" data-page="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</div>
-                <div class="nav-item" data-page="clients"><i class="fas fa-users"></i> Meus Clientes</div>
+                <div class="nav-item" data-page="clients"><i class="fas fa-users"></i> Clientes</div>
                 <div class="nav-item" data-page="sheets"><i class="fas fa-clipboard-list"></i> Fichas</div>
                 <div class="nav-item" data-page="backup"><i class="fas fa-database"></i> Backup</div>
             </div>
@@ -156,7 +156,7 @@
         </div>
 
         <div class="content-area">
-            <div class="top-bar"><div class="page-title"><h1 id="pageTitle">Dashboard</h1></div><div class="profile-info"><i class="fas fa-user-tie"></i><span>Personal Trainer</span></div></div>
+            <div class="top-bar"><div class="page-title"><h1 id="pageTitle">Dashboard</h1></div><div class="profile-info"><i class="fas fa-user-tie"></i><span>Trainer</span></div></div>
 
             <div class="page active" id="dashboard">
                 <div class="stats-grid">
@@ -164,26 +164,23 @@
                     <div class="stat-card"><div class="stat-header"><h3>Fichas</h3><div class="stat-icon"><i class="fas fa-clipboard-list"></i></div></div><div class="stat-number" id="totalSheets">0</div></div>
                     <div class="stat-card"><div class="stat-header"><h3>Backups</h3><div class="stat-icon"><i class="fas fa-database"></i></div></div><div class="stat-number" id="totalBackups">0</div></div>
                 </div>
-                <h3 style="color:#ffffff;margin:20px 0">Clientes Recentes</h3>
-                <div class="table-container"><div class="table-header" style="grid-template-columns:2fr 1.5fr"><div>Nome</div><div>Email</div></div><div id="recentClientsList"></div></div>
+                <div class="section-title">Clientes Recentes</div>
+                <div class="table-wrapper"><div class="table-container"><div class="table-header" style="grid-template-columns:2fr 1.5fr"><div>Nome</div><div>Email</div></div><div id="recentClientsList"></div></div></div>
             </div>
 
             <div class="page" id="clients">
-                <div class="action-buttons"><button class="btn-primary" onclick="openClientModal()"><i class="fas fa-plus"></i> Novo Cliente</button></div>
-                <div class="table-container"><div class="table-header" style="grid-template-columns:2fr 1.5fr 1.5fr 80px"><div>Nome</div><div>Email</div><div>Telefone</div><div>Ações</div></div><div id="clientsList"></div></div>
+                <div class="action-buttons"><button class="btn-primary" onclick="openClientModal()"><i class="fas fa-plus"></i> Novo</button></div>
+                <div class="table-wrapper"><div class="table-container"><div class="table-header" style="grid-template-columns:2fr 1.5fr 1.5fr 70px"><div>Nome</div><div>Email</div><div>Telefone</div><div>Ações</div></div><div id="clientsList"></div></div></div>
             </div>
 
             <div class="page" id="sheets">
-                <div class="action-buttons"><button class="btn-primary" onclick="openSheetModal()"><i class="fas fa-plus"></i> Nova Ficha</button></div>
-                <div class="table-container"><div class="table-header" style="grid-template-columns:2fr 1.5fr 1fr 80px"><div>Ficha</div><div>Cliente</div><div>Data</div><div>Ações</div></div><div id="sheetsList"></div></div>
+                <div class="action-buttons"><button class="btn-primary" onclick="openSheetModal()"><i class="fas fa-plus"></i> Nova</button></div>
+                <div class="table-wrapper"><div class="table-container"><div class="table-header" style="grid-template-columns:2fr 1.5fr 1fr 70px"><div>Ficha</div><div>Cliente</div><div>Data</div><div>Ações</div></div><div id="sheetsList"></div></div></div>
             </div>
 
             <div class="page" id="backup">
-                <div class="action-buttons">
-                    <button class="btn-primary" onclick="exportBackup()"><i class="fas fa-download"></i> Exportar Backup</button>
-                    <button class="btn-secondary" onclick="importBackup()"><i class="fas fa-upload"></i> Importar Backup</button>
-                </div>
-                <div class="table-container"><div class="table-header" style="grid-template-columns:2fr 1fr"><div>Data</div><div>Tipo</div></div><div id="backupHistoryList"></div></div>
+                <div class="action-buttons"><button class="btn-primary" onclick="exportBackup()"><i class="fas fa-download"></i> Exportar</button><button class="btn-secondary" onclick="importBackup()"><i class="fas fa-upload"></i> Importar</button></div>
+                <div class="table-wrapper"><div class="table-container"><div class="table-header" style="grid-template-columns:2fr 1fr"><div>Data</div><div>Tipo</div></div><div id="backupHistoryList"></div></div></div>
             </div>
 
             <div class="copyright">© 2026 Aurora Fitness • Matheus Pacifico | (79) 99645-8399</div>
@@ -203,7 +200,7 @@
                 document.getElementById('loginScreen').classList.add('hidden');
                 document.getElementById('mainPanel').classList.add('active');
                 renderAll(); updateStats();
-            } else { document.getElementById('loginError').style.display = 'block'; }
+            } else { document.getElementById('loginError').style.display = 'block'; document.getElementById('loginError').textContent = 'Email ou senha incorretos'; }
         });
 
         function logout() { document.getElementById('loginScreen').classList.remove('hidden'); document.getElementById('mainPanel').classList.remove('active'); }
@@ -212,7 +209,7 @@
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); this.classList.add('active');
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(this.dataset.page).classList.add('active');
-            document.getElementById('pageTitle').textContent = { dashboard:'Dashboard', clients:'Meus Clientes', sheets:'Fichas de Treino', backup:'Backup' }[this.dataset.page];
+            document.getElementById('pageTitle').textContent = { dashboard:'Dashboard', clients:'Clientes', sheets:'Fichas', backup:'Backup' }[this.dataset.page];
         });});
 
         function openClientModal(id = null) {
@@ -225,7 +222,7 @@
         function deleteClient(id) { if (confirm('Excluir?')) { clients = clients.filter(c => c.id != id); sheets = sheets.filter(s => s.clientId != id); localStorage.setItem('pt_clients', JSON.stringify(clients)); localStorage.setItem('pt_sheets', JSON.stringify(sheets)); renderClients(); renderSheets(); updateStats(); } }
         function renderClients() {
             const c = document.getElementById('clientsList'); if (!clients.length) { c.innerHTML = '<div class="empty-state">Nenhum cliente</div>'; return; }
-            c.innerHTML = clients.map(c => `<div class="table-row" style="grid-template-columns:2fr 1.5fr 1.5fr 80px"><div>${c.name}</div><div>${c.email}</div><div>${c.phone || '-'}</div><div><i class="fas fa-edit action-icon" onclick="openClientModal('${c.id}')"></i><i class="fas fa-trash-alt action-icon" onclick="deleteClient('${c.id}')" style="color:#ef4444"></i></div></div>`).join('');
+            c.innerHTML = clients.map(c => `<div class="table-row" style="grid-template-columns:2fr 1.5fr 1.5fr 70px"><div>${c.name}</div><div>${c.email}</div><div>${c.phone || '-'}</div><div><i class="fas fa-edit action-icon" onclick="openClientModal('${c.id}')"></i><i class="fas fa-trash-alt action-icon" onclick="deleteClient('${c.id}')" style="color:#ef4444"></i></div></div>`).join('');
             document.getElementById('recentClientsList').innerHTML = clients.slice(-3).reverse().map(c => `<div class="table-row" style="grid-template-columns:2fr 1.5fr"><div>${c.name}</div><div>${c.email}</div></div>`).join('');
         }
 
@@ -240,12 +237,12 @@
         function addExercise() { tempExercises.push({ name: '', series: '3', reps: '12', load: '', notes: '' }); renderExerciseList(); }
         function removeExercise(idx) { tempExercises.splice(idx, 1); renderExerciseList(); }
         function renderExerciseList() {
-            const c = document.getElementById('exercisesList'); if (!tempExercises.length) { c.innerHTML = '<p style="color:#888">Nenhum exercício</p>'; return; }
+            const c = document.getElementById('exercisesList'); if (!tempExercises.length) { c.innerHTML = '<p style="color:#888;text-align:center">Nenhum</p>'; return; }
             c.innerHTML = tempExercises.map((ex, i) => `<div class="exercise-item"><div class="exercise-header"><h4>Exercício ${i+1}</h4><i class="fas fa-trash-alt" onclick="removeExercise(${i})" style="color:#ef4444;cursor:pointer"></i></div><div class="exercise-grid"><input type="text" placeholder="Nome" value="${ex.name}" onchange="tempExercises[${i}].name = this.value" style="grid-column:span 4"><input type="text" placeholder="Séries" value="${ex.series}" onchange="tempExercises[${i}].series = this.value"><input type="text" placeholder="Reps" value="${ex.reps}" onchange="tempExercises[${i}].reps = this.value"><input type="text" placeholder="Carga" value="${ex.load}" onchange="tempExercises[${i}].load = this.value"><input type="text" placeholder="Obs" value="${ex.notes}" onchange="tempExercises[${i}].notes = this.value"></div></div>`).join('');
         }
         document.getElementById('sheetForm').addEventListener('submit', (e) => { e.preventDefault(); if (!tempExercises.length) { alert('Adicione exercícios!'); return; } const id = document.getElementById('sheetId').value || String(Date.now()); const clientId = document.getElementById('sheetClient').value; const client = clients.find(c => c.id == clientId); const sheet = { id, clientId, clientName: client.name, name: document.getElementById('sheetName').value, notes: document.getElementById('sheetNotes').value, exercises: tempExercises, createdAt: new Date().toLocaleDateString('pt-BR') }; const idx = sheets.findIndex(s => s.id == id); if (idx >= 0) sheets[idx] = sheet; else sheets.push(sheet); localStorage.setItem('pt_sheets', JSON.stringify(sheets)); closeSheetModal(); renderSheets(); updateStats(); });
         function deleteSheet(id) { if (confirm('Excluir?')) { sheets = sheets.filter(s => s.id != id); localStorage.setItem('pt_sheets', JSON.stringify(sheets)); renderSheets(); updateStats(); } }
-        function renderSheets() { const c = document.getElementById('sheetsList'); if (!sheets.length) { c.innerHTML = '<div class="empty-state">Nenhuma ficha</div>'; return; } c.innerHTML = sheets.map(s => `<div class="table-row" style="grid-template-columns:2fr 1.5fr 1fr 80px"><div>${s.name}</div><div>${s.clientName}</div><div>${s.createdAt}</div><div><i class="fas fa-edit action-icon" onclick="openSheetModal('${s.id}')"></i><i class="fas fa-trash-alt action-icon" onclick="deleteSheet('${s.id}')" style="color:#ef4444"></i></div></div>`).join(''); }
+        function renderSheets() { const c = document.getElementById('sheetsList'); if (!sheets.length) { c.innerHTML = '<div class="empty-state">Nenhuma ficha</div>'; return; } c.innerHTML = sheets.map(s => `<div class="table-row" style="grid-template-columns:2fr 1.5fr 1fr 70px"><div>${s.name}</div><div>${s.clientName}</div><div>${s.createdAt}</div><div><i class="fas fa-edit action-icon" onclick="openSheetModal('${s.id}')"></i><i class="fas fa-trash-alt action-icon" onclick="deleteSheet('${s.id}')" style="color:#ef4444"></i></div></div>`).join(''); }
 
         function exportBackup() { const backup = { clients, sheets, date: new Date().toISOString() }; backups.unshift({ date: new Date().toLocaleString('pt-BR'), type: 'Manual' }); localStorage.setItem('pt_backups', JSON.stringify(backups)); const data = JSON.stringify(backup); const blob = new Blob([data], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `backup_${new Date().toISOString().slice(0,10)}.json`; a.click(); renderBackupHistory(); updateStats(); }
         function importBackup() { const input = document.createElement('input'); input.type = 'file'; input.accept = '.json'; input.onchange = (e) => { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = (ev) => { try { const data = JSON.parse(ev.target.result); if (data.clients) { clients = data.clients; sheets = data.sheets || []; localStorage.setItem('pt_clients', JSON.stringify(clients)); localStorage.setItem('pt_sheets', JSON.stringify(sheets)); renderClients(); renderSheets(); updateStats(); alert('✅ Backup restaurado!'); } } catch(err) { alert('❌ Arquivo inválido'); } }; reader.readAsText(file); }; input.click(); }
