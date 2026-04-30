@@ -11,7 +11,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Segoe', sans-serif; }
         body { background: #0a0a0a; height: 100vh; overflow: hidden; position: fixed; width: 100%; }
         
-        /* TELA DE ESCOLHA E LOGIN - TUDO LEGÍVEL */
         .choice-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
             background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
@@ -70,7 +69,6 @@
         }
         .error-message { color: #ff6666; text-align: center; margin-top: 12px; font-size: 0.75rem; display: none; }
         
-        /* PAINEL INSTRUTOR */
         .instructor-panel { display: none; height: 100vh; background: #0a0a0a; overflow-y: auto; position: fixed; top: 0; left: 0; width: 100%; }
         .instructor-panel.active { display: block; }
         
@@ -108,7 +106,6 @@
             cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
         }
         
-        /* CORREÇÃO: CLIENTES RECENTES - TEXTO BRANCO */
         .win8-card {
             background: #1a1a1a;
             border: 1px solid #ff6b35;
@@ -147,7 +144,6 @@
         .client-sheets.active { display: block; }
         .sheet-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px 12px 40px; border-bottom: 1px solid #2a2a2a; color: #ffffff; }
         
-        /* PAINEL CLIENTE */
         .client-panel { display: none; height: 100vh; background: #0a0a0a; overflow-y: auto; position: fixed; top: 0; left: 0; width: 100%; }
         .client-panel.active { display: block; }
         
@@ -178,7 +174,6 @@
         .crono-btn { padding: 12px; border-radius: 40px; font-size: 0.7rem; font-weight: 600; cursor: pointer; background: #252525; color: #ffffff; border: none; }
         .crono-start { background: #ff6b35; }
         
-        /* MODAIS */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 2000; align-items: flex-end; }
         .modal.active { display: flex; }
         .modal-content { background: #1a1a1a; border-top: 3px solid #ff6b35; border-radius: 32px 32px 0 0; padding: 24px; width: 100%; max-height: 85vh; overflow-y: auto; }
@@ -200,7 +195,6 @@
         }
         .gender-btn.active { background: #ff6b35; border-color: #ff6b35; }
         
-        /* BIBLIOTECA */
         .library-container { background: #0a0a0a; border-radius: 20px; padding: 8px; }
         .muscle-group { margin-bottom: 12px; background: #1a1a1a; border-radius: 16px; overflow: hidden; border: 1px solid #ff6b35; }
         .group-header { display: flex; justify-content: space-between; padding: 14px 16px; background: #252525; cursor: pointer; }
@@ -218,7 +212,6 @@
         .exercise-checkbox label { color: #ffffff; font-size: 0.75rem; flex: 1; cursor: pointer; }
         .exercise-checkbox input { width: 18px; height: 18px; accent-color: #ff6b35; cursor: pointer; }
         
-        /* EXERCÍCIOS SELECIONADOS */
         .selected-exercises { background: #1a1a1a; border-radius: 20px; margin-top: 16px; padding: 12px; border: 1px solid #ff6b35; }
         .selected-header { display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #ff6b35; }
         .selected-header h4 { color: #ff6b35; font-size: 0.8rem; }
@@ -375,13 +368,18 @@
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         const TRAINER = { id: 'trainer', password: '123456' };
         
+        // ==================== BIBLIOTECA CORRIGIDA (SEGUNDO SUA LISTA) ====================
         const EXERCISE_LIBRARY = {
-            "🏋️ PEITO": { "Peitoral": ["Supino Reto Barra", "Supino Inclinado Halteres", "Crucifixo", "Peck Deck", "Crossover", "Flexão"] },
-            "🔥 COSTAS": { "Latíssimo": ["Puxada Frontal", "Barra Fixa", "Remada Curvada"], "Trapézio": ["Encolhimento", "Remada Alta"] },
-            "🦵 PERNAS": { "Quadríceps": ["Agachamento Livre", "Leg Press", "Cadeira Extensora"], "Posterior": ["Mesa Flexora", "Stiff"], "Glúteos": ["Elevação Pélvica", "Avanço"], "Panturrilha": ["Panturrilha em Pé"] },
-            "💪 OMBROS": { "Deltoide": ["Desenvolvimento", "Elevação Lateral", "Elevação Frontal", "Crucifixo Invertido"] },
-            "💪 BRAÇOS": { "Bíceps": ["Rosca Direta", "Rosca Alternada", "Rosca Martelo"], "Tríceps": ["Tríceps Corda", "Tríceps Testa", "Tríceps Coice"] },
-            "🏆 ABDÔMEN": { "Core": ["Abdominal Reto", "Prancha", "Elevação de Pernas", "Russian Twist"] }
+            "🔴 PEITO": ["Supino reto", "Supino inclinado", "Supino declinado", "Supino com halter", "Crucifixo", "Crucifixo inclinado", "Cross (crossover)", "Cross por baixo", "Peck deck (voador)", "Flexão de braço"],
+            "🔵 COSTAS": ["Puxada na frente", "Puxada supinada", "Barra fixa", "Remada curvada", "Remada unilateral (serrote)", "Remada baixa", "Remada cavalinho (T-bar)", "Pulldown (braço reto)", "Remada máquina", "Levantamento terra"],
+            "🟢 OMBRO": ["Desenvolvimento", "Desenvolvimento com halter", "Desenvolvimento no smith", "Elevação lateral", "Elevação frontal", "Crucifixo invertido", "Elevação lateral na máquina", "Arnold press", "Encolhimento"],
+            "🟡 BÍCEPS": ["Rosca direta", "Rosca alternada", "Rosca concentrada", "Rosca martelo", "Rosca barra W", "Rosca banco inclinado", "Rosca no cabo", "Rosca spider"],
+            "🔴 TRÍCEPS": ["Tríceps na corda", "Tríceps na barra", "Tríceps testa", "Tríceps francês", "Mergulho no banco", "Tríceps coice", "Tríceps unilateral na corda", "Tríceps banco"],
+            "🟣 QUADRÍCEPS": ["Agachamento", "Agachamento no smith", "Leg press", "Hack machine", "Extensora", "Afundo", "Passada", "Agachamento búlgaro"],
+            "⚫ POSTERIOR / GLÚTEO": ["Mesa flexora", "Flexora sentado", "Stiff", "Terra romeno", "Glúteo na máquina", "Glúteo no cabo", "Elevação pélvica (hip thrust)", "Good morning"],
+            "⚪ PANTURRILHA": ["Panturrilha em pé", "Panturrilha sentado", "Panturrilha no leg press", "Panturrilha no smith", "Panturrilha unilateral"],
+            "🔶 ABDÔMEN": ["Abdominal supra", "Abdominal infra", "Abdominal remador", "Abdominal bicicleta", "Prancha", "Prancha lateral"],
+            "❤️ CARDIO BÁSICO": ["Esteira (caminhada)", "Esteira (corrida leve)", "Bicicleta ergométrica", "Elíptico", "Simulador de escada", "Máquina de remo"]
         };
         
         function generateWorkout(gender, goal, level, days) {
@@ -391,16 +389,16 @@
             else if (level === "avancado") { series = "4"; reps = "8"; }
             
             const exercises = {
-                peito: ["Supino Reto Barra", "Supino Inclinado Halteres", "Crucifixo", "Peck Deck", "Crossover", "Flexão"],
-                costas: ["Puxada Frontal", "Barra Fixa", "Remada Curvada", "Remada Unilateral", "Pullover"],
-                ombros: ["Desenvolvimento", "Elevação Lateral", "Elevação Frontal", "Crucifixo Invertido"],
-                biceps: ["Rosca Direta", "Rosca Alternada", "Rosca Martelo", "Rosca Concentrada"],
-                triceps: ["Tríceps Corda", "Tríceps Testa", "Tríceps Coice", "Francesa"],
-                quadriceps: ["Agachamento Livre", "Leg Press", "Cadeira Extensora"],
-                posterior: ["Mesa Flexora", "Stiff", "Cadeira Flexora"],
-                gluteos: ["Elevação Pélvica", "Avanço", "Afundo", "Agachamento Sumô"],
-                panturrilha: ["Panturrilha em Pé", "Panturrilha Sentado"],
-                abdomen: ["Abdominal Reto", "Prancha", "Elevação de Pernas", "Russian Twist"]
+                peito: ["Supino reto", "Supino inclinado", "Crucifixo", "Peck deck (voador)", "Cross (crossover)", "Flexão de braço"],
+                costas: ["Puxada na frente", "Barra fixa", "Remada curvada", "Remada unilateral (serrote)", "Levantamento terra"],
+                ombros: ["Desenvolvimento", "Elevação lateral", "Elevação frontal", "Crucifixo invertido", "Encolhimento"],
+                biceps: ["Rosca direta", "Rosca alternada", "Rosca martelo", "Rosca concentrada"],
+                triceps: ["Tríceps na corda", "Tríceps testa", "Tríceps coice", "Mergulho no banco"],
+                quadriceps: ["Agachamento", "Leg press", "Extensora", "Afundo"],
+                posterior: ["Mesa flexora", "Stiff", "Terra romeno"],
+                gluteos: ["Elevação pélvica (hip thrust)", "Glúteo no cabo", "Agachamento búlgaro"],
+                panturrilha: ["Panturrilha em pé", "Panturrilha sentado"],
+                abdomen: ["Abdominal supra", "Prancha", "Abdominal infra", "Abdominal bicicleta"]
             };
             
             if (gender === "male") {
@@ -410,15 +408,15 @@
                     workouts.C = [exercises.quadriceps[0], exercises.quadriceps[1], exercises.posterior[0], exercises.gluteos[0], exercises.panturrilha[0]].map(n => ({ name: n, series, reps, load: "", notes: "" }));
                 }
                 if (days >= 4) workouts.D = [exercises.ombros[2], exercises.biceps[2], exercises.triceps[1], exercises.abdomen[1]].map(n => ({ name: n, series, reps, load: "", notes: "" }));
-                if (days >= 5) workouts.E = [exercises.peito[4], exercises.costas[4], exercises.quadriceps[2], exercises.posterior[1]].map(n => ({ name: n, series, reps, load: "", notes: "" }));
+                if (days >= 5) workouts.E = [exercises.peito[3], exercises.costas[3], exercises.quadriceps[2], exercises.posterior[1]].map(n => ({ name: n, series, reps, load: "", notes: "" }));
             } else {
                 if (days >= 3) {
                     workouts.A = [exercises.gluteos[0], exercises.gluteos[1], exercises.quadriceps[0], exercises.posterior[0], exercises.panturrilha[0]].map(n => ({ name: n, series, reps, load: "", notes: "" }));
                     workouts.B = [exercises.peito[0], exercises.costas[0], exercises.ombros[0], exercises.biceps[0], exercises.triceps[0]].map(n => ({ name: n, series, reps, load: "", notes: "" }));
-                    workouts.C = [exercises.gluteos[2], exercises.quadriceps[1], exercises.posterior[1], exercises.abdomen[0], exercises.abdomen[2]].map(n => ({ name: n, series, reps, load: "", notes: "" }));
+                    workouts.C = [exercises.gluteos[2], exercises.quadriceps[2], exercises.posterior[1], exercises.abdomen[0], exercises.abdomen[2]].map(n => ({ name: n, series, reps, load: "", notes: "" }));
                 }
-                if (days >= 4) workouts.D = [exercises.costas[2], exercises.ombros[1], exercises.triceps[2], exercises.abdomen[3]].map(n => ({ name: n, series, reps, load: "", notes: "" }));
-                if (days >= 5) workouts.E = [exercises.peito[3], exercises.biceps[3], exercises.panturrilha[1]].map(n => ({ name: n, series, reps, load: "", notes: "" }));
+                if (days >= 4) workouts.D = [exercises.costas[2], exercises.ombros[2], exercises.triceps[2], exercises.abdomen[3]].map(n => ({ name: n, series, reps, load: "", notes: "" }));
+                if (days >= 5) workouts.E = [exercises.peito[4], exercises.biceps[3], exercises.panturrilha[1]].map(n => ({ name: n, series, reps, load: "", notes: "" }));
             }
             return workouts;
         }
@@ -438,16 +436,17 @@
         function renderExerciseLibrary(search = '') {
             const container = document.getElementById('exerciseLibrary');
             let html = '';
-            for (const [groupName, muscles] of Object.entries(EXERCISE_LIBRARY)) {
+            for (const [groupName, exercises] of Object.entries(EXERCISE_LIBRARY)) {
+                const filtered = search ? exercises.filter(e => e.toLowerCase().includes(search.toLowerCase())) : exercises;
+                if (filtered.length === 0) continue;
                 const groupId = groupName.replace(/[^a-zA-Z]/g, '');
                 html += `<div class="muscle-group"><div class="group-header" onclick="toggleGroup('${groupId}')"><h4>${groupName}</h4><i class="fas fa-chevron-down"></i></div><div class="muscles-list" id="list-${groupId}">`;
-                for (const [muscleName, exercises] of Object.entries(muscles)) {
-                    const muscleId = `${groupId}_${muscleName.replace(/[^a-zA-Z]/g, '')}`;
-                    html += `<div class="muscle-item"><div class="muscle-name" onclick="toggleMuscle('${muscleId}')"><span>${muscleName}</span><i class="fas fa-chevron-right"></i></div><div class="exercises-grid" id="exercises-${muscleId}">`;
-                    exercises.forEach(ex => { const checked = tempExercises.some(e => e.name === ex); html += `<div class="exercise-checkbox" data-exercise="${ex.replace(/'/g, "\\'")}"><input type="checkbox" ${checked ? 'checked' : ''}><label>${ex}</label></div>`; });
-                    html += `</div></div>`;
-                }
-                html += `</div></div>`;
+                html += `<div class="muscle-item"><div class="muscle-name" onclick="toggleMuscle('${groupId}_exercises')"><span>📋 Todos os exercícios</span><i class="fas fa-chevron-right"></i></div><div class="exercises-grid" id="exercises-${groupId}_exercises">`;
+                filtered.forEach(ex => {
+                    const checked = tempExercises.some(e => e.name === ex);
+                    html += `<div class="exercise-checkbox" data-exercise="${ex.replace(/'/g, "\\'")}"><input type="checkbox" ${checked ? 'checked' : ''}><label>${ex}</label></div>`;
+                });
+                html += `</div></div></div></div>`;
             }
             container.innerHTML = html || '<div class="empty-state">Nenhum exercício encontrado</div>';
             document.querySelectorAll('#exerciseLibrary .exercise-checkbox').forEach(el => { el.removeEventListener('click', handleExerciseClick); el.addEventListener('click', handleExerciseClick); });
