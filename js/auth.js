@@ -141,3 +141,52 @@ class Auth {
             };
             
             this.createSession(sessionData);
+            
+            return { 
+                success: true, 
+                message: 'Login realizado com sucesso',
+                user: sessionData
+            };
+        }
+        
+        return { success: false, message: 'ID ou senha incorretos' };
+    }
+
+    static createSession(sessionData) {
+        localStorage.setItem(CONFIG.SESSION_KEY, JSON.stringify(sessionData));
+    }
+
+    static logout() {
+        localStorage.removeItem(CONFIG.SESSION_KEY);
+    }
+
+    static redirectToPanel() {
+        const session = this.getSession();
+        if (!session) {
+            window.location.href = 'index.html';
+            return;
+        }
+        
+        if (session.userType === 'instructor') {
+            window.location.href = 'instructor-panel.html';
+        } else if (session.userType === 'client') {
+            window.location.href = 'client-panel.html';
+        }
+    }
+
+    static checkAuth(userType) {
+        if (!this.isAuthenticated()) {
+            window.location.href = 'index.html';
+            return false;
+        }
+        
+        const session = this.getSession();
+        if (session.userType !== userType) {
+            this.logout();
+            window.location.href = 'index.html';
+            return false;
+        }
+        
+        return true;
+    }
+}
