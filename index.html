@@ -2,572 +2,409 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Aurora Fitness</title>
-    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Segoe', sans-serif; }
-        body { background: #0a0a0a; height: 100vh; overflow: hidden; position: fixed; width: 100%; }
-        
-        .choice-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-            display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px;
-        }
-        .choice-screen.hidden { display: none; }
-        .choice-box {
-            background: #1a1a1a; border: 1px solid #ff6b35;
-            border-radius: 32px; padding: 40px 28px; width: 100%; max-width: 380px; text-align: center;
-        }
-        .choice-logo { margin-bottom: 32px; }
-        .choice-logo i { font-size: 3.5rem; color: #ff6b35; }
-        .choice-logo h1 { font-size: 2rem; font-weight: 700; color: #ffffff; margin-top: 12px; }
-        .choice-buttons { display: grid; gap: 16px; }
-        .choice-btn {
-            padding: 20px; background: #0a0a0a;
-            border: 1px solid #ff6b35; border-radius: 20px;
-            color: #ffffff; cursor: pointer;
-        }
-        .choice-btn i { font-size: 2rem; color: #ff6b35; margin-bottom: 10px; display: block; }
-        .choice-btn h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 6px; color: #ffffff; }
-        .choice-btn p { color: #cccccc; font-size: 0.75rem; }
-        .choice-footer { margin-top: 32px; color: #888888; font-size: 0.65rem; }
-        
-        .login-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-            display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px;
-        }
-        .login-screen.hidden { display: none; }
-        .login-box {
-            background: #1a1a1a; border: 1px solid #ff6b35;
-            border-radius: 32px; padding: 32px 24px; width: 100%; max-width: 360px;
-        }
-        .login-logo { text-align: center; margin-bottom: 28px; }
-        .login-logo i { font-size: 2.5rem; color: #ff6b35; }
-        .login-logo h1 { font-size: 1.6rem; font-weight: 700; color: #ffffff; }
-        .login-badge { background: #ff6b35; padding: 6px 16px; border-radius: 40px; font-size: 0.7rem; font-weight: 700; color: #ffffff; display: inline-block; margin-top: 12px; }
-        .input-group { margin-bottom: 18px; }
-        .input-group label { display: block; color: #cccccc; margin-bottom: 6px; font-size: 0.7rem; font-weight: 600; }
-        .input-field { position: relative; }
-        .input-field i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #ff6b35; font-size: 1rem; }
-        .input-field input {
-            width: 100%; padding: 14px 16px 14px 48px;
-            background: #0a0a0a; border: 1px solid #ff6b35; border-radius: 16px;
-            color: #ffffff; font-size: 0.9rem;
-        }
-        .btn-login {
-            width: 100%; padding: 14px; background: #ff6b35;
-            border: none; border-radius: 16px; color: #ffffff; font-weight: 700; font-size: 0.9rem; cursor: pointer;
-        }
-        .btn-back {
-            width: 100%; padding: 12px; background: #0a0a0a;
-            border: 1px solid #ff6b35; border-radius: 16px;
-            color: #cccccc; cursor: pointer; margin-top: 12px;
-        }
-        .error-message { color: #ff6666; text-align: center; margin-top: 12px; font-size: 0.75rem; display: none; }
-        
-        .instructor-panel { display: none; height: 100vh; background: #0a0a0a; overflow-y: auto; position: fixed; top: 0; left: 0; width: 100%; }
-        .instructor-panel.active { display: block; }
-        
-        .win8-header {
-            background: #0d0d0d; padding: 20px 24px; border-bottom: 3px solid #ff6b35; position: sticky; top: 0; z-index: 100;
-        }
-        .win8-header h1 { font-size: 1.6rem; font-weight: 700; color: #ffffff; }
-        .win8-header span { color: #ff6b35; }
-        .win8-userbar { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
-        .win8-profile { display: flex; align-items: center; gap: 10px; background: #1a1a1a; padding: 8px 16px; border-radius: 40px; }
-        .win8-profile i { color: #ff6b35; }
-        .win8-profile span { color: #ffffff; font-size: 0.8rem; }
-        .win8-logout { background: rgba(255,68,68,0.15); border: 1px solid #ff6666; color: #ff6666; padding: 8px 16px; border-radius: 40px; cursor: pointer; }
-        
-        .win8-tiles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; padding: 20px; }
-        .win8-tile {
-            background: #1a1a1a; border: 1px solid #ff6b35;
-            border-radius: 24px; padding: 24px 16px; text-align: center; cursor: pointer;
-        }
-        .win8-tile i { font-size: 2.2rem; color: #ff6b35; margin-bottom: 12px; display: block; }
-        .win8-tile h3 { color: #ffffff; font-size: 0.9rem; font-weight: 600; }
-        .win8-tile p { color: #cccccc; font-size: 0.65rem; }
-        
-        .win8-section { display: none; padding: 20px; }
-        .win8-section.active { display: block; }
-        
-        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 20px; }
-        .stat-card { background: #1a1a1a; border: 1px solid #ff6b35; border-radius: 20px; padding: 20px; text-align: center; }
-        .stat-card .stat-number { font-size: 2.2rem; font-weight: 800; color: #ff6b35; }
-        .stat-card .stat-label { color: #cccccc; font-size: 0.65rem; margin-top: 6px; }
-        
-        .btn-primary {
-            background: #ff6b35; border: none;
-            padding: 12px 20px; border-radius: 40px; color: #ffffff; font-weight: 700;
-            cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
-        }
-        
-        .win8-card {
-            background: #1a1a1a;
-            border: 1px solid #ff6b35;
-            border-radius: 20px;
-            overflow: hidden;
-        }
-        .win8-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 20px;
-            background: #252525;
-            border-bottom: 1px solid #ff6b35;
-        }
-        .win8-card-header h3 { 
-            color: #ffffff !important; 
-            font-size: 0.85rem; 
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-        .win8-card-header i { color: #ff6b35; }
-        
-        .win8-list { background: #1a1a1a; border: 1px solid #ff6b35; border-radius: 20px; overflow: hidden; }
-        .win8-list-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid #2a2a2a; }
-        .win8-list-item .item-title { color: #ffffff; font-size: 0.85rem; }
-        .win8-list-item .item-sub { color: #cccccc; font-size: 0.65rem; margin-top: 4px; }
-        .win8-list-item .item-actions { display: flex; gap: 16px; }
-        .win8-list-item .item-actions i { color: #888888; cursor: pointer; }
-        .win8-list-item .item-actions i:hover { color: #ff6b35; }
-        
-        .client-group { background: #1a1a1a; border: 1px solid #ff6b35; border-radius: 20px; margin-bottom: 16px; overflow: hidden; }
-        .client-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: #252525; cursor: pointer; }
-        .client-header h4 { color: #ffffff; }
-        .client-header i { color: #ff6b35; }
-        .client-sheets { display: none; background: #0a0a0a; }
-        .client-sheets.active { display: block; }
-        .sheet-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px 12px 40px; border-bottom: 1px solid #2a2a2a; color: #ffffff; }
-        
-        .client-panel { display: none; height: 100vh; background: #0a0a0a; overflow-y: auto; position: fixed; top: 0; left: 0; width: 100%; }
-        .client-panel.active { display: block; }
-        
-        .main-treino-btn {
-            background: #ff6b35; border: none;
-            border-radius: 24px; padding: 18px; width: 100%; color: #ffffff;
-            font-size: 1rem; font-weight: 700; cursor: pointer; margin-bottom: 16px;
-        }
-        .auto-treino-btn {
-            background: #1a1a1a; border: 2px solid #ff6b35;
-            border-radius: 24px; padding: 18px; width: 100%; color: #ffffff;
-            font-size: 1rem; font-weight: 700; cursor: pointer; margin-bottom: 16px;
-            display: flex; align-items: center; justify-content: center; gap: 12px;
-        }
-        .sub-treinos-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
-        .sub-treino-btn {
-            background: #1a1a1a; border: 1px solid #ff6b35;
-            border-radius: 20px; padding: 16px; color: #ffffff; text-align: center; cursor: pointer;
-        }
-        .sub-treino-btn.has-treino { background: #ff6b35; border: none; }
-        .relatorio-btn {
-            background: #1a1a1a; border: 1px solid #ff6b35;
-            border-radius: 20px; padding: 16px; width: 100%; color: #ffffff; text-align: center; cursor: pointer; margin-bottom: 16px;
-        }
-        .cronometro-container { background: #1a1a1a; border: 1px solid #ff6b35; border-radius: 24px; padding: 20px; text-align: center; }
-        .cronometro-display .timer { font-size: 3.5rem; font-weight: 800; color: #ff6b35; font-family: monospace; letter-spacing: 6px; }
-        .cronometro-botoes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 16px; }
-        .crono-btn { padding: 12px; border-radius: 40px; font-size: 0.7rem; font-weight: 600; cursor: pointer; background: #252525; color: #ffffff; border: none; }
-        .crono-start { background: #ff6b35; }
-        
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 2000; align-items: flex-end; }
-        .modal.active { display: flex; }
-        .modal-content { background: #1a1a1a; border-top: 3px solid #ff6b35; border-radius: 32px 32px 0 0; padding: 24px; width: 100%; max-height: 85vh; overflow-y: auto; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #2a2a2a; }
-        .modal-header h2, .modal-header h3 { color: #ff6b35; font-size: 1rem; font-weight: 700; }
-        .close-modal { color: #ffffff; font-size: 1.2rem; cursor: pointer; }
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; color: #cccccc; margin-bottom: 8px; font-size: 0.7rem; font-weight: 600; }
-        .form-group select, .form-group input, .form-group textarea {
-            width: 100%; padding: 14px 16px;
-            background: #0a0a0a; border: 1px solid #ff6b35; border-radius: 16px;
-            color: #ffffff; font-size: 0.9rem;
-        }
-        .gender-buttons { display: flex; gap: 12px; }
-        .gender-btn {
-            flex: 1; padding: 14px; background: #1a1a1a;
-            border: 1px solid #ff6b35; border-radius: 16px;
-            color: #ffffff; text-align: center; cursor: pointer;
-        }
-        .gender-btn.active { background: #ff6b35; border-color: #ff6b35; }
-        
-        .library-container { background: #0a0a0a; border-radius: 20px; padding: 8px; }
-        .muscle-group { margin-bottom: 12px; background: #1a1a1a; border-radius: 16px; overflow: hidden; border: 1px solid #ff6b35; }
-        .group-header { display: flex; justify-content: space-between; padding: 14px 16px; background: #252525; cursor: pointer; }
-        .group-header h4 { color: #ff6b35; font-size: 0.85rem; }
-        .group-header i { color: #ff6b35; }
-        .muscles-list { display: none; padding: 8px; }
-        .muscles-list.show { display: block; }
-        .muscle-item { margin-bottom: 8px; background: #0a0a0a; border-radius: 12px; overflow: hidden; border: 1px solid #ff6b35; }
-        .muscle-name { display: flex; justify-content: space-between; padding: 12px 16px; background: #1a1a1a; cursor: pointer; color: #ffffff; }
-        .muscle-name span { color: #ffffff; }
-        .muscle-name i { color: #ff6b35; }
-        .exercises-grid { display: none; padding: 6px 6px 6px 20px; }
-        .exercises-grid.show { display: block; }
-        .exercise-checkbox { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: #1a1a1a; border-radius: 10px; margin-bottom: 4px; cursor: pointer; }
-        .exercise-checkbox label { color: #ffffff; font-size: 0.75rem; flex: 1; cursor: pointer; }
-        .exercise-checkbox input { width: 18px; height: 18px; accent-color: #ff6b35; cursor: pointer; }
-        
-        .selected-exercises { background: #1a1a1a; border-radius: 20px; margin-top: 16px; padding: 12px; border: 1px solid #ff6b35; }
-        .selected-header { display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #ff6b35; }
-        .selected-header h4 { color: #ff6b35; font-size: 0.8rem; }
-        .selected-exercise-item { background: #0a0a0a; padding: 12px; border-radius: 16px; margin-bottom: 8px; border: 1px solid #ff6b35; }
-        .selected-exercise-item strong { color: #ff6b35; display: block; margin-bottom: 8px; font-size: 0.85rem; }
-        .selected-exercise-details {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin-top: 8px;
-        }
-        .selected-exercise-details input {
-            background: #1a1a1a;
-            border: 1px solid #ff6b35;
-            border-radius: 10px;
-            padding: 8px 6px;
-            color: #ffffff;
-            font-size: 0.7rem;
-            width: 100%;
-            text-align: center;
-        }
-        .selected-exercise-details input::placeholder { color: #888888; }
-        .remove-exercise { color: #ff6666; cursor: pointer; float: right; font-size: 0.8rem; }
-        .search-exercise { width: 100%; padding: 12px 16px; background: #0a0a0a; border: 1px solid #ff6b35; border-radius: 40px; color: #ffffff; margin-bottom: 16px; }
-        
-        .empty-state { text-align: center; padding: 40px; color: #888888; }
-        .copyright { text-align: center; padding: 20px; color: #888888; font-size: 0.55rem; margin-top: 20px; }
-        
-        input, select, textarea { color: #ffffff !important; }
-        input::placeholder { color: #888888 !important; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aurora Fitness - Login</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    <div class="choice-screen" id="choiceScreen">
-        <div class="choice-box">
-            <div class="choice-logo"><i class="fas fa-dumbbell"></i><h1>Aurora<span style="color:#ff6b35">Fitness</span></h1></div>
+    <!-- LOADING SCREEN -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Carregando...</p>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- TELA DE ESCOLHA -->
+    <div id="choiceScreen" class="choice-screen">
+        <div class="choice-container">
+            <div class="logo-section">
+                <i class="fas fa-dumbbell logo-icon"></i>
+                <h1>Aurora<span class="text-accent">Fitness</span></h1>
+                <p class="tagline">Sistema de Gestão de Treinos</p>
+            </div>
+
             <div class="choice-buttons">
-                <div class="choice-btn" id="btnInstructor"><i class="fas fa-user-tie"></i><h3>Sou Instrutor</h3><p>Acesse o painel do personal</p></div>
-                <div class="choice-btn" id="btnClient"><i class="fas fa-user"></i><h3>Sou Aluno</h3><p>Acesse suas fichas de treino</p></div>
-            </div>
-            <div class="choice-footer">© 2026 Aurora Fitness • Matheus Pacifico<br>(79) 99645-8399</div>
-        </div>
-    </div>
-
-    <div class="login-screen hidden" id="instructorLoginScreen">
-        <div class="login-box">
-            <div class="login-logo"><i class="fas fa-dumbbell"></i><h1>Aurora</h1><div class="login-badge">INSTRUTOR</div></div>
-            <form id="instructorLoginForm">
-                <div class="input-group"><label>ID DO INSTRUTOR</label><div class="input-field"><i class="fas fa-id-card"></i><input type="text" id="instructorId" value="trainer"></div></div>
-                <div class="input-group"><label>SENHA</label><div class="input-field"><i class="fas fa-lock"></i><input type="password" id="instructorPassword" value="123456"></div></div>
-                <div class="error-message" id="instructorLoginError">ID ou senha incorretos</div>
-                <button type="submit" class="btn-login"><i class="fas fa-sign-in-alt"></i> ACESSAR</button>
-                <button type="button" class="btn-back" id="btnBackInstructor"><i class="fas fa-arrow-left"></i> VOLTAR</button>
-            </form>
-        </div>
-    </div>
-
-    <div class="login-screen hidden" id="clientLoginScreen">
-        <div class="login-box">
-            <div class="login-logo"><i class="fas fa-dumbbell"></i><h1>Aurora</h1><div class="login-badge">ALUNO</div></div>
-            <form id="clientLoginForm">
-                <div class="input-group"><label>ID DO CLIENTE</label><div class="input-field"><i class="fas fa-id-card"></i><input type="text" id="clientId" placeholder="Seu ID"></div></div>
-                <div class="input-group"><label>SENHA</label><div class="input-field"><i class="fas fa-lock"></i><input type="password" id="clientPassword" placeholder="••••••••"></div></div>
-                <div class="error-message" id="clientLoginError">ID ou senha incorretos</div>
-                <button type="submit" class="btn-login"><i class="fas fa-sign-in-alt"></i> ACESSAR</button>
-                <button type="button" class="btn-back" id="btnBackClient"><i class="fas fa-arrow-left"></i> VOLTAR</button>
-            </form>
-        </div>
-    </div>
-
-    <div class="instructor-panel" id="instructorPanel">
-        <div class="win8-header">
-            <h1>Aurora<span>Fitness</span></h1>
-            <div class="win8-userbar">
-                <div class="win8-profile"><i class="fas fa-user-tie"></i><span>INSTRUTOR</span></div>
-                <button class="win8-logout" id="btnLogoutInstructor"><i class="fas fa-sign-out-alt"></i> SAIR</button>
-            </div>
-        </div>
-        <div class="win8-tiles">
-            <div class="win8-tile" data-section="dashboard"><i class="fas fa-chart-pie"></i><h3>Dashboard</h3><p>Visão geral</p></div>
-            <div class="win8-tile" data-section="clients"><i class="fas fa-users"></i><h3>Clientes</h3><p>Gerenciar</p></div>
-            <div class="win8-tile" data-section="sheets"><i class="fas fa-clipboard-list"></i><h3>Fichas</h3><p>Treinos</p></div>
-            <div class="win8-tile" data-section="backup"><i class="fas fa-database"></i><h3>Backup</h3><p>Segurança</p></div>
-        </div>
-        <div class="win8-section" id="section-dashboard">
-            <div class="stats-grid">
-                <div class="stat-card"><div class="stat-number" id="totalClients">0</div><div class="stat-label">CLIENTES</div></div>
-                <div class="stat-card"><div class="stat-number" id="totalSheets">0</div><div class="stat-label">FICHAS</div></div>
-            </div>
-            <div class="win8-card">
-                <div class="win8-card-header"><h3>📋 CLIENTES RECENTES</h3></div>
-                <div id="recentClientsList"></div>
-            </div>
-        </div>
-        <div class="win8-section" id="section-clients"><div style="margin-bottom:16px"><button class="btn-primary" id="btnNewClient"><i class="fas fa-plus"></i> NOVO CLIENTE</button></div><div class="win8-list" id="clientsList"></div></div>
-        <div class="win8-section" id="section-sheets"><div style="margin-bottom:16px"><button class="btn-primary" id="btnNewSheet"><i class="fas fa-plus"></i> NOVA FICHA</button></div><div id="sheetsByClient"></div></div>
-        <div class="win8-section" id="section-backup"><div style="display:flex; gap:12px; margin-bottom:16px"><button class="btn-primary" id="btnExportBackup"><i class="fas fa-download"></i> EXPORTAR</button><button class="btn-primary" id="btnImportBackup"><i class="fas fa-upload"></i> IMPORTAR</button></div><div class="win8-list" id="backupHistoryList"></div></div>
-        <div class="copyright">© 2026 Aurora Fitness • Matheus Pacifico | (79) 99645-8399</div>
-    </div>
-
-    <div class="modal" id="clientModal"><div class="modal-content"><div class="modal-header"><h2>NOVO CLIENTE</h2><i class="fas fa-times close-modal" id="closeClientModal"></i></div><form id="clientForm"><input type="hidden" id="clientId"><div class="form-group"><label>NOME</label><input type="text" id="clientName" required></div><div class="form-group"><label>ID DO CLIENTE</label><input type="text" id="clientIdField" required></div><div class="form-group"><label>SENHA</label><input type="text" id="clientPasswordField" required></div><div class="form-group"><label>TELEFONE</label><input type="tel" id="clientPhone"></div><button type="submit" class="btn-primary" style="width:100%">SALVAR</button></form></div></div>
-    
-    <div class="modal" id="sheetModal"><div class="modal-content"><div class="modal-header"><h2>MONTAR FICHA</h2><i class="fas fa-times close-modal" id="closeSheetModal"></i></div><form id="sheetForm"><input type="hidden" id="sheetId"><div class="form-group"><label>CLIENTE</label><select id="sheetClient" required></select></div><div class="form-group"><label>NOME DA FICHA</label><input type="text" id="sheetName" required placeholder="Ex: Treino A"></div><div class="form-group"><label>OBSERVAÇÕES</label><textarea id="sheetNotes" rows="2" placeholder="Instruções importantes..."></textarea></div>
-        <div style="margin-bottom:16px"><h3 style="color:#ff6b35; margin-bottom:12px;"><i class="fas fa-database"></i> BIBLIOTECA</h3><input type="text" id="searchExercise" class="search-exercise" placeholder="🔍 Pesquisar..."><div class="library-container" id="exerciseLibrary"></div></div>
-        <div class="selected-exercises"><div class="selected-header"><h4>EXERCÍCIOS SELECIONADOS (<span id="selectedCount">0</span>)</h4><i class="fas fa-trash" id="clearAllExercises" style="color:#ff6666; cursor:pointer;"></i></div><div id="selectedExercisesList"></div></div>
-        <button type="submit" class="btn-primary" style="width:100%; margin-top:16px;">SALVAR FICHA</button></form></div></div>
-
-    <div class="modal" id="autoTreinoModal"><div class="modal-content"><div class="modal-header"><h2><i class="fas fa-magic"></i> GERAR TREINO AUTOMÁTICO</h2><i class="fas fa-times close-modal" id="closeAutoTreinoModal"></i></div>
-        <div class="form-group"><label>SEU GÊNERO</label><div class="gender-buttons"><div class="gender-btn" data-gender="male">👨 HOMEM</div><div class="gender-btn" data-gender="female">👩 MULHER</div></div></div>
-        <div class="form-group"><label>OBJETIVO</label><select id="treinoGoal"><option value="hipertrofia">💪 HIPERTROFIA</option><option value="emagrecimento">🔥 EMAGRECIMENTO</option><option value="resistencia">🏃 RESISTÊNCIA</option></select></div>
-        <div class="form-group"><label>NÍVEL</label><select id="treinoLevel"><option value="iniciante">🌱 INICIANTE</option><option value="intermediario">⚡ INTERMEDIÁRIO</option><option value="avancado">💎 AVANÇADO</option></select></div>
-        <div class="form-group"><label>DIAS POR SEMANA</label><select id="treinoDays"><option value="3">3 dias (ABC)</option><option value="4">4 dias (ABCD)</option><option value="5">5 dias (ABCDE)</option></select></div>
-        <button class="btn-primary" id="btnGenerateTreino" style="width:100%"><i class="fas fa-magic"></i> GERAR TREINO PERSONALIZADO</button>
-    </div></div>
-
-    <div class="client-panel" id="clientPanel">
-        <div class="win8-header">
-            <h1>Aurora<span>Fitness</span></h1>
-            <div class="win8-userbar">
-                <div class="win8-profile"><i class="fas fa-user-circle"></i><span id="clientNameDisplay">ALUNO</span></div>
-                <button class="win8-logout" id="btnLogoutClient"><i class="fas fa-sign-out-alt"></i> SAIR</button>
-            </div>
-        </div>
-        <div style="padding:20px">
-            <button class="main-treino-btn" id="btnMeusTreinos"><i class="fas fa-dumbbell"></i> MEUS TREINOS</button>
-            <button class="auto-treino-btn" id="btnAutoTreino"><i class="fas fa-magic"></i> 🤖 GERAR TREINO AUTOMÁTICO</button>
-            <div class="sub-treinos-grid" id="subTreinosGrid" style="display:none">
-                <button class="sub-treino-btn" data-treino="A"><i class="fas fa-fire"></i> TREINO A</button>
-                <button class="sub-treino-btn" data-treino="B"><i class="fas fa-bolt"></i> TREINO B</button>
-                <button class="sub-treino-btn" data-treino="C"><i class="fas fa-dumbbell"></i> TREINO C</button>
-                <button class="sub-treino-btn" data-treino="D"><i class="fas fa-heart"></i> TREINO D</button>
-                <button class="sub-treino-btn" data-treino="E"><i class="fas fa-star"></i> TREINO E</button>
-            </div>
-            <button class="relatorio-btn" id="btnRelatorio"><i class="fas fa-chart-bar"></i> RELATÓRIO</button>
-            <div class="cronometro-container">
-                <div class="cronometro-display"><div class="timer" id="cronometroDisplay">00:00</div></div>
-                <div class="cronometro-botoes">
-                    <button class="crono-btn crono-start" id="btnCronoStart"><i class="fas fa-play"></i> INICIAR</button>
-                    <button class="crono-btn crono-pause" id="btnCronoPause"><i class="fas fa-pause"></i> PAUSAR</button>
-                    <button class="crono-btn crono-reset" id="btnCronoReset"><i class="fas fa-redo-alt"></i> RESET</button>
-                    <button class="crono-btn crono-save" id="btnCronoSave"><i class="fas fa-save"></i> SALVAR</button>
-                </div>
-            </div>
-        </div>
-        <div class="copyright">© 2026 Aurora Fitness</div>
-    </div>
-
-    <div class="modal" id="treinoModal"><div class="modal-content"><div class="modal-header"><h3 id="treinoModalTitle">TREINO</h3><i class="fas fa-times close-modal" id="closeTreinoModal"></i></div><div id="treinoModalContent"></div><button class="btn-primary" id="btnCloseTreinoModal" style="width:100%; margin-top:16px;">FECHAR</button></div></div>
-    <div class="modal" id="relatorioModal"><div class="modal-content"><div class="modal-header"><h3>RELATÓRIO</h3><i class="fas fa-times close-modal" id="closeRelatorioModal"></i></div><div id="relatorioContent"></div><button class="btn-primary" id="btnCloseRelatorioModal" style="width:100%; margin-top:16px;">FECHAR</button></div></div>
-
-    <script>
-        const SUPABASE_URL = 'https://hupkzyvbvfpzeihhmgxg.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1cGt6eXZidmZwemVpaGhtZ3hnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4MjU2NzksImV4cCI6MjA5MjQwMTY3OX0.YevRjHVLFOUFIGcoj0k0dGcFcpUquhW9LTFdsbuRWmE';
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        const TRAINER = { id: 'trainer', password: '123456' };
-        
-        // ==================== BIBLIOTECA CORRIGIDA (SEGUNDO SUA LISTA) ====================
-        const EXERCISE_LIBRARY = {
-            "🔴 PEITO": ["Supino reto", "Supino inclinado", "Supino declinado", "Supino com halter", "Crucifixo", "Crucifixo inclinado", "Cross (crossover)", "Cross por baixo", "Peck deck (voador)", "Flexão de braço"],
-            "🔵 COSTAS": ["Puxada na frente", "Puxada supinada", "Barra fixa", "Remada curvada", "Remada unilateral (serrote)", "Remada baixa", "Remada cavalinho (T-bar)", "Pulldown (braço reto)", "Remada máquina", "Levantamento terra"],
-            "🟢 OMBRO": ["Desenvolvimento", "Desenvolvimento com halter", "Desenvolvimento no smith", "Elevação lateral", "Elevação frontal", "Crucifixo invertido", "Elevação lateral na máquina", "Arnold press", "Encolhimento"],
-            "🟡 BÍCEPS": ["Rosca direta", "Rosca alternada", "Rosca concentrada", "Rosca martelo", "Rosca barra W", "Rosca banco inclinado", "Rosca no cabo", "Rosca spider"],
-            "🔴 TRÍCEPS": ["Tríceps na corda", "Tríceps na barra", "Tríceps testa", "Tríceps francês", "Mergulho no banco", "Tríceps coice", "Tríceps unilateral na corda", "Tríceps banco"],
-            "🟣 QUADRÍCEPS": ["Agachamento", "Agachamento no smith", "Leg press", "Hack machine", "Extensora", "Afundo", "Passada", "Agachamento búlgaro"],
-            "⚫ POSTERIOR / GLÚTEO": ["Mesa flexora", "Flexora sentado", "Stiff", "Terra romeno", "Glúteo na máquina", "Glúteo no cabo", "Elevação pélvica (hip thrust)", "Good morning"],
-            "⚪ PANTURRILHA": ["Panturrilha em pé", "Panturrilha sentado", "Panturrilha no leg press", "Panturrilha no smith", "Panturrilha unilateral"],
-            "🔶 ABDÔMEN": ["Abdominal supra", "Abdominal infra", "Abdominal remador", "Abdominal bicicleta", "Prancha", "Prancha lateral"],
-            "❤️ CARDIO BÁSICO": ["Esteira (caminhada)", "Esteira (corrida leve)", "Bicicleta ergométrica", "Elíptico", "Simulador de escada", "Máquina de remo"]
-        };
-        
-        function generateWorkout(gender, goal, level, days) {
-            const workouts = { A: [], B: [], C: [], D: [], E: [] };
-            let series = "3", reps = "12";
-            if (level === "intermediario") { series = "4"; reps = "10"; }
-            else if (level === "avancado") { series = "4"; reps = "8"; }
-            
-            const exercises = {
-                peito: ["Supino reto", "Supino inclinado", "Crucifixo", "Peck deck (voador)", "Cross (crossover)", "Flexão de braço"],
-                costas: ["Puxada na frente", "Barra fixa", "Remada curvada", "Remada unilateral (serrote)", "Levantamento terra"],
-                ombros: ["Desenvolvimento", "Elevação lateral", "Elevação frontal", "Crucifixo invertido", "Encolhimento"],
-                biceps: ["Rosca direta", "Rosca alternada", "Rosca martelo", "Rosca concentrada"],
-                triceps: ["Tríceps na corda", "Tríceps testa", "Tríceps coice", "Mergulho no banco"],
-                quadriceps: ["Agachamento", "Leg press", "Extensora", "Afundo"],
-                posterior: ["Mesa flexora", "Stiff", "Terra romeno"],
-                gluteos: ["Elevação pélvica (hip thrust)", "Glúteo no cabo", "Agachamento búlgaro"],
-                panturrilha: ["Panturrilha em pé", "Panturrilha sentado"],
-                abdomen: ["Abdominal supra", "Prancha", "Abdominal infra", "Abdominal bicicleta"]
-            };
-            
-            if (gender === "male") {
-                if (days >= 3) {
-                    workouts.A = [exercises.peito[0], exercises.peito[2], exercises.ombros[0], exercises.ombros[1], exercises.triceps[0]].map(n => ({ name: n, series, reps, load: "", notes: "" }));
-                    workouts.B = [exercises.costas[0], exercises.costas[2], exercises.biceps[0], exercises.biceps[1], exercises.abdomen[0]].map(n => ({ name: n, series, reps, load: "", notes: "" }));
-                    workouts.C = [exercises.quadriceps[0], exercises.quadriceps[1], exercises.posterior[0], exercises.gluteos[0], exercises.panturrilha[0]].map(n => ({ name: n, series, reps, load: "", notes: "" }));
-                }
-                if (days >= 4) workouts.D = [exercises.ombros[2], exercises.biceps[2], exercises.triceps[1], exercises.abdomen[1]].map(n => ({ name: n, series, reps, load: "", notes: "" }));
-                if (days >= 5) workouts.E = [exercises.peito[3], exercises.costas[3], exercises.quadriceps[2], exercises.posterior[1]].map(n => ({ name: n, series, reps, load: "", notes: "" }));
-            } else {
-                if (days >= 3) {
-                    workouts.A = [exercises.gluteos[0], exercises.gluteos[1], exercises.quadriceps[0], exercises.posterior[0], exercises.panturrilha[0]].map(n => ({ name: n, series, reps, load: "", notes: "" }));
-                    workouts.B = [exercises.peito[0], exercises.costas[0], exercises.ombros[0], exercises.biceps[0], exercises.triceps[0]].map(n => ({ name: n, series, reps, load: "", notes: "" }));
-                    workouts.C = [exercises.gluteos[2], exercises.quadriceps[2], exercises.posterior[1], exercises.abdomen[0], exercises.abdomen[2]].map(n => ({ name: n, series, reps, load: "", notes: "" }));
-                }
-                if (days >= 4) workouts.D = [exercises.costas[2], exercises.ombros[2], exercises.triceps[2], exercises.abdomen[3]].map(n => ({ name: n, series, reps, load: "", notes: "" }));
-                if (days >= 5) workouts.E = [exercises.peito[4], exercises.biceps[3], exercises.panturrilha[1]].map(n => ({ name: n, series, reps, load: "", notes: "" }));
-            }
-            return workouts;
-        }
-        
-        async function saveGeneratedWorkout(treinoLetter, exercises, sheetName) {
-            const id = crypto.randomUUID();
-            await supabaseClient.from('sheets').upsert({ id, client_id: currentClient.client_id, client_name: currentClient.name, name: `${sheetName} - ${treinoLetter}`, notes: `Treino gerado automaticamente`, exercises, created_at: new Date().toISOString() });
-        }
-        
-        let clients = [], sheets = [], backups = [], treinosTempo = {}, tempExercises = [], currentClient = null;
-        let cronometroInterval, cronometroSeconds = 0, cronometroRunning = false, savedScrollPosition = 0;
-        let selectedGender = "male";
-        
-        function saveModalScroll() { const modal = document.querySelector('#sheetModal .modal-content'); if (modal) savedScrollPosition = modal.scrollTop; }
-        function restoreModalScroll() { const modal = document.querySelector('#sheetModal .modal-content'); if (modal && savedScrollPosition > 0) setTimeout(() => modal.scrollTop = savedScrollPosition, 10); }
-        
-        function renderExerciseLibrary(search = '') {
-            const container = document.getElementById('exerciseLibrary');
-            let html = '';
-            for (const [groupName, exercises] of Object.entries(EXERCISE_LIBRARY)) {
-                const filtered = search ? exercises.filter(e => e.toLowerCase().includes(search.toLowerCase())) : exercises;
-                if (filtered.length === 0) continue;
-                const groupId = groupName.replace(/[^a-zA-Z]/g, '');
-                html += `<div class="muscle-group"><div class="group-header" onclick="toggleGroup('${groupId}')"><h4>${groupName}</h4><i class="fas fa-chevron-down"></i></div><div class="muscles-list" id="list-${groupId}">`;
-                html += `<div class="muscle-item"><div class="muscle-name" onclick="toggleMuscle('${groupId}_exercises')"><span>📋 Todos os exercícios</span><i class="fas fa-chevron-right"></i></div><div class="exercises-grid" id="exercises-${groupId}_exercises">`;
-                filtered.forEach(ex => {
-                    const checked = tempExercises.some(e => e.name === ex);
-                    html += `<div class="exercise-checkbox" data-exercise="${ex.replace(/'/g, "\\'")}"><input type="checkbox" ${checked ? 'checked' : ''}><label>${ex}</label></div>`;
-                });
-                html += `</div></div></div></div>`;
-            }
-            container.innerHTML = html || '<div class="empty-state">Nenhum exercício encontrado</div>';
-            document.querySelectorAll('#exerciseLibrary .exercise-checkbox').forEach(el => { el.removeEventListener('click', handleExerciseClick); el.addEventListener('click', handleExerciseClick); });
-        }
-        
-        function handleExerciseClick(e) { e.preventDefault(); e.stopPropagation(); saveModalScroll(); const input = this.querySelector('input'), label = this.querySelector('label'), exerciseName = label?.innerText; if (input && exerciseName) { const exists = tempExercises.find(e => e.name === exerciseName); if (exists) { input.checked = false; tempExercises = tempExercises.filter(e => e.name !== exerciseName); } else { input.checked = true; tempExercises.push({ name: exerciseName, series: '3', reps: '12', load: '', notes: '' }); } renderSelectedExercises(); } restoreModalScroll(); return false; }
-        window.toggleGroup = function(groupId) { saveModalScroll(); const list = document.getElementById(`list-${groupId}`); if (list) list.classList.toggle('show'); restoreModalScroll(); };
-        window.toggleMuscle = function(muscleId) { saveModalScroll(); const exercises = document.getElementById(`exercises-${muscleId}`); if (exercises) exercises.classList.toggle('show'); restoreModalScroll(); };
-        
-        function renderSelectedExercises() {
-            const container = document.getElementById('selectedExercisesList');
-            document.getElementById('selectedCount').textContent = tempExercises.length;
-            if (tempExercises.length === 0) { container.innerHTML = '<div class="empty-state">Nenhum exercício selecionado</div>'; return; }
-            container.innerHTML = tempExercises.map((ex, idx) => `
-                <div class="selected-exercise-item">
-                    <span class="remove-exercise" onclick="removeSelectedExercise(${idx})"><i class="fas fa-trash-alt"></i></span>
-                    <strong>${ex.name}</strong>
-                    <div class="selected-exercise-details">
-                        <input type="text" placeholder="Séries" value="${ex.series}" onchange="updateExerciseDetail(${idx}, 'series', this.value)">
-                        <input type="text" placeholder="Reps" value="${ex.reps}" onchange="updateExerciseDetail(${idx}, 'reps', this.value)">
-                        <input type="text" placeholder="Carga" value="${ex.load}" onchange="updateExerciseDetail(${idx}, 'load', this.value)">
-                        <input type="text" placeholder="Obs" value="${ex.notes || ''}" onchange="updateExerciseDetail(${idx}, 'notes', this.value)">
+                <button id="btnInstructor" class="choice-card">
+                    <i class="fas fa-user-tie"></i>
+                    <div class="choice-info">
+                        <h3>Sou Instrutor</h3>
+                        <p>Acessar painel de gerenciamento</p>
                     </div>
+                    <i class="fas fa-chevron-right arrow-icon"></i>
+                </button>
+
+                <button id="btnClient" class="choice-card">
+                    <i class="fas fa-user"></i>
+                    <div class="choice-info">
+                        <h3>Sou Aluno</h3>
+                        <p>Acessar meus treinos</p>
+                    </div>
+                    <i class="fas fa-chevron-right arrow-icon"></i>
+                </button>
+            </div>
+
+            <div class="footer-info">
+                <p>© 2026 Aurora Fitness • Matheus Pacifico</p>
+                <p class="phone">(79) 99645-8399</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TELA DE LOGIN INSTRUTOR -->
+    <div id="instructorLoginScreen" class="login-screen hidden">
+        <div class="login-container">
+            <button id="btnBackInstructor" class="back-button">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+            
+            <div class="login-header">
+                <i class="fas fa-user-tie login-avatar"></i>
+                <h2>Login do Instrutor</h2>
+                <p>Acesse seu painel administrativo</p>
+            </div>
+
+            <form id="instructorLoginForm" class="login-form">
+                <div class="form-group">
+                    <label for="instructorId">
+                        <i class="fas fa-id-card"></i> ID do Instrutor
+                    </label>
+                    <input 
+                        type="text" 
+                        id="instructorId" 
+                        placeholder="Digite seu ID"
+                        value="admin"
+                        required
+                    >
+                    <span class="error-message" id="instructorIdError"></span>
                 </div>
-            `).join('');
+
+                <div class="form-group">
+                    <label for="instructorPassword">
+                        <i class="fas fa-lock"></i> Senha
+                    </label>
+                    <div class="password-field">
+                        <input 
+                            type="password" 
+                            id="instructorPassword" 
+                            placeholder="Digite sua senha"
+                            value="123456"
+                            required
+                        >
+                        <button type="button" class="toggle-password" data-target="instructorPassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <span class="error-message" id="instructorPasswordError"></span>
+                </div>
+
+                <div id="instructorLoginError" class="alert-error hidden">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>ID ou senha incorretos</span>
+                </div>
+
+                <button type="submit" class="btn-primary btn-block" id="btnInstructorSubmit">
+                    <i class="fas fa-sign-in-alt"></i> Entrar
+                </button>
+            </form>
+
+            <div class="login-footer">
+                <p>Credenciais de teste:</p>
+                <code>ID: admin | Senha: 123456</code>
+            </div>
+        </div>
+    </div>
+
+    <!-- TELA DE LOGIN ALUNO -->
+    <div id="clientLoginScreen" class="login-screen hidden">
+        <div class="login-container">
+            <button id="btnBackClient" class="back-button">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+            
+            <div class="login-header">
+                <i class="fas fa-user login-avatar"></i>
+                <h2>Login do Aluno</h2>
+                <p>Acesse suas fichas de treino</p>
+            </div>
+
+            <form id="clientLoginForm" class="login-form">
+                <div class="form-group">
+                    <label for="clientId">
+                        <i class="fas fa-id-card"></i> Seu ID de Aluno
+                    </label>
+                    <input 
+                        type="text" 
+                        id="clientId" 
+                        placeholder="Ex: CLI001"
+                        required
+                    >
+                    <span class="error-message" id="clientIdError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="clientPassword">
+                        <i class="fas fa-lock"></i> Senha
+                    </label>
+                    <div class="password-field">
+                        <input 
+                            type="password" 
+                            id="clientPassword" 
+                            placeholder="Digite sua senha"
+                            required
+                        >
+                        <button type="button" class="toggle-password" data-target="clientPassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <span class="error-message" id="clientPasswordError"></span>
+                </div>
+
+                <div id="clientLoginError" class="alert-error hidden">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>ID ou senha incorretos</span>
+                </div>
+
+                <button type="submit" class="btn-primary btn-block" id="btnClientSubmit">
+                    <i class="fas fa-sign-in-alt"></i> Entrar
+                </button>
+            </form>
+
+            <div class="login-footer">
+                <p>Credenciais de teste:</p>
+                <code>ID: CLI001 | Senha: cliente123</code>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE CONFIRMAÇÃO -->
+    <div id="confirmModal" class="modal-overlay hidden">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 id="confirmTitle">Confirmação</h3>
+                <button class="modal-close" id="closeConfirmModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage">Tem certeza?</p>
+            </div>
+            <div class="modal-footer">
+                <button id="confirmCancel" class="btn-secondary">Cancelar</button>
+                <button id="confirmOk" class="btn-primary">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="js/config.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/utils.js"></script>
+    <script>
+        // Inicialização da página de login
+        document.addEventListener('DOMContentLoaded', () => {
+            // Verificar se já está autenticado
+            if (Auth.isAuthenticated()) {
+                Auth.redirectToPanel();
+                return;
+            }
+
+            // Event Listeners
+            setupChoiceScreen();
+            setupInstructorLogin();
+            setupClientLogin();
+            setupPasswordToggles();
+        });
+
+        function setupChoiceScreen() {
+            document.getElementById('btnInstructor').addEventListener('click', () => {
+                showScreen('instructorLoginScreen');
+            });
+
+            document.getElementById('btnClient').addEventListener('click', () => {
+                showScreen('clientLoginScreen');
+            });
+
+            document.getElementById('btnBackInstructor').addEventListener('click', () => {
+                showScreen('choiceScreen');
+            });
+
+            document.getElementById('btnBackClient').addEventListener('click', () => {
+                showScreen('choiceScreen');
+            });
         }
-        
-        window.updateExerciseDetail = (idx, field, val) => { if (tempExercises[idx]) tempExercises[idx][field] = val; };
-        window.removeSelectedExercise = (idx) => { saveModalScroll(); tempExercises.splice(idx, 1); renderSelectedExercises(); renderExerciseLibrary(document.getElementById('searchExercise')?.value || ''); restoreModalScroll(); };
-        function clearAllExercises() { if (confirm('Remover todos os exercícios?')) { tempExercises = []; renderSelectedExercises(); renderExerciseLibrary(''); } }
-        
-        async function loadClients() { const { data } = await supabaseClient.from('clients').select('*'); clients = data || []; }
-        async function loadSheets() { const { data } = await supabaseClient.from('sheets').select('*'); sheets = data || []; }
-        async function loadBackups() { const { data } = await supabaseClient.from('backups').select('*'); backups = data || []; }
-        async function loadTreinosTempo() { const { data } = await supabaseClient.from('treinos_tempo').select('*'); treinosTempo = {}; data?.forEach(t => { if (!treinosTempo[t.client_id]) treinosTempo[t.client_id] = []; treinosTempo[t.client_id].push(t); }); }
-        async function loadAllData() { await loadClients(); await loadSheets(); await loadBackups(); await loadTreinosTempo(); renderAll(); }
-        
-        function renderClients() { 
-            const c = document.getElementById('clientsList'); 
-            if (!clients.length) { c.innerHTML = '<div class="empty-state">Nenhum cliente cadastrado</div>'; return; } 
-            c.innerHTML = clients.map(c => `<div class="win8-list-item"><div><div class="item-title">${c.name}</div><div class="item-sub">ID: ${c.client_id}</div></div><div class="item-actions"><i class="fas fa-edit" onclick="openClientModal('${c.id}')"></i><i class="fas fa-trash-alt" onclick="deleteClient('${c.id}')" style="color:#ff6666"></i></div></div>`).join(''); 
-            const recentContainer = document.getElementById('recentClientsList');
-            if (recentContainer) {
-                recentContainer.innerHTML = clients.slice(0, 5).map(c => `<div class="win8-list-item"><div><div class="item-title">${c.name}</div><div class="item-sub">ID: ${c.client_id}</div></div></div>`).join('');
+
+        function setupInstructorLogin() {
+            document.getElementById('instructorLoginForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const id = document.getElementById('instructorId').value.trim();
+                const password = document.getElementById('instructorPassword').value.trim();
+                
+                // Validação
+                let hasError = false;
+                
+                if (!id) {
+                    showFieldError('instructorId', 'ID é obrigatório');
+                    hasError = true;
+                } else {
+                    clearFieldError('instructorId');
+                }
+                
+                if (!password) {
+                    showFieldError('instructorPassword', 'Senha é obrigatória');
+                    hasError = true;
+                } else {
+                    clearFieldError('instructorPassword');
+                }
+                
+                if (hasError) return;
+                
+                // Loading
+                showLoading(true);
+                document.getElementById('btnInstructorSubmit').disabled = true;
+                
+                try {
+                    const result = await Auth.login('instructor', id, password);
+                    
+                    if (result.success) {
+                        showToast('Login realizado com sucesso!', 'success');
+                        setTimeout(() => {
+                            window.location.href = 'instructor-panel.html';
+                        }, 1000);
+                    } else {
+                        showLoginError('instructorLoginError', result.message);
+                    }
+                } catch (error) {
+                    showLoginError('instructorLoginError', 'Erro ao conectar. Tente novamente.');
+                    console.error('Login error:', error);
+                } finally {
+                    showLoading(false);
+                    document.getElementById('btnInstructorSubmit').disabled = false;
+                }
+            });
+        }
+
+        function setupClientLogin() {
+            document.getElementById('clientLoginForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const clientId = document.getElementById('clientId').value.trim();
+                const password = document.getElementById('clientPassword').value.trim();
+                
+                // Validação
+                let hasError = false;
+                
+                if (!clientId) {
+                    showFieldError('clientId', 'ID do cliente é obrigatório');
+                    hasError = true;
+                } else {
+                    clearFieldError('clientId');
+                }
+                
+                if (!password) {
+                    showFieldError('clientPassword', 'Senha é obrigatória');
+                    hasError = true;
+                } else {
+                    clearFieldError('clientPassword');
+                }
+                
+                if (hasError) return;
+                
+                // Loading
+                showLoading(true);
+                document.getElementById('btnClientSubmit').disabled = true;
+                
+                try {
+                    const result = await Auth.login('client', clientId, password);
+                    
+                    if (result.success) {
+                        showToast('Login realizado com sucesso!', 'success');
+                        setTimeout(() => {
+                            window.location.href = 'client-panel.html';
+                        }, 1000);
+                    } else {
+                        showLoginError('clientLoginError', result.message);
+                    }
+                } catch (error) {
+                    showLoginError('clientLoginError', 'Erro ao conectar. Tente novamente.');
+                    console.error('Login error:', error);
+                } finally {
+                    showLoading(false);
+                    document.getElementById('btnClientSubmit').disabled = false;
+                }
+            });
+        }
+
+        function setupPasswordToggles() {
+            document.querySelectorAll('.toggle-password').forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.dataset.target;
+                    const input = document.getElementById(targetId);
+                    const icon = button.querySelector('i');
+                    
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        icon.classList.remove('fa-eye');
+                        icon.classList.add('fa-eye-slash');
+                    } else {
+                        input.type = 'password';
+                        icon.classList.remove('fa-eye-slash');
+                        icon.classList.add('fa-eye');
+                    }
+                });
+            });
+        }
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.choice-screen, .login-screen').forEach(screen => {
+                screen.classList.add('hidden');
+            });
+            document.getElementById(screenId).classList.remove('hidden');
+        }
+
+        function showFieldError(fieldId, message) {
+            const errorElement = document.getElementById(fieldId + 'Error');
+            const inputElement = document.getElementById(fieldId);
+            
+            if (errorElement) {
+                errorElement.textContent = message;
+                errorElement.classList.add('visible');
+            }
+            
+            if (inputElement) {
+                inputElement.classList.add('input-error');
             }
         }
-        
-        function renderSheetsByClient() { 
-            const container = document.getElementById('sheetsByClient'); 
-            const grouped = {}; 
-            sheets.forEach(s => { if (!grouped[s.client_id]) grouped[s.client_id] = []; grouped[s.client_id].push(s); }); 
-            let html = ''; 
-            for (const [cid, sheetList] of Object.entries(grouped)) { 
-                const client = clients.find(c => c.client_id === cid); 
-                if (!client) continue; 
-                html += `<div class="client-group"><div class="client-header" onclick="toggleSheets('${cid}')"><h4>${client.name}</h4><i class="fas fa-chevron-down"></i></div><div class="client-sheets" id="sheets-${cid}">`; 
-                sheetList.forEach(s => { html += `<div class="sheet-item"><span><strong>${s.name}</strong> (${s.exercises?.length || 0} ex)</span><div><i class="fas fa-edit" onclick="openSheetModal('${s.id}')"></i> <i class="fas fa-trash-alt" onclick="deleteSheet('${s.id}')" style="color:#ff6666; margin-left:12px;"></i></div></div>`; }); 
-                html += `</div></div>`; 
-            } 
-            container.innerHTML = html || '<div class="empty-state">Nenhuma ficha cadastrada</div>'; 
+
+        function clearFieldError(fieldId) {
+            const errorElement = document.getElementById(fieldId + 'Error');
+            const inputElement = document.getElementById(fieldId);
+            
+            if (errorElement) {
+                errorElement.textContent = '';
+                errorElement.classList.remove('visible');
+            }
+            
+            if (inputElement) {
+                inputElement.classList.remove('input-error');
+            }
         }
-        
-        window.toggleSheets = (cid) => { document.getElementById(`sheets-${cid}`)?.classList.toggle('active'); };
-        function renderBackupHistory() { const c = document.getElementById('backupHistoryList'); if (!backups.length) { c.innerHTML = '<div class="empty-state">Nenhum backup realizado</div>'; return; } c.innerHTML = backups.slice(-10).reverse().map(b => `<div class="win8-list-item"><div><div class="item-title">${b.date}</div><div class="item-sub">${b.type}</div></div></div>`).join(''); }
-        function updateStats() { document.getElementById('totalClients').textContent = clients.length; document.getElementById('totalSheets').textContent = sheets.length; }
-        function renderAll() { renderClients(); renderBackupHistory(); updateStats(); renderSheetsByClient(); }
-        
-        function openClientModal(id = null) { if (id) { const c = clients.find(x => x.id == id); document.getElementById('clientId').value = c.id; document.getElementById('clientName').value = c.name; document.getElementById('clientIdField').value = c.client_id; document.getElementById('clientPasswordField').value = c.password; document.getElementById('clientPhone').value = c.phone || ''; } else { document.getElementById('clientForm').reset(); document.getElementById('clientId').value = ''; document.getElementById('clientPasswordField').value = Math.random().toString(36).slice(-6); } document.getElementById('clientModal').classList.add('active'); }
-        async function deleteClient(id) { if (confirm('Excluir cliente e todas as fichas?')) { const client = clients.find(c => c.id == id); if (client) await supabaseClient.from('sheets').delete().eq('client_id', client.client_id); await supabaseClient.from('clients').delete().eq('id', id); await loadAllData(); } }
-        function openSheetModal(id = null) { const select = document.getElementById('sheetClient'); select.innerHTML = clients.map(c => `<option value="${c.id}">${c.name}</option>`).join(''); tempExercises = []; savedScrollPosition = 0; if (id) { const s = sheets.find(x => x.id == id); if (s) { document.getElementById('sheetId').value = s.id; const client = clients.find(c => c.client_id === s.client_id); if (client) document.getElementById('sheetClient').value = client.id; document.getElementById('sheetName').value = s.name; document.getElementById('sheetNotes').value = s.notes || ''; tempExercises = [...(s.exercises || [])]; } } else { document.getElementById('sheetForm').reset(); document.getElementById('sheetId').value = ''; } renderSelectedExercises(); renderExerciseLibrary(''); document.getElementById('sheetModal').classList.add('active'); }
-        async function deleteSheet(id) { if (confirm('Excluir esta ficha?')) { await supabaseClient.from('sheets').delete().eq('id', id); await loadSheets(); updateStats(); renderSheetsByClient(); } }
-        async function exportBackup() { const backup = { clients, sheets, date: new Date().toISOString() }; await supabaseClient.from('backups').insert({ date: new Date().toLocaleString('pt-BR'), type: 'Manual', size: 'OK', data: backup }); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(backup)])); a.download = `backup_${new Date().toISOString().slice(0,10)}.json`; a.click(); await loadBackups(); renderBackupHistory(); alert('✅ Backup exportado com sucesso!'); }
-        function importBackup() { const input = document.createElement('input'); input.type = 'file'; input.accept = '.json'; input.onchange = async (e) => { const reader = new FileReader(); reader.onload = async (ev) => { try { const data = JSON.parse(ev.target.result); if (data.clients) { for (const c of data.clients) await supabaseClient.from('clients').upsert(c); for (const s of data.sheets) await supabaseClient.from('sheets').upsert(s); } await loadAllData(); alert('✅ Backup restaurado com sucesso!'); } catch(err) { alert('Arquivo inválido'); } }; reader.readAsText(e.target.files[0]); }; input.click(); }
-        
-        function verificarTreinos() { const clientSheets = sheets.filter(s => s.client_id === currentClient?.client_id); document.querySelectorAll('.sub-treino-btn').forEach((btn, i) => { const treino = ['A', 'B', 'C', 'D', 'E'][i]; if (clientSheets.some(s => s.name.includes(`TREINO ${treino}`) || s.name.includes(`Treino ${treino}`))) btn.classList.add('has-treino'); else btn.classList.remove('has-treino'); }); }
-        function mostrarTreino(treino) { const clientSheets = sheets.filter(s => s.client_id === currentClient?.client_id); const treinoSheet = clientSheets.find(s => s.name.includes(`TREINO ${treino}`) || s.name.includes(`Treino ${treino}`)); if (!treinoSheet) { alert(`Treino ${treino} não encontrado!`); return; } document.getElementById('treinoModalTitle').textContent = treinoSheet.name; let html = treinoSheet.notes ? `<div style="background:#252525; padding:12px; border-radius:16px; margin-bottom:16px; border-left:4px solid #ff6b35; color:#ffffff;">📝 ${treinoSheet.notes}</div>` : ''; treinoSheet.exercises?.forEach((ex, i) => { html += `<div style="background:#1a1a1a; border:1px solid #ff6b35; border-radius:16px; padding:14px; margin-bottom:10px;"><strong style="color:#ff6b35;">${i+1}. ${ex.name}</strong><div style="display:flex; gap:12px; margin-top:10px; flex-wrap:wrap;"><span style="background:#252525; padding:4px 10px; border-radius:20px; color:#ffffff;">🔢 Séries: ${ex.series}</span><span style="background:#252525; padding:4px 10px; border-radius:20px; color:#ffffff;">🔄 Reps: ${ex.reps}</span><span style="background:#252525; padding:4px 10px; border-radius:20px; color:#ffffff;">⚡ Carga: ${ex.load || '-'}</span></div>${ex.notes ? `<small style="color:#cccccc; margin-top:8px; display:block;">📌 Obs: ${ex.notes}</small>` : ''}</div>`; }); document.getElementById('treinoModalContent').innerHTML = html; document.getElementById('treinoModal').classList.add('active'); }
-        function mostrarRelatorio() { const tempos = treinosTempo[currentClient?.client_id] || []; let html = tempos.length === 0 ? '<div class="empty-state">Nenhum treino registrado</div>' : `<div style="margin-bottom:16px; padding:12px; background:#252525; border-radius:16px; color:#ffffff;">📊 Total: ${tempos.length} treinos realizados</div>`; tempos.slice(-10).reverse().forEach(t => { html += `<div class="win8-list-item" style="margin-bottom:8px;"><span style="color:#ffffff;"><i class="fas fa-calendar"></i> ${t.data}</span><span style="color:#ff6b35;"><i class="fas fa-stopwatch"></i> ${t.tempo_formatado}</span></div>`; }); document.getElementById('relatorioContent').innerHTML = html; document.getElementById('relatorioModal').classList.add('active'); }
-        function updateCronometroDisplay() { document.getElementById('cronometroDisplay').textContent = `${String(Math.floor(cronometroSeconds/60)).padStart(2,'0')}:${String(cronometroSeconds%60).padStart(2,'0')}`; }
-        function startCronometro() { if (!cronometroRunning) { cronometroRunning = true; cronometroInterval = setInterval(() => { cronometroSeconds++; updateCronometroDisplay(); }, 1000); } }
-        function pauseCronometro() { if (cronometroRunning) { cronometroRunning = false; clearInterval(cronometroInterval); } }
-        function resetCronometro() { pauseCronometro(); cronometroSeconds = 0; updateCronometroDisplay(); }
-        async function salvarTempoTreino() { if (cronometroSeconds === 0) { alert('⏱️ Inicie o cronômetro!'); return; } await supabaseClient.from('treinos_tempo').insert({ id: crypto.randomUUID(), client_id: currentClient.client_id, data: new Date().toLocaleDateString('pt-BR'), hora: new Date().toLocaleTimeString('pt-BR'), tempo_segundos: cronometroSeconds, tempo_formatado: `${Math.floor(cronometroSeconds/60)}:${String(cronometroSeconds%60).padStart(2,'0')}` }); await loadTreinosTempo(); resetCronometro(); alert('✅ Tempo de treino salvo!'); }
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('btnInstructor').onclick = () => { document.getElementById('choiceScreen').classList.add('hidden'); document.getElementById('instructorLoginScreen').classList.remove('hidden'); };
-            document.getElementById('btnClient').onclick = () => { document.getElementById('choiceScreen').classList.add('hidden'); document.getElementById('clientLoginScreen').classList.remove('hidden'); };
-            document.getElementById('btnBackInstructor').onclick = () => { document.getElementById('choiceScreen').classList.remove('hidden'); document.getElementById('instructorLoginScreen').classList.add('hidden'); };
-            document.getElementById('btnBackClient').onclick = () => { document.getElementById('choiceScreen').classList.remove('hidden'); document.getElementById('clientLoginScreen').classList.add('hidden'); };
-            document.getElementById('instructorLoginForm').onsubmit = (e) => { e.preventDefault(); if (document.getElementById('instructorId').value === TRAINER.id && document.getElementById('instructorPassword').value === TRAINER.password) { document.getElementById('instructorLoginScreen').classList.add('hidden'); document.getElementById('instructorPanel').classList.add('active'); loadAllData(); } else { document.getElementById('instructorLoginError').style.display = 'block'; } };
-            document.getElementById('btnLogoutInstructor').onclick = () => { document.getElementById('instructorPanel').classList.remove('active'); document.getElementById('choiceScreen').classList.remove('hidden'); };
-            document.getElementById('btnLogoutClient').onclick = () => { currentClient = null; document.getElementById('clientPanel').classList.remove('active'); document.getElementById('choiceScreen').classList.remove('hidden'); };
-            document.querySelectorAll('.win8-tile').forEach(tile => { tile.onclick = () => { document.querySelectorAll('.win8-section').forEach(s => s.classList.remove('active')); document.getElementById(`section-${tile.dataset.section}`).classList.add('active'); }; });
-            document.getElementById('section-dashboard').classList.add('active');
-            document.getElementById('btnNewClient').onclick = () => openClientModal();
-            document.getElementById('closeClientModal').onclick = () => document.getElementById('clientModal').classList.remove('active');
-            document.getElementById('btnNewSheet').onclick = () => openSheetModal();
-            document.getElementById('closeSheetModal').onclick = () => document.getElementById('sheetModal').classList.remove('active');
-            document.getElementById('clearAllExercises').onclick = clearAllExercises;
-            document.getElementById('searchExercise').oninput = (e) => { saveModalScroll(); renderExerciseLibrary(e.target.value); restoreModalScroll(); };
-            document.getElementById('btnExportBackup').onclick = exportBackup;
-            document.getElementById('btnImportBackup').onclick = importBackup;
-            document.getElementById('clientForm').onsubmit = async (e) => { e.preventDefault(); const id = document.getElementById('clientId').value || crypto.randomUUID(); await supabaseClient.from('clients').upsert({ id, name: document.getElementById('clientName').value, client_id: document.getElementById('clientIdField').value, password: document.getElementById('clientPasswordField').value, phone: document.getElementById('clientPhone').value, created_at: new Date().toISOString() }); await loadClients(); document.getElementById('clientModal').classList.remove('active'); renderClients(); updateStats(); alert('✅ Cliente salvo com sucesso!'); };
-            document.getElementById('sheetForm').onsubmit = async (e) => { e.preventDefault(); if (!tempExercises.length) { alert('⚠️ Adicione pelo menos um exercício!'); return; } const id = document.getElementById('sheetId').value || crypto.randomUUID(); const client = clients.find(c => c.id == document.getElementById('sheetClient').value); await supabaseClient.from('sheets').upsert({ id, client_id: client.client_id, client_name: client.name, name: document.getElementById('sheetName').value, notes: document.getElementById('sheetNotes').value, exercises: tempExercises, created_at: new Date().toISOString() }); await loadSheets(); document.getElementById('sheetModal').classList.remove('active'); updateStats(); renderSheetsByClient(); tempExercises = []; alert('✅ Ficha salva com sucesso!'); };
-            document.getElementById('clientLoginForm').onsubmit = async (e) => { e.preventDefault(); await loadAllData(); const client = clients.find(c => c.client_id === document.getElementById('clientId').value.trim() && c.password === document.getElementById('clientPassword').value); if (client) { currentClient = client; document.getElementById('clientLoginScreen').classList.add('hidden'); document.getElementById('clientPanel').classList.add('active'); document.getElementById('clientNameDisplay').textContent = client.name.split(' ')[0]; verificarTreinos(); } else { document.getElementById('clientLoginError').style.display = 'block'; } };
-            document.getElementById('btnMeusTreinos').onclick = () => { const grid = document.getElementById('subTreinosGrid'); grid.style.display = grid.style.display === 'none' ? 'grid' : 'none'; };
-            document.querySelectorAll('.sub-treino-btn').forEach(btn => { btn.onclick = () => mostrarTreino(btn.dataset.treino); });
-            document.getElementById('btnRelatorio').onclick = mostrarRelatorio;
-            document.getElementById('closeRelatorioModal').onclick = () => document.getElementById('relatorioModal').classList.remove('active');
-            document.getElementById('btnCloseRelatorioModal').onclick = () => document.getElementById('relatorioModal').classList.remove('active');
-            document.getElementById('closeTreinoModal').onclick = () => document.getElementById('treinoModal').classList.remove('active');
-            document.getElementById('btnCloseTreinoModal').onclick = () => document.getElementById('treinoModal').classList.remove('active');
-            document.getElementById('btnCronoStart').onclick = startCronometro;
-            document.getElementById('btnCronoPause').onclick = pauseCronometro;
-            document.getElementById('btnCronoReset').onclick = resetCronometro;
-            document.getElementById('btnCronoSave').onclick = salvarTempoTreino;
-            document.getElementById('btnAutoTreino').onclick = () => { document.getElementById('autoTreinoModal').classList.add('active'); };
-            document.getElementById('closeAutoTreinoModal').onclick = () => document.getElementById('autoTreinoModal').classList.remove('active');
-            document.querySelectorAll('.gender-btn').forEach(btn => { btn.onclick = () => { document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); selectedGender = btn.dataset.gender; }; });
-            document.querySelector('.gender-btn[data-gender="male"]').classList.add('active');
-            document.getElementById('btnGenerateTreino').onclick = async () => { const goal = document.getElementById('treinoGoal').value; const level = document.getElementById('treinoLevel').value; const days = parseInt(document.getElementById('treinoDays').value); const workouts = generateWorkout(selectedGender, goal, level, days); let saved = 0; for (let [letter, exercises] of Object.entries(workouts)) { if (exercises.length > 0) { await saveGeneratedWorkout(letter, exercises, `TREINO ${letter}`); saved++; } } document.getElementById('autoTreinoModal').classList.remove('active'); await loadSheets(); verificarTreinos(); alert(`✅ ${saved} treinos gerados com sucesso!`); };
-        });
+
+        function showLoginError(errorId, message) {
+            const errorDiv = document.getElementById(errorId);
+            if (errorDiv) {
+                errorDiv.querySelector('span').textContent = message;
+                errorDiv.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    errorDiv.classList.add('hidden');
+                }, 5000);
+            }
+        }
     </script>
 </body>
 </html>
