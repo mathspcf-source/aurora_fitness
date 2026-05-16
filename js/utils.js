@@ -6,19 +6,34 @@ class Utils {
     // ---------- LOADING ----------
     static showLoading(show = true) {
         const overlay = document.getElementById('loadingOverlay');
+        if (!overlay) {
+            console.warn('⚠️ loadingOverlay não encontrado no DOM');
+            return;
+        }
+        
+        if (show) {
+            overlay.classList.remove('hidden');
+        } else {
+            overlay.classList.add('hidden');
+        }
+    }
+
+    // Força esconder o loading (para casos de erro)
+    static hideLoading() {
+        const overlay = document.getElementById('loadingOverlay');
         if (overlay) {
-            if (show) {
-                overlay.classList.remove('hidden');
-            } else {
-                overlay.classList.add('hidden');
-            }
+            overlay.classList.add('hidden');
         }
     }
 
     // ---------- TOASTS ----------
     static showToast(message, type = 'info', duration = 3000) {
         const container = document.getElementById('toastContainer');
-        if (!container) return;
+        if (!container) {
+            console.warn('⚠️ toastContainer não encontrado. Mensagem:', message);
+            alert(message); // Fallback para alert
+            return;
+        }
         
         const icons = {
             success: 'fa-check-circle',
@@ -30,7 +45,7 @@ class Utils {
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
         toast.innerHTML = `
-            <i class="fas ${icons[type]} toast-icon"></i>
+            <i class="fas ${icons[type] || icons.info} toast-icon"></i>
             <span class="toast-message">${message}</span>
             <button class="toast-close" onclick="this.parentElement.remove()">
                 <i class="fas fa-times"></i>
@@ -40,11 +55,12 @@ class Utils {
         
         container.appendChild(toast);
         
-        // Auto-remover após a duração
         setTimeout(() => {
             if (toast.parentElement) {
                 toast.classList.add('removing');
-                setTimeout(() => toast.remove(), 300);
+                setTimeout(() => {
+                    if (toast.parentElement) toast.remove();
+                }, 300);
             }
         }, duration);
     }
@@ -75,28 +91,34 @@ class Utils {
             
             const cleanup = () => {
                 modal.classList.add('hidden');
-                document.getElementById('confirmOk').removeEventListener('click', handleConfirm);
-                document.getElementById('confirmCancel').removeEventListener('click', handleCancel);
-                document.getElementById('closeConfirmModal').removeEventListener('click', handleCancel);
+                document.getElementById('confirmOk')?.removeEventListener('click', handleConfirm);
+                document.getElementById('confirmCancel')?.removeEventListener('click', handleCancel);
+                document.getElementById('closeConfirmModal')?.removeEventListener('click', handleCancel);
             };
             
-            document.getElementById('confirmOk').addEventListener('click', handleConfirm);
-            document.getElementById('confirmCancel').addEventListener('click', handleCancel);
-            document.getElementById('closeConfirmModal').addEventListener('click', handleCancel);
+            document.getElementById('confirmOk')?.addEventListener('click', handleConfirm);
+            document.getElementById('confirmCancel')?.addEventListener('click', handleCancel);
+            document.getElementById('closeConfirmModal')?.addEventListener('click', handleCancel);
         });
     }
 
     // ---------- FORMATAÇÃO ----------
     static formatDate(dateString) {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('pt-BR', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-        });
+        if (!dateString) return '-';
+        try {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+        } catch {
+            return dateString;
+        }
     }
 
     static formatTime(seconds) {
+        if (!seconds || seconds === 0) return '00:00';
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
@@ -110,22 +132,6 @@ class Utils {
     static validateRequired(value, fieldName) {
         if (!value || !value.trim()) {
             return `${fieldName} é obrigatório`;
-        }
-        return null;
-    }
-
-    static validateEmail(email) {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!re.test(email)) {
-            return 'Email inválido';
-        }
-        return null;
-    }
-
-    static validatePhone(phone) {
-        const re = /^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/;
-        if (phone && !re.test(phone.replace(/\s/g, ''))) {
-            return 'Telefone inválido';
         }
         return null;
     }
@@ -182,3 +188,19 @@ class Utils {
         };
     }
 }
+
+// ============================================
+// FORÇAR REMOÇÃO DO LOADING EM CASO DE ERRO
+// ============================================
+window.addEventListener('DOMContentLoaded', () => {
+    // Garantir que o loading suma após 5 segundos no máximo
+    setTimeout(() => {
+        Utils.hideLoading();
+    }, 5000);
+});
+
+window.addEventListener('error', (e) => {
+    console.error('Erro global capturado:', e.error);
+    Utils.hideLoading();
+    Utils.showToast('Erro ao carregar o sistema. Verifique o console (F12).', 'error', 8000);
+});
