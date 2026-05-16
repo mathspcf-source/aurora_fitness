@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aurora Fitness - Aluno</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="loading" id="loading"><div class="spinner"></div></div>
+
+<header class="mobile-header">
+    <div class="brand"><i class="fas fa-dumbbell" style="color:var(--primary);font-size:20px"></i><span>AuroraFitness</span></div>
+    <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+</header>
+<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<nav class="sidebar">
+    <div class="sidebar-logo"><i class="fas fa-dumbbell" style="font-size:24px;color:var(--primary)"></i><span>Aurora Fitness</span></div>
+    <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebarAvatar"><i class="fas fa-user"></i></div>
+        <div class="sidebar-user-info">
+            <div class="sidebar-user-name" id="sidebarNome">Aluno</div>
+            <div class="sidebar-user-role">Cliente</div>
+        </div>
+    </div>
+    <div class="sidebar-nav" id="sidebarNav">
+        <button class="active" data-section="treinos"><i class="fas fa-dumbbell"></i> Meus Treinos</button>
+        <button data-section="cronometro"><i class="fas fa-stopwatch"></i> Cronômetro</button>
+        <button data-section="relatorio"><i class="fas fa-chart-bar"></i> Relatório</button>
+        <button data-section="perfil"><i class="fas fa-user-cog"></i> Perfil</button>
+    </div>
+    <div class="sidebar-footer"><button onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</button></div>
+</nav>
+
+<main class="main">
+    <header class="header">
+        <div class="header-left"><h1>Aluno</h1><p id="headerNome">Acompanhe seus treinos</p></div>
+    </header>
+    <div class="content">
+        <!-- TREINOS -->
+        <div id="section-treinos">
+            <h2>Meus Treinos</h2>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(150px,1fr));gap:12px;margin-bottom:16px" id="gridTreinos"></div>
+            <button class="btn btn-primary" onclick="openModal('modalAutoTreino')" style="width:100%"><i class="fas fa-magic"></i> Gerar Treino Automático</button>
+        </div>
+
+        <!-- CRONÔMETRO -->
+        <div id="section-cronometro" class="hidden">
+            <h2>Cronômetro de Treino</h2>
+            <div style="background:var(--card-bg);border-radius:var(--radius);padding:24px;text-align:center;box-shadow:var(--shadow);border:1px solid var(--border)">
+                <div style="font-size:48px;font-weight:700;color:var(--primary);font-family:monospace;letter-spacing:4px;margin-bottom:20px" id="cronoDisplay">00:00</div>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+                    <button class="btn btn-primary" onclick="startCrono()"><i class="fas fa-play"></i></button>
+                    <button class="btn btn-outline" onclick="pauseCrono()"><i class="fas fa-pause"></i></button>
+                    <button class="btn btn-outline" onclick="resetCrono()"><i class="fas fa-redo"></i></button>
+                    <button class="btn btn-success" onclick="salvarTempo()"><i class="fas fa-save"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- RELATÓRIO -->
+        <div id="section-relatorio" class="hidden">
+            <h2>Relatório de Treinos</h2>
+            <div class="table-container"><table><thead><tr><th>Data</th><th>Hora</th><th>Tempo</th></tr></thead><tbody id="tabelaRelatorio"></tbody></table></div>
+        </div>
+
+        <!-- PERFIL -->
+        <div id="section-perfil" class="hidden">
+            <h2>Meu Perfil</h2>
+            <div class="profile-section">
+                <div><div class="profile-avatar" id="alunoAvatar"><i class="fas fa-user"></i></div></div>
+                <div class="profile-info">
+                    <div class="form-group"><label>Nome</label><input type="text" id="perfilNome" readonly></div>
+                    <div class="form-group"><label>ID do Aluno</label><input type="text" id="perfilId" readonly></div>
+                    <div class="form-group"><label>Telefone</label><input type="text" id="perfilTelefone" readonly></div>
+                    <div class="form-group"><label>Nova Senha</label><input type="password" id="perfilSenha" placeholder="Manter atual"></div>
+                    <button class="btn btn-primary" onclick="salvarPerfil()">Salvar Alterações</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- MODAL TREINO -->
+<div id="modalTreino" class="modal"><div class="modal-content">
+    <div class="modal-header"><h3 id="modalTreinoTitle">Treino</h3><button class="modal-close" onclick="closeModal('modalTreino')">&times;</button></div>
+    <div id="modalTreinoContent"></div>
+    <button class="btn btn-primary" onclick="closeModal('modalTreino')" style="width:100%;margin-top:12px">Fechar</button>
+</div></div>
+
+<!-- MODAL AUTO TREINO -->
+<div id="modalAutoTreino" class="modal"><div class="modal-content">
+    <div class="modal-header"><h3>Gerar Treino Automático</h3><button class="modal-close" onclick="closeModal('modalAutoTreino')">&times;</button></div>
+    <form id="formAutoTreino">
+        <div class="form-group"><label>Gênero</label><select id="autoGenero"><option value="male">Masculino</option><option value="female">Feminino</option></select></div>
+        <div class="form-group"><label>Objetivo</label><select id="autoObjetivo"><option value="hipertrofia">Hipertrofia</option><option value="emagrecimento">Emagrecimento</option></select></div>
+        <div class="form-group"><label>Nível</label><select id="autoNivel"><option value="iniciante">Iniciante</option><option value="intermediario">Intermediário</option><option value="avancado">Avançado</option></select></div>
+        <div class="form-group"><label>Dias por Semana</label><select id="autoDias"><option value="3">3 dias (ABC)</option><option value="4">4 dias (ABCD)</option><option value="5">5 dias (ABCDE)</option></select></div>
+        <button type="submit" class="btn btn-primary" style="width:100%"><i class="fas fa-magic"></i> Gerar Treinos</button>
+    </form>
+</div></div>
+
+<script src="supabase.js"></script>
+<script>
+// Verificar sessão
+(function() {
+    const d = localStorage.getItem('aurora_session');
+    if (!d) { window.location.href = 'index.html'; return; }
+    try {
+        const s = JSON.parse(d);
+        if (Date.now() - s.timestamp > SESSION_DURATION) { destruirSessao(); window.location.href = 'index.html'; return; }
+        if (s.tipo !== 'aluno') { window.location.href = 'index.html'; return; }
+    } catch(e) { window.location.href = 'index.html'; }
+})();
+
+const userId = localStorage.getItem('aurora_user_id');
+const userNome = localStorage.getItem('aurora_user_nome');
+$('sidebarNome').textContent = userNome || 'Aluno';
+$('headerNome').textContent = userNome || 'Acompanhe seus treinos';
+
+let fichasAluno = [], temposTreino = [];
+let cronoSeconds = 0, cronoInterval = null, cronoRunning = false;
+
+// ==================== NAVEGAÇÃO ====================
+document.querySelectorAll('#sidebarNav button').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('#sidebarNav button').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        document.querySelectorAll('[id^="section-"]').forEach(s => s.classList.add('hidden'));
+        const target = $('section-' + this.dataset.section);
+        if (target) target.classList.remove('hidden');
+        if (window.innerWidth <= 768) closeSidebar();
+        const actions = { treinos: carregarTreinos, cronometro: null, relatorio: carregarRelatorio, perfil: carregarPerfil };
+        if (actions[this.dataset.section]) actions[this.dataset.section]();
+    });
+});
+
+// ==================== TREINOS ====================
+async function carregarTreinos() {
+    showLoading();
+    const cliente = await sb.from('clients').select('client_id').eq('id', userId).single();
+    if (!cliente.data) { hideLoading(); return; }
+    const { data } = await sb.from('sheets').select('*').eq('client_id', cliente.data.client_id).order('created_at', { ascending: true });
+    fichasAluno = data || [];
+    $('gridTreinos').innerHTML = fichasAluno.length === 0
+        ? '<div class="empty-state" style="grid-column:1/-1">Nenhuma ficha disponível</div>'
+        : fichasAluno.map(f => `
+            <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center;cursor:pointer;transition:var(--transition)" onclick="abrirTreino('${f.id}')">
+                <div style="font-size:24px;color:var(--primary);margin-bottom:8px"><i class="fas fa-dumbbell"></i></div>
+                <div style="font-weight:600;font-size:13px">${f.name}</div>
+                <div style="font-size:10px;color:var(--text-light);margin-top:4px">${f.exercises?.length || 0} exercícios</div>
+            </div>
+        `).join('');
+    hideLoading();
+}
+
+function abrirTreino(id) {
+    const ficha = fichasAluno.find(f => f.id == id);
+    if (!ficha) return;
+    $('modalTreinoTitle').textContent = ficha.name;
+    let html = ficha.notes ? `<div style="background:#f9fafb;padding:10px 14px;border-radius:8px;margin-bottom:12px;border-left:4px solid var(--primary);font-size:11px;color:var(--text)">📝 ${ficha.notes}</div>` : '';
+    ficha.exercises?.forEach((ex, i) => {
+        html += `<div style="background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:8px">
+            <strong style="color:var(--primary)">${i+1}. ${ex.name}</strong>
+            <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+                <span style="background:#f9fafb;padding:3px 10px;border-radius:20px;font-size:10px">Séries: ${ex.series}</span>
+                <span style="background:#f9fafb;padding:3px 10px;border-radius:20px;font-size:10px">Reps: ${ex.reps}</span>
+                <span style="background:#f9fafb;padding:3px 10px;border-radius:20px;font-size:10px">Carga: ${ex.load || '-'}</span>
+            </div>
+            ${ex.notes ? `<small style="color:var(--text-light);margin-top:6px;display:block">Obs: ${ex.notes}</small>` : ''}
+        </div>`;
+    });
+    $('modalTreinoContent').innerHTML = html;
+    openModal('modalTreino');
+}
+
+// ==================== AUTO TREINO ====================
+$('formAutoTreino').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const genero = $('autoGenero').value;
+    const objetivo = $('autoObjetivo').value;
+    const nivel = $('autoNivel').value;
+    const dias = parseInt($('autoDias').value);
+    const workouts = generateWorkout(genero, objetivo, nivel, dias);
+    
+    const cliente = await sb.from('clients').select('client_id,name').eq('id', userId).single();
+    if (!cliente.data) { alert('Cliente não encontrado.'); return; }
+    
+    showLoading();
+    let salvos = 0;
+    for (const [letra, exercicios] of Object.entries(workouts)) {
+        if (exercicios.length > 0) {
+            await sb.from('sheets').insert({
+                id: uid(), client_id: cliente.data.client_id, client_name: cliente.data.name,
+                name: `TREINO ${letra}`, notes: 'Gerado automaticamente',
+                exercises: exercicios, created_at: new Date().toISOString()
+            });
+            salvos++;
+        }
+    }
+    hideLoading();
+    closeModal('modalAutoTreino');
+    carregarTreinos();
+    toast(`${salvos} treinos gerados!`);
+});
+
+// ==================== CRONÔMETRO ====================
+function updateCronoDisplay() {
+    const m = Math.floor(cronoSeconds / 60).toString().padStart(2, '0');
+    const s = (cronoSeconds % 60).toString().padStart(2, '0');
+    $('cronoDisplay').textContent = `${m}:${s}`;
+}
+
+function startCrono() {
+    if (!cronoRunning) {
+        cronoRunning = true;
+        cronoInterval = setInterval(() => { cronoSeconds++; updateCronoDisplay(); }, 1000);
+    }
+}
+
+function pauseCrono() {
+    cronoRunning = false;
+    clearInterval(cronoInterval);
+}
+
+function resetCrono() {
+    pauseCrono();
+    cronoSeconds = 0;
+    updateCronoDisplay();
+}
+
+async function salvarTempo() {
+    if (cronoSeconds === 0) { toast('Inicie o cronômetro primeiro!'); return; }
+    const cliente = await sb.from('clients').select('client_id').eq('id', userId).single();
+    if (!cliente.data) return;
+    showLoading();
+    await sb.from('treinos_tempo').insert({
+        id: uid(), client_id: cliente.data.client_id,
+        data: new Date().toLocaleDateString('pt-BR'),
+        hora: new Date().toLocaleTimeString('pt-BR'),
+        tempo_segundos: cronoSeconds,
+        tempo_formatado: `${Math.floor(cronoSeconds/60)}:${(cronoSeconds%60).toString().padStart(2,'0')}`
+    });
+    hideLoading();
+    resetCrono();
+    toast('Tempo salvo!');
+}
+
+// ==================== RELATÓRIO ====================
+async function carregarRelatorio() {
+    showLoading();
+    const cliente = await sb.from('clients').select('client_id').eq('id', userId).single();
+    if (!cliente.data) { hideLoading(); return; }
+    const { data } = await sb.from('treinos_tempo').select('*').eq('client_id', cliente.data.client_id).order('created_at', { ascending: false });
+    temposTreino = data || [];
+    $('tabelaRelatorio').innerHTML = temposTreino.length === 0
+        ? '<tr><td colspan="3" class="empty-state">Nenhum treino registrado</td></tr>'
+        : temposTreino.map(t => `<tr><td>${t.data}</td><td>${t.hora}</td><td>${t.tempo_formatado}</td></tr>`).join('');
+    hideLoading();
+}
+
+// ==================== PERFIL ====================
+async function carregarPerfil() {
+    const { data } = await sb.from('clients').select('*').eq('id', userId).single();
+    if (data) {
+        $('perfilNome').value = data.name;
+        $('perfilId').value = data.client_id;
+        $('perfilTelefone').value = data.phone || '';
+    }
+}
+
+async function salvarPerfil() {
+    const senha = $('perfilSenha').value.trim();
+    if (!senha) { toast('Digite uma nova senha.'); return; }
+    showLoading();
+    await sb.from('clients').update({ password: senha }).eq('id', userId);
+    hideLoading();
+    $('perfilSenha').value = '';
+    toast('Senha alterada!');
+}
+
+// ==================== INIT ====================
+carregarTreinos();
+</script>
+</body>
+</html>
