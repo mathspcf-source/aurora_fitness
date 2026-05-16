@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aurora Fitness - Meu Painel</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* ============================================
+           ESTILOS DO PAINEL DO ALUNO
+           ============================================ */
+        
+        :root {
+            --client-primary: #1a237e;
+            --client-accent: #ff6b35;
+            --client-bg: #f5f5f5;
+        }
+
+        .client-layout {
+            min-height: 100vh;
+            background: var(--client-bg);
+        }
+
+        /* ---------- HEADER ---------- */
+        .client-header {
+            background: linear-gradient(135deg, var(--client-primary) 0%, #283593 100%);
+            color: white;
+            padding: 20px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .client-header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .client-brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .client-brand span {
+            color: var(--client-accent);
+        }
+
+        .client-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .client-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .client-user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .client-user-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .client-user-code {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        .btn-logout-client {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-logout-client:hover {
+            background: rgba(198, 40, 40, 0.5);
+            border-color: #ef5350;
+        }
+
+        /* ---------- MAIN CONTENT ---------- */
+        .client-main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 24px 20px;
+        }
+
+        /* ---------- WELCOME CARD ---------- */
+        .welcome-card {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .welcome-card .greeting {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .welcome-card h1 {
+            font-size: 1.8rem;
+            color: var(--client-primary);
+            margin-bottom: 8px;
+        }
+
+        .welcome-card .motivation {
+            color: var(--client-accent);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* ---------- QUICK ACTIONS ---------- */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .action-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 16px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .action-card:hover {
+            border-color: var(--client-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 35, 126, 0.15);
+        }
+
+        .action-card i {
+            font-size: 2.5rem;
+            color: var(--client-primary);
+            margin-bottom: 12px;
+        }
+
+        .action-card h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .action-card p {
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .action-card.accent i {
+            color: var(--client-accent);
+        }
+
+        /* ---------- WORKOUT SELECTOR ---------- */
+        .workout-selector {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .workout-selector h2 {
+            font-size: 1.2rem;
+            color: var(--client-primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .workout-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+        }
+
+        .workout-btn {
+            background: #f5f5f5;
+            border: 2px solid #e0e0e0;
+            border-radius: 16px;
+            padding: 20px 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .workout-btn:hover {
+            border-color: var(--client-primary);
+            background: #e8eaf6;
+            color: var(--client-primary);
+        }
+
+        .workout-btn.has-workout {
+            background: var(--client-primary);
+            border-color: var(--client-primary);
+            color: white;
+        }
+
+        .workout-btn.has-workout:hover {
+            background: #283593;
+        }
+
+        .workout-btn i {
+            display: block;
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .workout-btn .workout-label {
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+
+        .workout-btn .workout-exercises {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        /* ---------- CRONOMETER ---------- */
+        .cronometer-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .cronometer-display {
+            font-family: 'Courier New', monospace;
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--client-primary);
+            margin: 16px 0;
+            letter-spacing: 4px;
+        }
+
+        .cronometer-controls {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .crono-btn {
+            padding: 12px 20px;
+            border-radius: 30px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .crono-btn.start {
+            background: var(--client-primary);
+            color: white;
+        }
+
+        .crono-btn.start:hover {
+            background: #283593;
+        }
+
+        .crono-btn.pause {
+            background: #ff9800;
+            color: white;
+        }
+
+        .crono-btn.reset {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .crono-btn.save {
+            background: #4caf50;
+            color: white;
+        }
+
+        .crono-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ---------- MODAL EXERCISE LIST ---------- */
+        .exercise-view-item {
+            background: #f9f9f9;
+            border-left: 4px solid var(--client-primary);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .exercise-view-item h4 {
+            color: var(--client-primary);
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .exercise-view-details {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .exercise-view-detail {
+            background: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .exercise-view-detail i {
+            color: var(--client-accent);
+        }
+
+        /* ---------- HISTORY LIST ---------- */
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid #eee;
+            transition: background 0.2s;
+        }
+
+        .history-item:hover {
+            background: #f9f9f9;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-date {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .history-duration {
+            color: var(--client-accent);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .history-time {
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        /* ---------- AUTO WORKOUT ---------- */
+        .gender-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .gender-option {
+            flex: 1;
+            padding: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 16px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .gender-option.active {
+            border-color: var(--client-primary);
+            background: #e8eaf6;
+        }
+
+        .gender-option i {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .gender-option.male i { color: #1976d2; }
+        .gender-option.female i { color: #e91e63; }
+
+        /* ---------- RESPONSIVE ---------- */
+        @media (max-width: 600px) {
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .client-header-content {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .client-user {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .cronometer-display {
+                font-size: 3rem;
+            }
+
+            .workout-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- LOADING -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Carregando seus treinos...</p>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- MODAL DE CONFIRMAÇÃO -->
+    <div id="confirmModal" class="modal-overlay hidden">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 id="confirmTitle">Confirmação</h3>
+                <button class="modal-close" id="closeConfirmModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage">Tem certeza?</p>
+            </div>
+            <div class="modal-footer">
+                <button id="confirmCancel" class="btn-secondary">Cancelar</button>
+                <button id="confirmOk" class="btn-primary">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE VISUALIZAÇÃO DE TREINO -->
+    <div id="workoutViewModal" class="modal-overlay hidden">
+        <div class="modal-dialog" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 id="workoutViewTitle">Treino</h3>
+                <button class="modal-close" id="closeWorkoutView">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="workoutViewContent"></div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="closeWorkoutViewBtn">Fechar</button>
+                <button class="btn-primary" id="startWorkoutTimer">
+                    <i class="fas fa-stopwatch"></i> Iniciar Treino
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE RELATÓRIO -->
+    <div id="reportModal" class="modal-overlay hidden">
+        <div class="modal-dialog" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-chart-bar"></i> Histórico de Treinos</h3>
+                <button class="modal-close" id="closeReportModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="reportContent"></div>
+            <div class="modal-footer">
+                <button class="btn-primary" id="closeReportBtn">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE TREINO AUTOMÁTICO -->
+    <div id="autoWorkoutModal" class="modal-overlay hidden">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3><i class="fas fa-magic"></i> Gerar Treino Automático</h3>
+                <button class="modal-close" id="closeAutoWorkoutModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Gênero</label>
+                    <div class="gender-selector">
+                        <div class="gender-option male active" data-gender="male">
+                            <i class="fas fa-male"></i>
+                            <span>Masculino</span>
+                        </div>
+                        <div class="gender-option female" data-gender="female">
+                            <i class="fas fa-female"></i>
+                            <span>Feminino</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="autoGoal">
+                        <i class="fas fa-bullseye"></i> Objetivo
+                    </label>
+                    <select id="autoGoal">
+                        <option value="hipertrofia">💪 Hipertrofia</option>
+                        <option value="emagrecimento">🔥 Emagrecimento</option>
+                        <option value="resistencia">🏃 Resistência</option>
+                        <option value="forca">🏋️ Força</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="autoLevel">
+                        <i class="fas fa-signal"></i> Nível
+                    </label>
+                    <select id="autoLevel">
+                        <option value="iniciante">🌱 Iniciante</option>
+                        <option value="intermediario">⚡ Intermediário</option>
+                        <option value="avancado">💎 Avançado</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="autoDays">
+                        <i class="fas fa-calendar-week"></i> Dias por Semana
+                    </label>
+                    <select id="autoDays">
+                        <option value="3">3 dias (ABC)</option>
+                        <option value="4">4 dias (ABCD)</option>
+                        <option value="5">5 dias (ABCDE)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancelAutoWorkout">Cancelar</button>
+                <button class="btn-primary" id="generateAutoWorkout">
+                    <i class="fas fa-magic"></i> Gerar Treino
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LAYOUT PRINCIPAL -->
+    <div class="client-layout">
+        <!-- HEADER -->
+        <header class="client-header">
+            <div class="client-header-content">
+                <div class="client-brand">
+                    Aurora<span>Fitness</span>
+                </div>
+                <div class="client-user">
+                    <div class="client-avatar" id="clientInitial">A</div>
+                    <div class="client-user-info">
+                        <span class="client-user-name" id="clientDisplayName">Aluno</span>
+                        <span class="client-user-code" id="clientDisplayCode">CLI000</span>
+                    </div>
+                    <button class="btn-logout-client" id="btnLogoutClient">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN -->
+        <main class="client-main">
+            <!-- WELCOME -->
+            <div class="welcome-card">
+                <div class="greeting" id="greetingMessage">Bom dia</div>
+                <h1 id="welcomeName">Aluno</h1>
+                <div class="motivation" id="motivationMessage"></div>
+            </div>
+
+            <!-- QUICK ACTIONS -->
+            <div class="quick-actions">
+                <div class="action-card" id="btnMyWorkouts">
+                    <i class="fas fa-dumbbell"></i>
+                    <h3>Meus Treinos</h3>
+                    <p>Visualizar fichas</p>
+                </div>
+                <div class="action-card accent" id="btnAutoWorkout">
+                    <i class="fas fa-magic"></i>
+                    <h3>Treino Automático</h3>
+                    <p>Gerar treino IA</p>
+                </div>
+                <div class="action-card" id="btnReport">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Relatório</h3>
+                    <p>Histórico e progresso</p>
+                </div>
+                <div class="action-card accent" id="btnTips">
+                    <i class="fas fa-lightbulb"></i>
+                    <h3>Dicas</h3>
+                    <p>Nutrição e saúde</p>
+                </div>
+            </div>
+
+            <!-- WORKOUT SELECTOR -->
+            <div class="workout-selector" id="workoutSelector" style="display:none;">
+                <h2><i class="fas fa-clipboard-list"></i> Selecione seu Treino</h2>
+                <div class="workout-grid" id="workoutGrid"></div>
+            </div>
+
+            <!-- CRONOMETER -->
+            <div class="cronometer-card">
+                <h3 style="color: var(--client-primary); margin-bottom: 8px;">
+                    <i class="fas fa-stopwatch"></i> Cronômetro de Treino
+                </h3>
+                <div class="cronometer-display" id="cronometerDisplay">00:00</div>
+                <div class="cronometer-controls">
+                    <button class="crono-btn start" id="btnStart">
+                        <i class="fas fa-play"></i> Iniciar
+                    </button>
+                    <button class="crono-btn pause" id="btnPause" disabled>
+                        <i class="fas fa-pause"></i> Pausar
+                    </button>
+                    <button class="crono-btn reset" id="btnReset">
+                        <i class="fas fa-redo-alt"></i> Resetar
+                    </button>
+                    <button class="crono-btn save" id="btnSave" disabled>
+                        <i class="fas fa-save"></i> Salvar
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/utils.js"></script>
+
+    <script>
+        // ============================================
+        // INICIALIZAÇÃO DO PAINEL DO ALUNO
+        // ============================================
+
+        // Verificar autenticação
+        if (!Auth.checkAuth('client')) {
+            throw new Error('Acesso não autorizado');
+        }
+
+        const session = Auth.getSession();
+        let mySheets = [];
+        let workoutLogs = [];
+        let cronometerInterval = null;
+        let cronometerSeconds = 0;
+        let isCronometerRunning = false;
+        let selectedGender = 'male';
+
+        // ============ INICIALIZAÇÃO ============
+        document.addEventListener('DOMContentLoaded', async () => {
+            setupUI();
+            setupEventListeners();
+            await loadMyData();
+            Utils.showLoading(false);
+        });
+
+        function setupUI() {
+            // Nome e código do cliente
+            document.getElementById('clientDisplayName').textContent = session.name || 'Aluno';
+            document.getElementById('clientDisplayCode').textContent = session.clientCode || 'CLI000';
+            document.getElementById('clientInitial').textContent = (session.name || 'A').charAt(0).toUpperCase();
+            document.getElementById('welcomeName').textContent = session.name || 'Aluno';
+
+            // Saudação
+            const hour = new Date().getHours();
+            let greeting = 'Bom dia';
+            if (hour >= 12 && hour < 18) greeting = 'Boa tarde';
+            if (hour >= 18) greeting = 'Boa noite';
+            document.getElementById('greetingMessage').textContent = greeting;
+
+            // Mensagem motivacional
+            const motivations = [
+                'Cada treino é um passo para sua melhor versão! 💪',
+                'Seu corpo alcança o que sua mente acredita! 🧠',
+                'A dor do treino é temporária, mas os resultados são para sempre! 🏆',
+                'Não desista, você está mais perto do que ontem! 🚀',
+                'Transforme suor em conquistas! ⚡'
+            ];
+            document.getElementById('motivationMessage').textContent = 
+                motivations[Math.floor(Math.random() * motivations.length)];
+        }
+
+        async function loadMyData() {
+            try {
+                Utils.showLoading(true);
+
+                // Carregar fichas do cliente
+                const sheetsData = await DB.getWorkoutSheets(session.clientId);
+                mySheets = sheetsData || [];
+
+                // Carregar logs de treino
+                const logsData = await DB.getWorkoutLogs(session.clientId);
+                workoutLogs = logsData || [];
+
+                renderWorkoutButtons();
+            } catch (error) {
+                console.error('Erro ao carregar dados:', error);
+                Utils.showToast('Erro ao carregar seus dados.', 'error');
+            } finally {
+                Utils.showLoading(false);
+            }
+        }
+
+        function setupEventListeners() {
+            // Logout
+            document.getElementById('btnLogoutClient').addEventListener('click', async () => {
+                const confirmed = await Utils.confirm('Deseja realmente sair?', 'Sair do Sistema');
+                if (confirmed) {
+                    Auth.logout();
+                    window.location.href = 'index.html';
+                }
+            });
+
+            // Meus Treinos
+            document.getElementById('btnMyWorkouts').addEventListener('click', () => {
+                const selector = document.getElementById('workoutSelector');
+                selector.style.display = selector.style.display === 'none' ? 'block' : 'none';
+                if (selector.style.display === 'block') {
+                    selector.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+
+            // Treino Automático
+            document.getElementById('btnAutoWorkout').addEventListener('click', () => {
+                document.getElementById('autoWorkoutModal').classList.remove('hidden');
+            });
+
+            // Relatório
+            document.getElementById('btnReport').addEventListener('click', showReport);
+
+            // Dicas
+            document.getElementById('btnTips').addEventListener('click', showTips);
+
+            // Modal de visualização de treino
+            document.getElementById('closeWorkoutView').addEventListener('click', closeWorkoutView);
+            document.getElementById('closeWorkoutViewBtn').addEventListener('click', closeWorkoutView);
+            document.getElementById('startWorkoutTimer').addEventListener('click', () => {
+                closeWorkoutView();
+                startCronometer();
+            });
+
+            // Modal de relatório
+            document.getElementById('closeReportModal').addEventListener('click', closeReport);
+            document.getElementById('closeReportBtn').addEventListener('click', closeReport);
+
+            // Modal de treino automático
+            document.getElementById('closeAutoWorkoutModal').addEventListener('click', closeAutoWorkout);
+            document.getElementById('cancelAutoWorkout').addEventListener('click', closeAutoWorkout);
+            document.getElementById('generateAutoWorkout').addEventListener('click', generateAutoWorkout);
+
+            // Gender selector
+            document.querySelectorAll('.gender-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    document.querySelectorAll('.gender-option').forEach(o => o.classList.remove('active'));
+                    option.classList.add('active');
+                    selectedGender = option.dataset.gender;
+                });
+            });
+
+            // Cronômetro
+            document.getElementById('btnStart').addEventListener('click', startCronometer);
+            document.getElementById('btnPause').addEventListener('click', pauseCronometer);
+            document.getElementById('btnReset').addEventListener('click', resetCronometer);
+            document.getElementById('btnSave').addEventListener('click', saveWorkoutLog);
+        }
+
+        // ============ WORKOUT BUTTONS ============
+        function renderWorkoutButtons() {
+            const grid = document.getElementById('workoutGrid');
+            const types = ['A', 'B', 'C', 'D', 'E'];
+            
+            grid.innerHTML = types.map(type => {
+                const sheet = mySheets.find(s => s.type === type || s.name.includes(`Treino ${type}`));
+                const hasWorkout = !!sheet;
+                const exerciseCount = sheet?.exercises?.length || 0;
+                
+                return `
+                    <button class="workout-btn ${hasWorkout ? 'has-workout' : ''}" 
+                            onclick="${hasWorkout ? `viewWorkout('${sheet.id}')` : `Utils.showToast('Nenhuma ficha para o Treino ${type}', 'warning')`}">
+                        <i class="fas ${getWorkoutIcon(type)}"></i>
+                        <div class="workout-label">Treino ${type}</div>
+                        <div class="workout-exercises">
+                            ${hasWorkout ? `${exerciseCount} exercícios` : 'Vazio'}
+                        </div>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function getWorkoutIcon(type) {
+            const icons = {
+                'A': 'fa-fire',
+                'B': 'fa-bolt',
+                'C': 'fa-dumbbell',
+                'D': 'fa-heart',
+                'E': 'fa-star'
+            };
+            return icons[type] || 'fa-dumbbell';
+        }
+
+        // ============ VIEW WORKOUT ============
+        function viewWorkout(sheetId) {
+            const sheet = mySheets.find(s => s.id === sheetId);
+            if (!sheet) return;
+
+            document.getElementById('workoutViewTitle').textContent = sheet.name;
+            
+            let html = '';
+            
+            if (sheet.notes) {
+                html += `
+                    <div style="background: #e8eaf6; padding: 16px; border-radius: 12px; margin-bottom: 20px; border-left: 4px solid var(--client-primary);">
+                        <strong><i class="fas fa-info-circle"></i> Observações:</strong>
+                        <p style="margin-top: 8px; color: #555;">${sheet.notes}</p>
+                    </div>
+                `;
+            }
+
+            if (sheet.exercises && sheet.exercises.length > 0) {
+                sheet.exercises.forEach((ex, index) => {
+                    html += `
+                        <div class="exercise-view-item">
+                            <h4>${index + 1}. ${ex.name}</h4>
+                            <div class="exercise-view-details">
+                                <span class="exercise-view-detail">
+                                    <i class="fas fa-layer-group"></i> ${ex.series} séries
+                                </span>
+                                <span class="exercise-view-detail">
+                                    <i class="fas fa-sync-alt"></i> ${ex.reps} reps
+                                </span>
+                                ${ex.load ? `
+                                <span class="exercise-view-detail">
+                                    <i class="fas fa-weight-hanging"></i> ${ex.load}
+                                </span>` : ''}
+                                ${ex.restTime ? `
+                                <span class="exercise-view-detail">
+                                    <i class="fas fa-clock"></i> ${ex.restTime}s descanso
+                                </span>` : ''}
+                            </div>
+                            ${ex.notes ? `
+                            <p style="margin-top: 8px; font-size: 0.85rem; color: #888;">
+                                <i class="fas fa-sticky-note"></i> ${ex.notes}
+                            </p>` : ''}
+                        </div>
+                    `;
+                });
+            }
+
+            document.getElementById('workoutViewContent').innerHTML = html;
+            document.getElementById('workoutViewModal').classList.remove('hidden');
+        }
+
+        function closeWorkoutView() {
+            document.getElementById('workoutViewModal').classList.add('hidden');
+        }
+
+        // ============ REPORT ============
+        function showReport() {
+            let html = '';
+            
+            if (workoutLogs.length === 0) {
+                html = `
+                    <div class="empty-state">
+                        <i class="fas fa-chart-bar" style="font-size: 3rem; color: #ccc;"></i>
+                        <h3>Nenhum treino registrado</h3>
+                        <p>Use o cronômetro para registrar seus treinos!</p>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div style="background: #e8eaf6; padding: 16px; border-radius: 12px; margin-bottom: 20px; text-align: center;">
+                        <strong style="font-size: 1.2rem;">📊 ${workoutLogs.length} treinos realizados</strong>
+                    </div>
+                `;
+                
+                workoutLogs.slice(0, 20).forEach(log => {
+                    html += `
+                        <div class="history-item">
+                            <div>
+                                <div class="history-date">${Utils.formatDate(log.date)}</div>
+                                <div class="history-time">${log.time?.slice(0, 5) || ''}</div>
+                            </div>
+                            <div class="history-duration">
+                                <i class="fas fa-stopwatch"></i> ${Utils.formatTime(log.duration_seconds)}
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            document.getElementById('reportContent').innerHTML = html;
+            document.getElementById('reportModal').classList.remove('hidden');
+        }
+
+        function closeReport() {
+            document.getElementById('reportModal').classList.add('hidden');
+        }
+
+        // ============ TIPS ============
+        function showTips() {
+            const tips = [
+                '💧 Beba pelo menos 2 litros de água por dia',
+                '😴 Durma 7-8 horas para melhor recuperação muscular',
+                '🍗 Consuma proteína após o treino para recuperação',
+                '🏋️ Aumente a carga gradualmente para evitar lesões',
+                '🧘 Alongue-se antes e depois do treino',
+                '📅 Mantenha consistência: 3-5 treinos por semana',
+                '🍌 Coma uma banana 30min antes do treino para energia',
+                '📝 Registre seus treinos para acompanhar o progresso',
+                '🫁 Respire corretamente: expire no esforço',
+                '🎯 Estabeleça metas realistas e comemore conquistas'
+            ];
+            
+            const randomTips = tips.sort(() => Math.random() - 0.5).slice(0, 3);
+            
+            Utils.showToast(`💡 ${randomTips[0]}`, 'info', 5000);
+            
+            setTimeout(() => {
+                Utils.showToast(`💡 ${randomTips[1]}`, 'info', 5000);
+            }, 1000);
+            
+            setTimeout(() => {
+                Utils.showToast(`💡 ${randomTips[2]}`, 'info', 5000);
+            }, 2000);
+        }
+
+        // ============ AUTO WORKOUT ============
+        function closeAutoWorkout() {
+            document.getElementById('autoWorkoutModal').classList.add('hidden');
+        }
+
+        async function generateAutoWorkout() {
+            const goal = document.getElementById('autoGoal').value;
+            const level = document.getElementById('autoLevel').value;
+            const days = parseInt(document.getElementById('autoDays').value);
+
+            const workouts = generateWorkoutPlan(selectedGender, goal, level, days);
+
+            try {
+                Utils.showLoading(true);
+                
+                let created = 0;
+                for (const [type, exercises] of Object.entries(workouts)) {
+                    if (exercises.length > 0) {
+                        await DB.createWorkoutSheet({
+                            clientId: session.clientId,
+                            instructorId: null,
+                            name: `Treino ${type} (Auto)`,
+                            type,
+                            notes: `Gerado automaticamente - ${goal} - ${level}`,
+                            exercises
+                        });
+                        created++;
+                    }
+                }
+
+                Utils.showToast(`${created} treinos gerados com sucesso!`, 'success');
+                closeAutoWorkout();
+                await loadMyData();
+                
+                // Mostrar seletor de treinos
+                document.getElementById('workoutSelector').style.display = 'block';
+                document.getElementById('workoutSelector').scrollIntoView({ behavior: 'smooth' });
+            } catch (error) {
+                console.error('Erro ao gerar treinos:', error);
+                Utils.showToast('Erro ao gerar treinos automáticos.', 'error');
+            } finally {
+                Utils.showLoading(false);
+            }
+        }
+
+        function generateWorkoutPlan(gender, goal, level, days) {
+            const workouts = { A: [], B: [], C: [], D: [], E: [] };
+            
+            let series = '3', reps = '12';
+            if (level === 'intermediario') { series = '4'; reps = '10'; }
+            else if (level === 'avancado') { series = '4'; reps = '8'; }
+
+            const exercises = {
+                peito: [
+                    { name: 'Supino reto', group: 'Peito' },
+                    { name: 'Supino inclinado', group: 'Peito' },
+                    { name: 'Crucifixo', group: 'Peito' },
+                    { name: 'Peck deck', group: 'Peito' }
+                ],
+                costas: [
+                    { name: 'Puxada frontal', group: 'Costas' },
+                    { name: 'Remada curvada', group: 'Costas' },
+                    { name: 'Barra fixa', group: 'Costas' }
+                ],
+                ombros: [
+                    { name: 'Desenvolvimento', group: 'Ombros' },
+                    { name: 'Elevação lateral', group: 'Ombros' }
+                ],
+                biceps: [
+                    { name: 'Rosca direta', group: 'Bíceps' },
+                    { name: 'Rosca alternada', group: 'Bíceps' }
+                ],
+                triceps: [
+                    { name: 'Tríceps corda', group: 'Tríceps' },
+                    { name: 'Tríceps testa', group: 'Tríceps' }
+                ],
+                pernas: [
+                    { name: 'Agachamento', group: 'Quadríceps' },
+                    { name: 'Leg press', group: 'Quadríceps' },
+                    { name: 'Mesa flexora', group: 'Posterior' }
+                ],
+                abdomen: [
+                    { name: 'Abdominal supra', group: 'Abdômen' },
+                    { name: 'Prancha', group: 'Abdômen' }
+                ]
+            };
+
+            if (gender === 'male') {
+                if (days >= 3) {
+                    workouts.A = [...exercises.peito.slice(0, 3), ...exercises.ombros.slice(0, 1), ...exercises.triceps.slice(0, 1)].map(ex => ({ ...ex, series, reps, load: '', restTime: '60', notes: '' }));
+                    workouts.B = [...exercises.costas.slice(0, 3), ...exercises.biceps.slice(0, 2)].map(ex => ({ ...ex, series, reps, load: '', restTime: '60', notes: '' }));
+                    workouts.C = [...exercises.pernas.slice(0, 3), ...exercises.abdomen.slice(0, 2)].map(ex => ({ ...ex, series, reps, load: '', restTime: '60', notes: '' }));
+                }
+                if (days >= 4) workouts.D = [...exercises.ombros.slice(0, 2), ...exercises.triceps.slice(0, 2), ...exercises.abdomen.slice(0, 1)].map(ex => ({ ...ex, series, reps, load: '', restTime: '60', notes: '' }));
+                if (days >= 5) workouts.E = [...exercises.peito.slice(1, 3), ...exercises.costas.slice(1, 3), ...exercises.biceps.slice(0, 1)].map(ex => ({ ...ex, series, reps, load: '', restTime: '60', notes: '' }));
+            } else {
+                if (days >= 3) {
+                    workouts.A = [...exercises.pernas.slice(0, 3), { name: 'Elevação pélvica', group: 'Glúteos' }, { name: 'Abdução', group: 'Glúteos' }].map(ex => ({ ...ex, series, reps, load: '', restTime: '60', notes: '' }));
+                    workouts.B = [...exercises.peito.slice(0, 2), ...exercises.costas.slice(0, 2), ...exercises.ombros.slice(0, 1)].map(ex => ({ ...ex, series, reps, load: '', restTime: '60', notes: '' }));
+                    workouts.C = [...exercises.biceps.slice(0, 2), ...exercises.triceps.slice(0, 2), ...exercises.abdomen.slice(0, 2)].map(ex => ({ ...ex, series, reps, load: '', restTime: '60', notes: '' }));
+                }
+                if (days >= 4) workouts.D = [...exercises.ombros.slice(0, 2), { name: 'Stiff', group: 'Posterior' }, { name: 'Glúteo cabo', group: 'Glúteos' }].map(ex => ({ ...ex, series, reps, load: '', restTime: '60', notes: '' }));
+                if (days >= 5) workouts.E = [...exercises.peito.slice(1, 3), ...exercises.costas.slice(1, 3), ...exercises.abdomen.slice(0, 1)].map(ex => ({ ...ex, series, reps, load: '', restTime: '60', notes: '' }));
+            }
+
+            return workouts;
+        }
+
+        // ============ CRONOMETER ============
+        function updateCronometerDisplay() {
+            const mins = Math.floor(cronometerSeconds / 60);
+            const secs = cronometerSeconds % 60;
+            document.getElementById('cronometerDisplay').textContent = 
+                `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        function startCronometer() {
+            if (!isCronometerRunning) {
+                isCronometerRunning = true;
+                document.getElementById('btnStart').disabled = true;
+                document.getElementById('btnPause').disabled = false;
+                document.getElementById('btnSave').disabled = false;
+                
+                cronometerInterval = setInterval(() => {
+                    cronometerSeconds++;
+                    updateCronometerDisplay();
+                }, 1000);
+            }
+        }
+
+        function pauseCronometer() {
+            if (isCronometerRunning) {
+                isCronometerRunning = false;
+                document.getElementById('btnStart').disabled = false;
+                document.getElementById('btnPause').disabled = true;
+                clearInterval(cronometerInterval);
+            }
+        }
+
+        function resetCronometer() {
+            pauseCronometer();
+            cronometerSeconds = 0;
+            updateCronometerDisplay();
+            document.getElementById('btnSave').disabled = true;
+            document.getElementById('btnStart').disabled = false;
+        }
+
+        async function saveWorkoutLog() {
+            if (cronometerSeconds === 0) {
+                Utils.showToast('Inicie o cronômetro antes de salvar!', 'warning');
+                return;
+            }
+
+            try {
+                Utils.showLoading(true);
+                
+                await DB.createWorkoutLog({
+                    clientId: session.clientId,
+                    sheetId: null,
+                    durationSeconds: cronometerSeconds,
+                    date: new Date().toISOString().split('T')[0],
+                    time: new Date().toTimeString().split(' ')[0],
+                    notes: 'Treino registrado'
+                });
+
+                Utils.showToast('Treino salvo com sucesso! 🎉', 'success');
+                resetCronometer();
+                await loadMyData();
+            } catch (error) {
+                console.error('Erro ao salvar treino:', error);
+                Utils.showToast('Erro ao salvar treino.', 'error');
+            } finally {
+                Utils.showLoading(false);
+            }
+        }
+    </script>
+</body>
+</html>
