@@ -9,24 +9,50 @@ class SupabaseClient {
     }
 
     init() {
-        if (typeof supabase === 'undefined') {
-            console.error('Supabase SDK não carregado. Adicione o script CDN.');
+        // Verificar se o SDK do Supabase foi carregado
+        if (typeof window.supabase === 'undefined') {
+            console.error('❌ Supabase SDK não carregado. Verifique se o CDN está antes deste script.');
+            console.error('Ordem correta: supabase CDN → config.js → supabase-client.js');
+            return;
+        }
+        
+        // Verificar se as configurações existem
+        if (typeof CONFIG === 'undefined') {
+            console.error('❌ CONFIG não encontrado. Verifique se config.js foi carregado.');
             return;
         }
         
         if (!CONFIG.SUPABASE_URL || !CONFIG.SUPABASE_KEY) {
-            console.error('Configurações do Supabase não encontradas. Crie o arquivo config.js');
+            console.error('❌ Configurações do Supabase incompletas. Verifique config.js');
+            console.error('SUPABASE_URL:', CONFIG.SUPABASE_URL);
+            console.error('SUPABASE_KEY:', CONFIG.SUPABASE_KEY ? 'Carregada ✓' : 'Faltando ✗');
             return;
         }
         
-        this.client = supabase.createClient(
-            CONFIG.SUPABASE_URL,
-            CONFIG.SUPABASE_KEY
-        );
+        try {
+            this.client = window.supabase.createClient(
+                CONFIG.SUPABASE_URL,
+                CONFIG.SUPABASE_KEY
+            );
+            console.log('✅ Supabase conectado com sucesso!');
+        } catch (error) {
+            console.error('❌ Erro ao conectar ao Supabase:', error);
+        }
+    }
+
+    // Verificar se o cliente está pronto
+    isReady() {
+        if (!this.client) {
+            console.error('❌ Supabase não inicializado. Execute init() primeiro.');
+            return false;
+        }
+        return true;
     }
 
     // ---------- PROFILES ----------
     async getProfile(userId, userType) {
+        if (!this.isReady()) return null;
+        
         const { data, error } = await this.client
             .from('profiles')
             .select('*')
@@ -34,11 +60,16 @@ class SupabaseClient {
             .eq('is_active', true)
             .single();
         
-        if (error) throw error;
+        if (error) {
+            console.error('Erro ao buscar perfil:', error);
+            throw error;
+        }
         return data;
     }
 
     async getInstructorById(instructorId) {
+        if (!this.isReady()) return null;
+        
         const { data, error } = await this.client
             .from('profiles')
             .select('*')
@@ -46,95 +77,154 @@ class SupabaseClient {
             .eq('is_active', true)
             .single();
         
-        if (error) return null;
+        if (error) {
+            console.error('Erro ao buscar instrutor:', error);
+            return null;
+        }
         return data;
     }
 
     // ---------- CLIENTS ----------
     async getClients(instructorId = null) {
-        let query = this.client
-            .from('clients')
-            .select(`
-                *,
-                profile:profile_id (*)
-            `)
-            .eq('is_active', true);
+        if (!this.isReady()) return [];
         
-        if (instructorId) {
-            query = query.eq('instructor_id', instructorId);
+        try {
+            // Buscar todos os perfis de clientes ativos
+            const { data: profiles, error: profilesError } = await this.client
+                .from('profiles')
+                .select('*')
+                .eq('user_type', 'client')
+                .eq('is_active', true);
+            
+            if (profilesError) throw profilesError;
+            
+            // Buscar dados dos clientes
+            const { data: clientsData, error: clientsError } = await this.client
+                .from('clients')
+                .select('*')
+                .eq('is_active', true);
+            
+            if (clientsError) throw clientsError;
+            
+            // Combinar dados
+            const clients = clientsData.map(client => {
+                const profile = profiles.find(p => p.id === client.profile_id);
+                return {
+                    ...client,
+                    profile: profile || null
+                };
+            });
+            
+            // Filtrar por instrutor se necessário
+            if (instructorId) {
+                return clients.filter(c => c.instructor_id === instructorId);
+            }
+            
+            return clients;
+        } catch (error) {
+            console.error('Erro ao buscar clientes:', error);
+            return [];
         }
-        
-        const { data, error } = await query.order('name');
-        
-        if (error) throw error;
-        return data;
     }
 
     async getClientByCode(clientCode) {
-        const { data, error } = await this.client
-            .from('clients')
-            .select(`
-                *,
-                profile:profile_id (*)
-            `)
-            .eq('client_code', clientCode)
-            .eq('is_active', true)
-            .single();
+        if (!this.isReady()) return null;
         
-        if (error) return null;
-        return data;
+        try {
+            const { data: client, error: clientError } = await this.client
+                .from('clients')
+                .select('*')
+                .eq('client_code', clientCode)
+                .eq('is_active', true)
+                .single();
+            
+            if (clientError || !client) return null;
+            
+            const { data: profile, error: profileError } = await this.client
+                .from('profiles')
+                .select('*')
+                .eq('id', client.profile_id)
+                .single();
+            
+            if (profileError) return null;
+            
+            return {
+                ...client,
+                profile: profile
+            };
+        } catch (error) {
+            console.error('Erro ao buscar cliente por código:', error);
+            return null;
+        }
     }
 
     async createClient(clientData) {
-        const { data, error } = await this.client
+        if (!this.isReady()) throw new Error('Supabase não inicializado');
+        
+        // Criar perfil primeiro
+        const { data: profile, error: profileError } = await this.client
             .from('profiles')
             .insert({
                 user_type: 'client',
                 name: clientData.name,
-                phone: clientData.phone,
+                phone: clientData.phone || null,
                 password_hash: clientData.password
             })
             .select()
             .single();
         
-        if (error) throw error;
+        if (profileError) {
+            console.error('Erro ao criar perfil:', profileError);
+            throw profileError;
+        }
         
         // Criar registro na tabela clients
         const { data: clientRecord, error: clientError } = await this.client
             .from('clients')
             .insert({
-                profile_id: data.id,
+                profile_id: profile.id,
                 client_code: clientData.clientCode,
-                instructor_id: clientData.instructorId,
-                gender: clientData.gender,
-                birth_date: clientData.birthDate
+                instructor_id: clientData.instructorId || null,
+                gender: clientData.gender || null,
+                birth_date: clientData.birthDate || null
             })
             .select()
             .single();
         
-        if (clientError) throw clientError;
-        return clientRecord;
+        if (clientError) {
+            console.error('Erro ao criar cliente:', clientError);
+            // Rollback: deletar perfil criado
+            await this.client.from('profiles').delete().eq('id', profile.id);
+            throw clientError;
+        }
+        
+        return {
+            ...clientRecord,
+            profile: profile
+        };
     }
 
     async updateClient(clientId, clientData) {
-        // Atualizar profile
+        if (!this.isReady()) throw new Error('Supabase não inicializado');
+        
+        // Atualizar perfil
         const { error: profileError } = await this.client
             .from('profiles')
             .update({
                 name: clientData.name,
-                phone: clientData.phone,
+                phone: clientData.phone || null,
                 password_hash: clientData.password
             })
             .eq('id', clientData.profileId);
         
         if (profileError) throw profileError;
         
-        // Atualizar client
+        // Atualizar dados do cliente
         const { data, error } = await this.client
             .from('clients')
             .update({
-                gender: clientData.gender,
-                birth_date: clientData.birthDate
+                gender: clientData.gender || null,
+                birth_date: clientData.birthDate || null
             })
             .eq('id', clientId)
             .select()
@@ -145,7 +235,9 @@ class SupabaseClient {
     }
 
     async deleteClient(clientId, profileId) {
-        // Soft delete na tabela clients
+        if (!this.isReady()) throw new Error('Supabase não inicializado');
+        
+        // Soft delete no cliente
         const { error: clientError } = await this.client
             .from('clients')
             .update({ is_active: false })
@@ -153,7 +245,7 @@ class SupabaseClient {
         
         if (clientError) throw clientError;
         
-        // Soft delete no profile
+        // Soft delete no perfil
         const { error: profileError } = await this.client
             .from('profiles')
             .update({ is_active: false })
@@ -165,65 +257,81 @@ class SupabaseClient {
     }
 
     // ---------- WORKOUT SHEETS ----------
-    async getWorkoutSheets(clientId = null, instructorId = null) {
-        let query = this.client
-            .from('workout_sheets')
-            .select(`
-                *,
-                exercises (*)
-            `)
-            .eq('is_active', true);
+    async getWorkoutSheets(clientId = null) {
+        if (!this.isReady()) return [];
         
-        if (clientId) {
-            query = query.eq('client_id', clientId);
+        try {
+            let query = this.client
+                .from('workout_sheets')
+                .select('*')
+                .eq('is_active', true);
+            
+            if (clientId) {
+                query = query.eq('client_id', clientId);
+            }
+            
+            const { data: sheets, error: sheetsError } = await query.order('created_at', { ascending: false });
+            
+            if (sheetsError) throw sheetsError;
+            if (!sheets || sheets.length === 0) return [];
+            
+            // Buscar exercícios para cada ficha
+            const sheetsWithExercises = await Promise.all(
+                sheets.map(async (sheet) => {
+                    const { data: exercises, error: exercisesError } = await this.client
+                        .from('exercises')
+                        .select('*')
+                        .eq('sheet_id', sheet.id)
+                        .order('order_index', { ascending: true });
+                    
+                    if (exercisesError) {
+                        console.error('Erro ao buscar exercícios:', exercisesError);
+                        return { ...sheet, exercises: [] };
+                    }
+                    
+                    return {
+                        ...sheet,
+                        exercises: exercises || []
+                    };
+                })
+            );
+            
+            return sheetsWithExercises;
+        } catch (error) {
+            console.error('Erro ao buscar fichas:', error);
+            return [];
         }
-        
-        const { data, error } = await query.order('created_at', { ascending: false });
-        
-        if (error) throw error;
-        return data;
-    }
-
-    async getWorkoutSheetById(sheetId) {
-        const { data, error } = await this.client
-            .from('workout_sheets')
-            .select(`
-                *,
-                exercises (*)
-            `)
-            .eq('id', sheetId)
-            .single();
-        
-        if (error) throw error;
-        return data;
     }
 
     async createWorkoutSheet(sheetData) {
-        const { data, error } = await this.client
+        if (!this.isReady()) throw new Error('Supabase não inicializado');
+        
+        // Criar ficha
+        const { data: sheet, error: sheetError } = await this.client
             .from('workout_sheets')
             .insert({
                 client_id: sheetData.clientId,
-                instructor_id: sheetData.instructorId,
+                instructor_id: sheetData.instructorId || null,
                 name: sheetData.name,
-                type: sheetData.type,
-                notes: sheetData.notes
+                type: sheetData.type || 'custom',
+                notes: sheetData.notes || null
             })
             .select()
             .single();
         
-        if (error) throw error;
+        if (sheetError) throw sheetError;
         
         // Inserir exercícios
         if (sheetData.exercises && sheetData.exercises.length > 0) {
             const exercises = sheetData.exercises.map((ex, index) => ({
-                sheet_id: data.id,
+                sheet_id: sheet.id,
                 name: ex.name,
-                muscle_group: ex.muscleGroup,
-                series: ex.series,
-                reps: ex.reps,
-                load: ex.load,
-                rest_time: ex.restTime,
-                notes: ex.notes,
+                muscle_group: ex.muscleGroup || ex.group || null,
+                series: ex.series || '3',
+                reps: ex.reps || '12',
+                load: ex.load || null,
+                rest_time: ex.restTime || '60',
+                notes: ex.notes || null,
                 order_index: index
             }));
             
@@ -231,19 +339,26 @@ class SupabaseClient {
                 .from('exercises')
                 .insert(exercises);
             
-            if (exercisesError) throw exercisesError;
+            if (exercisesError) {
+                // Rollback
+                await this.client.from('workout_sheets').delete().eq('id', sheet.id);
+                throw exercisesError;
+            }
         }
         
-        return data;
+        return sheet;
     }
 
     async updateWorkoutSheet(sheetId, sheetData) {
+        if (!this.isReady()) throw new Error('Supabase não inicializado');
+        
+        // Atualizar ficha
         const { error: sheetError } = await this.client
             .from('workout_sheets')
             .update({
                 name: sheetData.name,
-                type: sheetData.type,
-                notes: sheetData.notes
+                type: sheetData.type || 'custom',
+                notes: sheetData.notes || null
             })
             .eq('id', sheetId);
         
@@ -262,12 +377,12 @@ class SupabaseClient {
             const exercises = sheetData.exercises.map((ex, index) => ({
                 sheet_id: sheetId,
                 name: ex.name,
-                muscle_group: ex.muscleGroup,
-                series: ex.series,
-                reps: ex.reps,
-                load: ex.load,
-                rest_time: ex.restTime,
-                notes: ex.notes,
+                muscle_group: ex.muscleGroup || ex.group || null,
+                series: ex.series || '3',
+                reps: ex.reps || '12',
+                load: ex.load || null,
+                rest_time: ex.restTime || '60',
+                notes: ex.notes || null,
                 order_index: index
             }));
             
@@ -282,6 +397,8 @@ class SupabaseClient {
     }
 
     async deleteWorkoutSheet(sheetId) {
+        if (!this.isReady()) throw new Error('Supabase não inicializado');
+        
         const { error } = await this.client
             .from('workout_sheets')
             .update({ is_active: false })
@@ -293,27 +410,36 @@ class SupabaseClient {
 
     // ---------- WORKOUT LOGS ----------
     async getWorkoutLogs(clientId) {
-        const { data, error } = await this.client
-            .from('workout_logs')
-            .select('*')
-            .eq('client_id', clientId)
-            .order('date', { ascending: false })
-            .limit(30);
+        if (!this.isReady()) return [];
         
-        if (error) throw error;
-        return data;
+        try {
+            const { data, error } = await this.client
+                .from('workout_logs')
+                .select('*')
+                .eq('client_id', clientId)
+                .order('date', { ascending: false })
+                .limit(30);
+            
+            if (error) throw error;
+            return data || [];
+        } catch (error) {
+            console.error('Erro ao buscar logs:', error);
+            return [];
+        }
     }
 
     async createWorkoutLog(logData) {
+        if (!this.isReady()) throw new Error('Supabase não inicializado');
+        
         const { data, error } = await this.client
             .from('workout_logs')
             .insert({
                 client_id: logData.clientId,
-                sheet_id: logData.sheetId,
+                sheet_id: logData.sheetId || null,
                 duration_seconds: logData.durationSeconds,
-                date: logData.date,
-                time: logData.time,
-                notes: logData.notes
+                date: logData.date || new Date().toISOString().split('T')[0],
+                time: logData.time || new Date().toTimeString().split(' ')[0],
+                notes: logData.notes || null
             })
             .select()
             .single();
@@ -324,25 +450,34 @@ class SupabaseClient {
 
     // ---------- BACKUPS ----------
     async getBackups(instructorId) {
-        const { data, error } = await this.client
-            .from('backups')
-            .select('*')
-            .eq('instructor_id', instructorId)
-            .order('created_at', { ascending: false })
-            .limit(20);
+        if (!this.isReady()) return [];
         
-        if (error) throw error;
-        return data;
+        try {
+            const { data, error } = await this.client
+                .from('backups')
+                .select('*')
+                .eq('instructor_id', instructorId)
+                .order('created_at', { ascending: false })
+                .limit(20);
+            
+            if (error) throw error;
+            return data || [];
+        } catch (error) {
+            console.error('Erro ao buscar backups:', error);
+            return [];
+        }
     }
 
     async createBackup(backupData) {
+        if (!this.isReady()) throw new Error('Supabase não inicializado');
+        
         const { data, error } = await this.client
             .from('backups')
             .insert({
                 instructor_id: backupData.instructorId,
-                backup_type: backupData.type,
-                data: backupData.data,
-                file_size: backupData.size
+                backup_type: backupData.type || 'Manual',
+                data: backupData.data || {},
+                file_size: backupData.size || 'N/A'
             })
             .select()
             .single();
@@ -352,5 +487,15 @@ class SupabaseClient {
     }
 }
 
-// Instância global
-const DB = new SupabaseClient();
+// Instância global - IMPORTANTE: só cria depois que o SDK foi carregado
+let DB = null;
+
+// Inicializar quando o DOM estiver pronto
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        DB = new SupabaseClient();
+    });
+} else {
+    // DOM já carregado
+    DB = new SupabaseClient();
+}
